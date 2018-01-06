@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TopicCreateViewController" customModule="RankBaam" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelButton" destination="MfY-k9-D2k" id="vd6-n7-fo0"/>
+                <outlet property="createButton" destination="SbD-KG-zhO" id="Vlg-th-ne2"/>
+                <outlet property="isOptionCanReviseSwitch" destination="Jub-Fi-iCG" id="2Yw-fQ-HYt"/>
+                <outlet property="numberOfvoterRightSegmentedControl" destination="5fe-5Y-KdG" id="MjM-M0-bSC"/>
+                <outlet property="titleTextField" destination="exx-m7-hCv" id="nyk-KK-xYA"/>
+                <outlet property="topicDetailTextView" destination="Md7-4y-Tng" id="m9R-lu-Jvk"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="exx-m7-hCv">
+                    <rect key="frame" x="37.5" y="36" width="300" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="옵션 사용자만 추가 가능" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kom-Q8-xM4">
+                    <rect key="frame" x="69.5" y="97" width="161" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Jub-Fi-iCG">
+                    <rect key="frame" x="262.5" y="92" width="51" height="31"/>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1인당 투표수 ( 중복 투표 x, 다중 투표)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mgt-V2-QfU">
+                    <rect key="frame" x="60" y="160" width="255" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="5fe-5Y-KdG">
+                    <rect key="frame" x="74.5" y="199" width="225" height="29"/>
+                    <segments>
+                        <segment title="1"/>
+                        <segment title="2"/>
+                        <segment title="3"/>
+                        <segment title="4"/>
+                        <segment title="5"/>
+                    </segments>
+                </segmentedControl>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="RankBaam 유권자 여러분 투표해주세요" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Md7-4y-Tng">
+                    <rect key="frame" x="19" y="245" width="337" height="336"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MfY-k9-D2k">
+                    <rect key="frame" x="53" y="617" width="30" height="30"/>
+                    <state key="normal" title="취소"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbD-KG-zhO">
+                    <rect key="frame" x="305" y="617" width="30" height="30"/>
+                    <state key="normal" title="생성"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Jub-Fi-iCG" firstAttribute="centerY" secondItem="Kom-Q8-xM4" secondAttribute="centerY" id="1op-8E-lRe"/>
+                <constraint firstItem="5fe-5Y-KdG" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="4cj-DK-egi"/>
+                <constraint firstItem="Kom-Q8-xM4" firstAttribute="top" secondItem="exx-m7-hCv" secondAttribute="bottom" constant="31" id="9vh-V5-UPN"/>
+                <constraint firstItem="Md7-4y-Tng" firstAttribute="top" secondItem="5fe-5Y-KdG" secondAttribute="bottom" constant="18" id="BAD-Tv-frc"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="SbD-KG-zhO" secondAttribute="trailing" constant="40" id="Cux-lT-fux"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Md7-4y-Tng" secondAttribute="trailing" constant="19" id="ERL-pA-q6g"/>
+                <constraint firstItem="Md7-4y-Tng" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="19" id="Gdt-gO-uSH"/>
+                <constraint firstItem="MfY-k9-D2k" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="53" id="Gfq-Eo-M1m"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="SbD-KG-zhO" secondAttribute="bottom" constant="20" id="OSR-vZ-WlA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="MfY-k9-D2k" secondAttribute="bottom" constant="20" id="QMS-5w-8On"/>
+                <constraint firstItem="mgt-V2-QfU" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="V4s-h9-ChJ"/>
+                <constraint firstItem="5fe-5Y-KdG" firstAttribute="top" secondItem="mgt-V2-QfU" secondAttribute="bottom" constant="18" id="X9N-Rw-IP0"/>
+                <constraint firstItem="exx-m7-hCv" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.8" id="a17-fw-dGH"/>
+                <constraint firstItem="exx-m7-hCv" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="chM-fQ-4Q3"/>
+                <constraint firstItem="MfY-k9-D2k" firstAttribute="top" secondItem="Md7-4y-Tng" secondAttribute="bottom" constant="36" id="eXo-AI-jhU"/>
+                <constraint firstItem="Jub-Fi-iCG" firstAttribute="leading" secondItem="Kom-Q8-xM4" secondAttribute="trailing" constant="32" id="hpT-0R-Xyw"/>
+                <constraint firstItem="5fe-5Y-KdG" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.6" id="i78-mc-mrT"/>
+                <constraint firstItem="mgt-V2-QfU" firstAttribute="top" secondItem="Kom-Q8-xM4" secondAttribute="bottom" constant="42" id="itb-JC-xvf"/>
+                <constraint firstItem="exx-m7-hCv" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="lvC-op-vec"/>
+                <constraint firstItem="Kom-Q8-xM4" firstAttribute="centerX" secondItem="exx-m7-hCv" secondAttribute="centerX" multiplier="0.8" id="pbq-Mf-VKR"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="25.5" y="52.5"/>
+        </view>
+    </objects>
+</document>

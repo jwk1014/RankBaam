@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="YunTaemin.ttf">
+            <string>YunTaemin</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="gFz-tM-Omq" customClass="TopicDetailHeader" customModule="RankBaamProtoType" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uV4-fX-VVk">
+                    <rect key="frame" x="0.0" y="-2" width="375" height="202"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="올해를 대표하는 영화는?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pSV-49-4NM">
+                    <rect key="frame" x="16" y="20" width="343" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="Af1-v9-OjI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="YunTaemin" family="Yun Taemin" pointSize="31"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#범죄도시 #신과함께 #영화광" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WD8-KY-twP">
+                    <rect key="frame" x="16" y="54" width="343" height="92"/>
+                    <fontDescription key="fontDescription" name="YunTaemin" family="Yun Taemin" pointSize="23"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bvr-71-iOp">
+                    <rect key="frame" x="194" y="139" width="181" height="61"/>
+                    <color key="tintColor" red="0.98057973899999995" green="0.34185133820000002" blue="0.17917497360000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <inset key="titleEdgeInsets" minX="0.0" minY="22" maxX="4" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="110" minY="30" maxX="40" maxY="5"/>
+                    <state key="normal" title="0" image="if_icon-ios7-heart-outline_211754"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1k2-Jt-9Av">
+                    <rect key="frame" x="299" y="162" width="76" height="38"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="pSV-49-4NM" firstAttribute="trailing" secondItem="WD8-KY-twP" secondAttribute="trailing" id="0qh-Og-a7C"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="top" secondItem="gFz-tM-Omq" secondAttribute="top" constant="-2" id="4QM-bJ-lqE"/>
+                <constraint firstItem="WD8-KY-twP" firstAttribute="top" secondItem="pSV-49-4NM" secondAttribute="bottom" constant="9" id="9MT-VY-8Cf"/>
+                <constraint firstItem="pSV-49-4NM" firstAttribute="top" secondItem="gFz-tM-Omq" secondAttribute="top" constant="20" symbolic="YES" id="CVv-qf-IB2"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="bottom" secondItem="QFZ-Ok-Ayk" secondAttribute="bottom" id="DHj-tU-S4c"/>
+                <constraint firstItem="pSV-49-4NM" firstAttribute="leading" secondItem="gFz-tM-Omq" secondAttribute="leadingMargin" id="FTb-vo-UEN"/>
+                <constraint firstItem="pSV-49-4NM" firstAttribute="leading" secondItem="WD8-KY-twP" secondAttribute="leading" id="Iak-UL-wQQ"/>
+                <constraint firstItem="Bvr-71-iOp" firstAttribute="leading" secondItem="QFZ-Ok-Ayk" secondAttribute="leading" constant="194" id="JvQ-Rk-3q1"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="trailing" secondItem="Bvr-71-iOp" secondAttribute="trailing" id="P8U-Nm-rp3"/>
+                <constraint firstItem="1k2-Jt-9Av" firstAttribute="leading" secondItem="QFZ-Ok-Ayk" secondAttribute="leading" constant="299" id="T2y-ka-aPk"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="centerX" secondItem="WD8-KY-twP" secondAttribute="centerX" id="VVs-yG-Lh9"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="bottom" secondItem="1k2-Jt-9Av" secondAttribute="bottom" id="WMH-KX-w71"/>
+                <constraint firstItem="Bvr-71-iOp" firstAttribute="trailing" secondItem="1k2-Jt-9Av" secondAttribute="trailing" id="b8i-hu-Dm9"/>
+                <constraint firstItem="WD8-KY-twP" firstAttribute="centerY" secondItem="gFz-tM-Omq" secondAttribute="centerY" id="c64-Wk-pl2"/>
+                <constraint firstItem="uV4-fX-VVk" firstAttribute="leading" secondItem="gFz-tM-Omq" secondAttribute="leading" id="fcT-ge-wyx"/>
+                <constraint firstItem="Bvr-71-iOp" firstAttribute="bottom" secondItem="1k2-Jt-9Av" secondAttribute="bottom" id="lMq-fp-GA7"/>
+                <constraint firstItem="Bvr-71-iOp" firstAttribute="top" secondItem="pSV-49-4NM" secondAttribute="bottom" constant="94" id="ocH-6T-g7O"/>
+                <constraint firstItem="1k2-Jt-9Av" firstAttribute="top" secondItem="WD8-KY-twP" secondAttribute="bottom" constant="16" id="qLQ-Wd-RfX"/>
+                <constraint firstAttribute="trailing" secondItem="Bvr-71-iOp" secondAttribute="trailing" id="y1y-ke-uka"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="QFZ-Ok-Ayk"/>
+            <connections>
+                <outlet property="backgroundImg" destination="uV4-fX-VVk" id="Y74-Hb-bxL"/>
+                <outlet property="descriptionLabel" destination="WD8-KY-twP" id="fhl-Y8-fzr"/>
+                <outlet property="likeButton" destination="1k2-Jt-9Av" id="11s-nD-tx8"/>
+                <outlet property="likeCountButton" destination="Bvr-71-iOp" id="P2M-dG-2Ru"/>
+                <outlet property="titleLabel" destination="pSV-49-4NM" id="D36-tc-Oam"/>
+            </connections>
+            <point key="canvasLocation" x="522" y="-9"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="if_icon-ios7-heart-outline_211754" width="128" height="128"/>
+    </resources>
+</document>
