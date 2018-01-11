@@ -14,7 +14,6 @@
 		E359977F1FF6087F0064BBC1 /* SignInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E359977D1FF6087F0064BBC1 /* SignInViewController.xib */; };
 		E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997801FF6088D0064BBC1 /* SignUpViewController.swift */; };
 		E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997811FF6088D0064BBC1 /* SignUpViewController.xib */; };
-		E3CC20EE20010094006DE641 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20ED20010094006DE641 /* DataManager.swift */; };
 		E3CC20F120010409006DE641 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F020010409006DE641 /* Extensions.swift */; };
 		E3CC20FC2001053A006DE641 /* TopicDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F32001053A006DE641 /* TopicDetailHeader.swift */; };
 		E3CC20FD2001053A006DE641 /* TopicOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F42001053A006DE641 /* TopicOptionCell.swift */; };
@@ -28,10 +27,26 @@
 		E3CC210720010AF0006DE641 /* NamesWithTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC210520010AF0006DE641 /* NamesWithTableView.swift */; };
 		E3CC210820010AF0006DE641 /* NamesWithCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */; };
 		E3CC210B200119E2006DE641 /* YunTaemin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3CC210A200119E2006DE641 /* YunTaemin.ttf */; };
+		E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */; };
+		E3CF6FD72006073400DE3D41 /* MainTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */; };
+		E3CF6FDA2006080000DE3D41 /* TabHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD82006080000DE3D41 /* TabHomeViewController.swift */; };
+		E3CF6FDB2006080000DE3D41 /* TabHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */; };
+		E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */; };
+		E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */; };
+		E3CF6FE22006088D00DE3D41 /* TabLikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */; };
+		E3CF6FE32006088D00DE3D41 /* TabLikeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FE12006088D00DE3D41 /* TabLikeViewController.xib */; };
+		E3CF6FE6200608A600DE3D41 /* TabMyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FE4200608A600DE3D41 /* TabMyViewController.swift */; };
+		E3CF6FE7200608A600DE3D41 /* TabMyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FE5200608A600DE3D41 /* TabMyViewController.xib */; };
+		E3CF6FEE20060BC900DE3D41 /* UserRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FEB20060BC900DE3D41 /* UserRouter.swift */; };
+		E3CF6FEF20060BC900DE3D41 /* TopicRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FEC20060BC900DE3D41 /* TopicRouter.swift */; };
+		E3CF6FF020060BC900DE3D41 /* OptionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FED20060BC900DE3D41 /* OptionRouter.swift */; };
+		E3CF6FF220060BDC00DE3D41 /* DataResponse+Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FF120060BDC00DE3D41 /* DataResponse+Map.swift */; };
+		E3CF6FF620060BEA00DE3D41 /* TargetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FF420060BEA00DE3D41 /* TargetType.swift */; };
+		E3CF6FF720060BEA00DE3D41 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FF520060BEA00DE3D41 /* Error.swift */; };
+		E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FF820060C0B00DE3D41 /* Services.swift */; };
 		E3DE12BD1FEBAFD000738EE1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DE12BC1FEBAFD000738EE1 /* AppDelegate.swift */; };
 		E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3DE12C31FEBAFD000738EE1 /* Assets.xcassets */; };
 		E3DE12C71FEBAFD000738EE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3DE12C51FEBAFD000738EE1 /* LaunchScreen.storyboard */; };
-		E3DE12D21FEBB09700738EE1 /* AlamofireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DE12D11FEBB09700738EE1 /* AlamofireManager.swift */; };
 		E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DE12D31FEBB0A400738EE1 /* UserDefaultsManager.swift */; };
 		E3DE12D61FEBB0AF00738EE1 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DE12D51FEBB0AF00738EE1 /* KeychainManager.swift */; };
 		E3DE12D81FEBB7DA00738EE1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E3DE12D71FEBB7DA00738EE1 /* GoogleService-Info.plist */; };
@@ -56,7 +71,6 @@
 		E359977D1FF6087F0064BBC1 /* SignInViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignInViewController.xib; sourceTree = "<group>"; };
 		E35997801FF6088D0064BBC1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		E35997811FF6088D0064BBC1 /* SignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
-		E3CC20ED20010094006DE641 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		E3CC20F020010409006DE641 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3CC20F32001053A006DE641 /* TopicDetailHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailHeader.swift; sourceTree = "<group>"; };
 		E3CC20F42001053A006DE641 /* TopicOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicOptionCell.swift; sourceTree = "<group>"; };
@@ -70,12 +84,28 @@
 		E3CC210520010AF0006DE641 /* NamesWithTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamesWithTableView.swift; sourceTree = "<group>"; };
 		E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamesWithCollectionView.swift; sourceTree = "<group>"; };
 		E3CC210A200119E2006DE641 /* YunTaemin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YunTaemin.ttf; sourceTree = "<group>"; };
+		E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
+		E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTabViewController.xib; sourceTree = "<group>"; };
+		E3CF6FD82006080000DE3D41 /* TabHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabHomeViewController.swift; sourceTree = "<group>"; };
+		E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabHomeViewController.xib; sourceTree = "<group>"; };
+		E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSearchViewController.swift; sourceTree = "<group>"; };
+		E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabSearchViewController.xib; sourceTree = "<group>"; };
+		E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabLikeViewController.swift; sourceTree = "<group>"; };
+		E3CF6FE12006088D00DE3D41 /* TabLikeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabLikeViewController.xib; sourceTree = "<group>"; };
+		E3CF6FE4200608A600DE3D41 /* TabMyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewController.swift; sourceTree = "<group>"; };
+		E3CF6FE5200608A600DE3D41 /* TabMyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabMyViewController.xib; sourceTree = "<group>"; };
+		E3CF6FEB20060BC900DE3D41 /* UserRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRouter.swift; sourceTree = "<group>"; };
+		E3CF6FEC20060BC900DE3D41 /* TopicRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicRouter.swift; sourceTree = "<group>"; };
+		E3CF6FED20060BC900DE3D41 /* OptionRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionRouter.swift; sourceTree = "<group>"; };
+		E3CF6FF120060BDC00DE3D41 /* DataResponse+Map.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataResponse+Map.swift"; sourceTree = "<group>"; };
+		E3CF6FF420060BEA00DE3D41 /* TargetType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TargetType.swift; sourceTree = "<group>"; };
+		E3CF6FF520060BEA00DE3D41 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		E3CF6FF820060C0B00DE3D41 /* Services.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Services.swift; sourceTree = "<group>"; };
 		E3DE12B91FEBAFD000738EE1 /* RankBaam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RankBaam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3DE12BC1FEBAFD000738EE1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E3DE12C31FEBAFD000738EE1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E3DE12C61FEBAFD000738EE1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E3DE12C81FEBAFD000738EE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E3DE12D11FEBB09700738EE1 /* AlamofireManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireManager.swift; sourceTree = "<group>"; };
 		E3DE12D31FEBB0A400738EE1 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		E3DE12D51FEBB0AF00738EE1 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		E3DE12D71FEBB7DA00738EE1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -108,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				E3CC20F020010409006DE641 /* Extensions.swift */,
+				E3CF6FF120060BDC00DE3D41 /* DataResponse+Map.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -115,6 +146,8 @@
 		E3CC20F220010442006DE641 /* Temp */ = {
 			isa = PBXGroup;
 			children = (
+				E3FEB4591FF614A90074D778 /* TopicListViewController.swift */,
+				E3FEB45A1FF614A90074D778 /* TopicListViewController.xib */,
 				E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */,
 				E3CC210520010AF0006DE641 /* NamesWithTableView.swift */,
 				E3CC20F62001053A006DE641 /* CardFlowLayout.swift */,
@@ -136,6 +169,25 @@
 				E3CC210A200119E2006DE641 /* YunTaemin.ttf */,
 			);
 			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		E3CF6FEA20060BC900DE3D41 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				E3CF6FEB20060BC900DE3D41 /* UserRouter.swift */,
+				E3CF6FEC20060BC900DE3D41 /* TopicRouter.swift */,
+				E3CF6FED20060BC900DE3D41 /* OptionRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		E3CF6FF320060BEA00DE3D41 /* Type */ = {
+			isa = PBXGroup;
+			children = (
+				E3CF6FF420060BEA00DE3D41 /* TargetType.swift */,
+				E3CF6FF520060BEA00DE3D41 /* Error.swift */,
+			);
+			path = Type;
 			sourceTree = "<group>";
 		};
 		E3DE12B01FEBAFD000738EE1 = {
@@ -162,7 +214,9 @@
 				E3DE12BC1FEBAFD000738EE1 /* AppDelegate.swift */,
 				E3DE12C51FEBAFD000738EE1 /* LaunchScreen.storyboard */,
 				E3CC20EF200103FA006DE641 /* Util */,
+				E3CF6FF320060BEA00DE3D41 /* Type */,
 				E3DE12D01FEBB05200738EE1 /* Model */,
+				E3CF6FEA20060BC900DE3D41 /* Router */,
 				E3DE12CF1FEBB03800738EE1 /* Repository */,
 				E3DE12CE1FEBB01600738EE1 /* View */,
 				E3CC20F220010442006DE641 /* Temp */,
@@ -184,8 +238,16 @@
 				E359977D1FF6087F0064BBC1 /* SignInViewController.xib */,
 				E35997801FF6088D0064BBC1 /* SignUpViewController.swift */,
 				E35997811FF6088D0064BBC1 /* SignUpViewController.xib */,
-				E3FEB4591FF614A90074D778 /* TopicListViewController.swift */,
-				E3FEB45A1FF614A90074D778 /* TopicListViewController.xib */,
+				E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */,
+				E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */,
+				E3CF6FD82006080000DE3D41 /* TabHomeViewController.swift */,
+				E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */,
+				E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */,
+				E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */,
+				E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */,
+				E3CF6FE12006088D00DE3D41 /* TabLikeViewController.xib */,
+				E3CF6FE4200608A600DE3D41 /* TabMyViewController.swift */,
+				E3CF6FE5200608A600DE3D41 /* TabMyViewController.xib */,
 				E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */,
 				E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */,
 				E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */,
@@ -197,10 +259,9 @@
 		E3DE12CF1FEBB03800738EE1 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
-				E3DE12D11FEBB09700738EE1 /* AlamofireManager.swift */,
 				E3DE12D31FEBB0A400738EE1 /* UserDefaultsManager.swift */,
 				E3DE12D51FEBB0AF00738EE1 /* KeychainManager.swift */,
-				E3CC20ED20010094006DE641 /* DataManager.swift */,
+				E3CF6FF820060C0B00DE3D41 /* Services.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -300,10 +361,15 @@
 				E3FEB4581FF6149C0074D778 /* TopicCreateViewController.xib in Resources */,
 				E3DE12D81FEBB7DA00738EE1 /* GoogleService-Info.plist in Resources */,
 				E3FEB4621FF615690074D778 /* TopicDetailViewController.xib in Resources */,
+				E3CF6FE32006088D00DE3D41 /* TabLikeViewController.xib in Resources */,
 				E3CC210B200119E2006DE641 /* YunTaemin.ttf in Resources */,
 				E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */,
+				E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */,
 				E3CC20FE2001053A006DE641 /* TopicDetailHeader.xib in Resources */,
+				E3CF6FE7200608A600DE3D41 /* TabMyViewController.xib in Resources */,
 				E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */,
+				E3CF6FDB2006080000DE3D41 /* TabHomeViewController.xib in Resources */,
+				E3CF6FD72006073400DE3D41 /* MainTabViewController.xib in Resources */,
 				E3CC21022001053A006DE641 /* RBMainRankingHeader.xib in Resources */,
 				E3CC21012001053A006DE641 /* TopicOptionCell.xib in Resources */,
 				E359977B1FF608540064BBC1 /* SplashViewController.xib in Resources */,
@@ -385,13 +451,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3DE12D21FEBB09700738EE1 /* AlamofireManager.swift in Sources */,
+				E3CF6FF020060BC900DE3D41 /* OptionRouter.swift in Sources */,
+				E3CF6FE6200608A600DE3D41 /* TabMyViewController.swift in Sources */,
 				E3DE12BD1FEBAFD000738EE1 /* AppDelegate.swift in Sources */,
 				E3CC210820010AF0006DE641 /* NamesWithCollectionView.swift in Sources */,
 				E3CC21042001053B006DE641 /* RBMainRankingCell.swift in Sources */,
 				E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */,
 				E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */,
+				E3CF6FDA2006080000DE3D41 /* TabHomeViewController.swift in Sources */,
 				E3CC21032001053A006DE641 /* RBMainRankingHeader.swift in Sources */,
+				E3CF6FF620060BEA00DE3D41 /* TargetType.swift in Sources */,
 				E3CC210720010AF0006DE641 /* NamesWithTableView.swift in Sources */,
 				E3DE12D61FEBB0AF00738EE1 /* KeychainManager.swift in Sources */,
 				E3CC20FC2001053A006DE641 /* TopicDetailHeader.swift in Sources */,
@@ -399,11 +468,18 @@
 				E3FEB45B1FF614A90074D778 /* TopicListViewController.swift in Sources */,
 				E3FEB4611FF615690074D778 /* TopicDetailViewController.swift in Sources */,
 				E3CC20FD2001053A006DE641 /* TopicOptionCell.swift in Sources */,
+				E3CF6FF220060BDC00DE3D41 /* DataResponse+Map.swift in Sources */,
 				E359977E1FF6087F0064BBC1 /* SignInViewController.swift in Sources */,
 				E3FEB4571FF6149C0074D778 /* TopicCreateViewController.swift in Sources */,
 				E3DE12DC1FEBD17D00738EE1 /* NetworkModels.swift in Sources */,
+				E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */,
 				E3DE12DA1FEBD14B00738EE1 /* Models.swift in Sources */,
-				E3CC20EE20010094006DE641 /* DataManager.swift in Sources */,
+				E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */,
+				E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */,
+				E3CF6FEE20060BC900DE3D41 /* UserRouter.swift in Sources */,
+				E3CF6FF720060BEA00DE3D41 /* Error.swift in Sources */,
+				E3CF6FE22006088D00DE3D41 /* TabLikeViewController.swift in Sources */,
+				E3CF6FEF20060BC900DE3D41 /* TopicRouter.swift in Sources */,
 				E359977A1FF608540064BBC1 /* SplashViewController.swift in Sources */,
 				E3CC20F120010409006DE641 /* Extensions.swift in Sources */,
 			);

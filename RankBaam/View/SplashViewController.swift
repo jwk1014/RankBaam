@@ -16,7 +16,33 @@ class SplashViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             //if let signForm = SignManager.keychain {
             let signformTemp = SignForm(email: "fgfg4514@naver.com", identification: "test1234")
-                AlamofireManager.request(.SignIn(signForm: signformTemp))
+            UserService.singin(signForm: signformTemp) {
+                
+                        switch($0.result) {
+                            
+                        case .success(let sResult):
+                            if sResult.succ {
+                                let vc = MainTabViewController()
+                                let naviVC = UINavigationController(rootViewController: vc)
+                                naviVC.title = "RankBaam"
+                                self.present(naviVC, animated: true, completion: nil)
+                            } else if let msg = sResult.msg {
+                                switch msg {
+                                default:
+                                    break
+                                }
+                            }
+                            
+                        case .failure(let error):
+                            if let error = error as? SolutionProcessableProtocol {
+                                error.handle(self)
+                            } else {
+                                
+                            }
+                            
+                        }
+                    }
+                    /*
                     .responseRankBaam { (error, errorClosure, result: SResult?, date) in
                         
                         if let errorClosure = errorClosure {
@@ -37,7 +63,7 @@ class SplashViewController: UIViewController {
                             let naviVC = UINavigationController(rootViewController: vc)
                             self.present(naviVC, animated: true, completion: nil)
                         }
-                    }
+                    }*/
             /*} else {
                 let vc = TopicListViewController()
                 let naviVC = UINavigationController(rootViewController: vc)

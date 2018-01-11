@@ -32,24 +32,37 @@ class TopicCreateViewController: UIViewController {
         // TODO: FIXME
         
         // TODO: Optional 처리
-        print("##### votable 갯수 : \(numberOfvoterRightSegmentedControl.selectedSegmentIndex + 1)")
         guard let detailDescription = topicDetailTextView.text else { return }
         
-        AlamofireManager.request(
-            .TopicCreate(topic: Topic(
-                title: titleTextField.text!,
-                description: detailDescription,
-                isOnlyWriterCreateOption: isOptionCanReviseSwitch.isOn,
-                votableCountPerUser: numberOfvoterRightSegmentedControl.selectedSegmentIndex + 1)))
-            .responseRankBaam { (error, errorClosure, result: SResultTopicCreate?, date) in
+        TopicService.topicCreate(topic: Topic(
+            title: titleTextField.text!,
+            description: detailDescription,
+            isOnlyWriterCreateOption: isOptionCanReviseSwitch.isOn,
+            votableCountPerUser: numberOfvoterRightSegmentedControl.selectedSegmentIndex + 1)) {
+            
+            switch($0.result) {
                 
-            if let result = result {
-                if result.succ {
+            case .success(let sResult):
+                if sResult.succ {
                     self.delegate?.TopicCreationCompleted()
                     self.dismiss(animated: true, completion: nil)
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
+                    }
                 }
+                
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+                
             }
         }
+        
     }
     
     @objc func cancelButtonTapped(_ sender: UIButton) {

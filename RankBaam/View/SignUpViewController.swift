@@ -75,23 +75,31 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             self.identificationTextField.becomeFirstResponder()
         } ) else {return}
         
-        AlamofireManager.request(
-            .SignUp(
-                signForm: SignForm.init(email: emailTextField.text!, identification: identificationTextField.text!)
-               
-            ))
-            .responseRankBaam { (error, _, result: SResult?, date) in
+        UserService.singin(signForm: SignForm(email: emailTextField.text!, identification: identificationTextField.text!)) {
             
-            if let result = result {
-                if result.succ {
+            switch($0.result) {
+                
+            case .success(let sResult):
+                if sResult.succ {
                     UIAlertController.alert(target: self, msg: "성공적으로 가입요청되었습니다.\n입력하신 이메일로 인증메일이 전송되었습니다.\n인증 후 로그인 해주세요.") { _ in
                         self.dismiss(animated: true, completion: nil)
                     }
-                } else if let msg = result.msg {
-                    if msg == "AlreadyJoinEmail" {
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    case "AlreadyJoinEmail":
                         UIAlertController.alert(target: self, msg: "이미 가입된 이메일입니다.", actionClosure: nil)
+                    default:
+                        break
                     }
                 }
+                
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+                
             }
         }
     }
@@ -101,7 +109,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         if let index = email.index(of: "@") {
             let emailDomain = String(email[ email.index(index, offsetBy: 1)... ])
             //let emailDomain = email.components(separatedBy: "@")[1]
-            return EMAIL_DOMAINS.contains(emailDomain)
+            return UserService.EMAIL_DOMAINS.contains(emailDomain)
         }
         return false
     }

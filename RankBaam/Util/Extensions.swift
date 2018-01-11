@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 extension String {
     func isMatch(regex: String) -> Bool {
@@ -65,3 +66,131 @@ extension Dictionary where Key == String, Value == Any {
         }
     }
 }
+
+extension DataResponse {
+    func create<T>(_ result: Result<T>) -> DataResponse<T> {
+        return DataResponse<T>(
+            request: self.request,
+            response: self.response,
+            data: self.data,
+            result: result,
+            timeline: self.timeline
+        )
+    }
+}
+
+extension DataRequest {
+    
+    func debug<T: Decodable>(response: DataResponse<Data>, type: T.Type){
+        
+        #if DEBUG
+            
+            var log: String = "\n===== \((response.request?.url?.absoluteString)!) =====\n\n"
+            
+            if let error = response.error {
+                log += "[ERROR]\n\(error.localizedDescription)\n\n"
+            } else {
+                
+                if  let headerFields = response.response?.allHeaderFields as? [String: String],
+                    let url = response.request?.url {
+                    
+                    if let dateString = headerFields["Date"] {
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss z"
+                        if let date = dateFormatter.date(from: dateString) {
+                            log += "[DATE]\n\(date)\n\n"
+                        }
+                    }
+                    
+                    if headerFields.count > 0 {
+                        log += "[HEADERS]\n"
+                        for (key, value) in headerFields {
+                            log += "\(key) : \(value)\n"
+                        }
+                        log += "\n"
+                    }
+                    
+                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
+                    if cookies.count > 0 {
+                        log += "[COOKIES]\n"
+                        for cookie in cookies {
+                            log += "\(cookie.name) : \(cookie.value) \n"
+                        }
+                        log += "\n"
+                    }
+                }
+                
+                log += "[RESPONSE DATA]\n"
+                if let data = response.data{
+                    
+                    do{
+                        let _ = try JSONDecoder().decode(type, from: data)
+                        
+                        if let str = String(data: data, encoding: .utf8) {
+                            log += "\(str)\n\n"
+                        } else {
+                            log += "to String fail\n\n"
+                        }
+                    } catch let error {
+                        log += "decode fail\n"
+                        log += "\(error.localizedDescription)\n\n"
+                    }
+                    
+                } else {
+                    log += "nil\n\n"
+                }
+            }
+            
+            log += "=================================================\n\n"
+            print(log)
+            
+        #endif
+    }
+    
+    func responseRankBaam<T: Decodable>(
+        _ completionHandler: @escaping (DataResponse<T>)->Void ){
+        
+        responseData { response in
+            
+            self.debug(response: response, type: T.self)
+            
+            if let error = response.error {
+                
+                completionHandler(response.create(.failure(error)))
+    
+            } else {
+                
+                guard let data = response.data else {
+                    completionHandler(response.create(.failure(DataEmptyError())))
+                    return
+                }
+                
+                guard let decodedData = try? JSONDecoder().decode(T.self, from: data) else {
+                    completionHandler(response.create(.failure(MappingError(from: data, to: T.self))))
+                    return
+                }
+                
+                completionHandler(response.create(.success(decodedData)))
+                
+            }
+        }
+    }
+}
+
+
+
+/*var errorClosure: ((UIViewController)->Void)? = nil
+ if let error = error as? URLError {
+ switch error.code {
+ case URLError.timedOut:
+ //와이파이 또는 통신사인터넷 등 인터넷이 아에 안됨
+ //서버다운
+ break
+ case URLError.cannotFindHost:
+ //와이파이 연결했지만 와이파이가 인터넷이 안되는 와이파이
+ break
+ default:
+ break
+ }
+ errorHandler(error, errorClosure)
+ }*/

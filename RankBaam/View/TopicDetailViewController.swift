@@ -25,13 +25,29 @@ class TopicDetailViewController: UIViewController {
         optionTableView.register(UINib.init(nibName: "TopicOptionCell", bundle: nil), forCellReuseIdentifier: NamesWithTableView.TOPICDETAILCELL)
         optionTableView.register(UINib.init(nibName: "TopicDetailHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: NamesWithTableView.TOPICDETAILHEADER)
         
-        
-        
-        AlamofireManager.request(
-            .OptionList(topicSN: self.topicSN, pagingParam: PagingParam(page: 1)))
-            .responseRankBaam { (error, errorClosure, result: SResultOptionList?, date) in
+        OptionService.optionList(topicSN: self.topicSN, pagingParam: PagingParam(page: 1)) {
+                
+            switch($0.result) {
+                
+            case .success(let sResult):
+                if sResult.succ {
+                    //TODO
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+                
+            }
             
-                print("에러 : \(String(describing: error?.localizedDescription)), 결과 : \(String(describing: result))")
         }
         
     }
@@ -40,15 +56,29 @@ class TopicDetailViewController: UIViewController {
         let alert = UIAlertController.init(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction.init(title: "확인", style: .default) { _ in
-            AlamofireManager.request(
-                .TopicDelete(topicSN: self.topicSN))
-                .responseRankBaam { (error, errorClosure, result: SResult?, date) in
-                if let result = result {
-                    if result.succ {
+            TopicService.topicDelete(topicSN: self.topicSN)  {
+                
+                switch($0.result) {
+                    
+                case .success(let sResult):
+                    if sResult.succ {
                         UIAlertController.alert(target: self, msg: "삭제되었습니다.") { _ in
                             self.navigationController?.popViewController(animated: true)
                         }
+                    } else if let msg = sResult.msg {
+                        switch msg {
+                        default:
+                            break
+                        }
                     }
+                    
+                case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                        error.handle(self)
+                    } else {
+                        
+                    }
+                    
                 }
             }
         })
@@ -73,24 +103,35 @@ extension TopicDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let topicDetailHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: NamesWithTableView.TOPICDETAILHEADER) as! TopicDetailHeader
         
-        AlamofireManager.request(
-            .TopicRead(topicSN: self.topicSN))
-            .responseRankBaam { (error, errorClosure, result: SResultTopicDetail?, date) in
+        TopicService.topicRead(topicSN: self.topicSN) {
+            
+            switch($0.result) {
                 
-                print("에러 : \(String(describing: error?.localizedDescription)), 결과 : \(String(describing: result))")
-                if let result = result {
-                    if result.succ {
-                        guard let topic = result.topic else {return}
-                        print("### 토픽 디테일 부분 ### : \(String(describing: topic.topicSN))")
-                        DispatchQueue.main.async {
-                            topicDetailHeader.titleLabel.text = topic.title
-                            topicDetailHeader.descriptionLabel.text = topic.description ?? ""
-                            topicDetailHeader.likeCountButton.titleLabel?.text = "\(topic.likeCount ?? 0)"
-                        }
+            case .success(let sResult):
+                if sResult.succ {
+                    guard let topic = sResult.topic else {return}
+                    DispatchQueue.main.async {
+                        topicDetailHeader.titleLabel.text = topic.title
+                        topicDetailHeader.descriptionLabel.text = topic.description ?? ""
+                        topicDetailHeader.likeCountButton.titleLabel?.text = "\(topic.likeCount ?? 0)"
+                    }
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
                     }
                 }
                 
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+                
+            }
         }
+        
         topicDetailHeader.delegate = self
         
         return topicDetailHeader
@@ -119,12 +160,28 @@ protocol TopicDetailHeaderDelegate{
 
 extension TopicDetailViewController: TopicDetailHeaderDelegate {
     func likeButtonTapped() {
-        AlamofireManager.request(
-            .TopicLike(topicSN: topicSN, isLike: true))
-            .responseRankBaam { (error, errorClosure, result: SResult?, date) in
+        TopicService.topicLike(topicSN: topicSN, isLike: true) {
+            
+            switch($0.result) {
                 
-                print("에러 : \(String(describing: error?.localizedDescription)), 결과 : \(String(describing: result))")
+            case .success(let sResult):
+                if sResult.succ {
+                    //TODO
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
                 
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+                
+            }
         }
     }
 }
