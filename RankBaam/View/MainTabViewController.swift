@@ -12,7 +12,21 @@ class MainTabViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        configureTabBar()
+    }
+    
+    //*****************************************************
+    //   MARK: - 1. 탭바 ViewController Configure
+    //*****************************************************
+    
+    fileprivate func configureTabBar() {
+        
+       /* let tabHomeVC = UINavigationController()
+        let tabTableVC = TabHomeViewController()
+        tabHomeVC.addChildViewController(tabTableVC)
+        tabHomeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(named: "ic_comment"), tag: 1)
+        addChildViewController(tabHomeVC)*/
+        
         let tabHomeVC = TabHomeViewController()
         tabHomeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(named: "ic_comment"), tag: 1)
         addChildViewController(tabHomeVC)
@@ -28,6 +42,7 @@ class MainTabViewController: UITabBarController {
         let tabMyVC = TabMyViewController()
         tabMyVC.tabBarItem = UITabBarItem(title: "내 글 관리", image: UIImage(named: "ic_comment"), tag: 4)
         addChildViewController(tabMyVC)
+        
     }
 
 }
