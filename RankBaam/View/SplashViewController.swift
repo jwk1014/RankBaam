@@ -12,6 +12,7 @@ class SplashViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+       
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             //if let signForm = SignManager.keychain {
@@ -70,7 +71,8 @@ class SplashViewController: UIViewController {
                 self.present(naviVC, animated: true, completion: nil)
             }*/
         }
-        
+ 
     }
 
 }
+

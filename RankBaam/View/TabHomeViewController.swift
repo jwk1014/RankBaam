@@ -17,6 +17,8 @@ class TabHomeViewController: UIViewController {
         configureNaviLargeTitle()
         mainTableView.register(UITableViewCell.self, forCellReuseIdentifier: "mainCell")
         mainTableView.register(UINib.init(nibName: "MainHotRankCell", bundle: nil), forCellReuseIdentifier: "MainHotRankCell")
+        mainTableView.register(UINib.init(nibName: "MainArrangedRankHeader", bundle: nil), forCellReuseIdentifier: "MainArrangedRankHeader")
+        mainTableView.register(UINib.init(nibName: "MainRankCell", bundle: nil), forCellReuseIdentifier: "MainRankCell")
 //        mainTableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "header")
     }
     fileprivate func configureNaviLargeTitle() {
@@ -43,8 +45,8 @@ extension TabHomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
             
         } else {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "mainCell", for: indexPath)
-        cell.backgroundColor = UIColor.black
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MainRankCell", for: indexPath)
+       
         return cell
         }
     }
@@ -52,7 +54,7 @@ extension TabHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             return 220
         } else {
-            return 100
+            return 80
         }
     }
     
@@ -76,13 +78,14 @@ extension TabHomeViewController: UITableViewDelegate, UITableViewDataSource {
 //            header?.backgroundColor = UIColor.brown
 //            return header
 //        }
-        return nil
+       let header = tableView.dequeueReusableCell(withIdentifier: "MainArrangedRankHeader")
+        return header
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 0
         } else {
-            return 100
+            return 50
         }
     }
 }

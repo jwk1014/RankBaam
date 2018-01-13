@@ -11,6 +11,10 @@
 		6C08759A2009349A00366889 /* MainHotRankCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */; };
 		6C08759D200935CA00366889 /* MainHotRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C08759B200935CA00366889 /* MainHotRankCell.swift */; };
 		6C08759E200935CA00366889 /* MainHotRankCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C08759C200935CA00366889 /* MainHotRankCell.xib */; };
+		6C0875A32009D25900366889 /* MainArrangedRankHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */; };
+		6C0875A42009D25900366889 /* MainArrangedRankHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */; };
+		6CFD54342009D49000289BDB /* MainRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD54322009D49000289BDB /* MainRankCell.swift */; };
+		6CFD54352009D49000289BDB /* MainRankCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD54332009D49000289BDB /* MainRankCell.xib */; };
 		A7C26317E03F2E7F886C1C73 /* Pods_RankBaam.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E27FF7FBFF9ACBE9802F4D /* Pods_RankBaam.framework */; };
 		E359977A1FF608540064BBC1 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997781FF608540064BBC1 /* SplashViewController.swift */; };
 		E359977B1FF608540064BBC1 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997791FF608540064BBC1 /* SplashViewController.xib */; };
@@ -71,6 +75,10 @@
 		6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHotRankCollectionCell.xib; sourceTree = "<group>"; };
 		6C08759B200935CA00366889 /* MainHotRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHotRankCell.swift; sourceTree = "<group>"; };
 		6C08759C200935CA00366889 /* MainHotRankCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHotRankCell.xib; sourceTree = "<group>"; };
+		6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainArrangedRankHeader.swift; sourceTree = "<group>"; };
+		6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainArrangedRankHeader.xib; sourceTree = "<group>"; };
+		6CFD54322009D49000289BDB /* MainRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankCell.swift; sourceTree = "<group>"; };
+		6CFD54332009D49000289BDB /* MainRankCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainRankCell.xib; sourceTree = "<group>"; };
 		73184CBA083F250A6B91BA1B /* Pods-RankBaam.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RankBaam.release.xcconfig"; path = "Pods/Target Support Files/Pods-RankBaam/Pods-RankBaam.release.xcconfig"; sourceTree = "<group>"; };
 		76E27FF7FBFF9ACBE9802F4D /* Pods_RankBaam.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RankBaam.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E35997781FF608540064BBC1 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
@@ -263,6 +271,10 @@
 				6C0875972009349A00366889 /* MainHotRankCollectionCell.swift */,
 				6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */,
 				6C08759B200935CA00366889 /* MainHotRankCell.swift */,
+				6CFD54322009D49000289BDB /* MainRankCell.swift */,
+				6CFD54332009D49000289BDB /* MainRankCell.xib */,
+				6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */,
+				6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */,
 				6C08759C200935CA00366889 /* MainHotRankCell.xib */,
 			);
 			path = View;
@@ -383,8 +395,10 @@
 				E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */,
 				E3CF6FDB2006080000DE3D41 /* TabHomeViewController.xib in Resources */,
 				E3CF6FD72006073400DE3D41 /* MainTabViewController.xib in Resources */,
+				6CFD54352009D49000289BDB /* MainRankCell.xib in Resources */,
 				6C08759A2009349A00366889 /* MainHotRankCollectionCell.xib in Resources */,
 				E3CC21022001053A006DE641 /* RBMainRankingHeader.xib in Resources */,
+				6C0875A42009D25900366889 /* MainArrangedRankHeader.xib in Resources */,
 				E3CC21012001053A006DE641 /* TopicOptionCell.xib in Resources */,
 				E359977B1FF608540064BBC1 /* SplashViewController.xib in Resources */,
 				E3FEB45C1FF614A90074D778 /* TopicListViewController.xib in Resources */,
@@ -468,6 +482,7 @@
 				E3CF6FF020060BC900DE3D41 /* OptionRouter.swift in Sources */,
 				E3CF6FE6200608A600DE3D41 /* TabMyViewController.swift in Sources */,
 				E3DE12BD1FEBAFD000738EE1 /* AppDelegate.swift in Sources */,
+				6C0875A32009D25900366889 /* MainArrangedRankHeader.swift in Sources */,
 				E3CC210820010AF0006DE641 /* NamesWithCollectionView.swift in Sources */,
 				E3CC21042001053B006DE641 /* RBMainRankingCell.swift in Sources */,
 				E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */,
@@ -491,6 +506,7 @@
 				E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */,
 				E3DE12DA1FEBD14B00738EE1 /* Models.swift in Sources */,
 				E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */,
+				6CFD54342009D49000289BDB /* MainRankCell.swift in Sources */,
 				E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */,
 				E3CF6FEE20060BC900DE3D41 /* UserRouter.swift in Sources */,
 				E3CF6FF720060BEA00DE3D41 /* Error.swift in Sources */,
