@@ -2,8 +2,9 @@ import Alamofire
 
 
 enum TopicRouter {
+  case categoryList
   case list(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
-  case weekList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
+  case weekList(page: Int, count: Int?, categorySN: Int?)
   case likeList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case myList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case create(topic: TopicWrite)
@@ -21,9 +22,11 @@ extension TopicRouter: TargetType {
   
   var path: String {
     switch self {
+    case .categoryList:
+      return "/topic/category/list"
     case let .list(page, _, _, _):
       return "/topic/list/\(page)"
-    case let .weekList(page, _, _, _):
+    case let .weekList(page, _, _):
       return "/topic/week/list/\(page)"
     case let .likeList(page, _, _, _):
       return "/topic/like/list/\(page)"
@@ -50,7 +53,8 @@ extension TopicRouter: TargetType {
   var method: HTTPMethod {
     
     switch self {
-    case .list,
+    case .categoryList,
+         .list,
          .weekList,
          .likeList,
          .myList,
@@ -69,13 +73,17 @@ extension TopicRouter: TargetType {
   var parameters: Parameters? {
     switch self {
     case let .list(_, count, categorySN, order),
-         let .weekList(_, count, categorySN, order),
          let .likeList(_, count, categorySN, order),
          let .myList(_, count, categorySN, order):
       return .init(optionalItems: [
         "count": count,
         "categorySN": categorySN,
         "order": order
+      ])
+    case let .weekList(_, count, categorySN):
+      return .init(optionalItems: [
+        "count": count,
+        "categorySN": categorySN
       ])
     case let .create(topic),
          let .update(topic):
@@ -87,7 +95,8 @@ extension TopicRouter: TargetType {
       ])
     case let .like(_, isLike):
       return ["isLike" : isLike]
-    case .read,
+    case .categoryList,
+         .read,
          .unlike,
          .updatePre,
          .delete:

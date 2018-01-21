@@ -17,7 +17,7 @@ struct Photo: Codable {
     var order: Int
     var url: String
     var realUrl: String {
-        return "https://www.devwon.com/rankbaam\(url)"
+        return "http://www.devwon.com/rankbaam/photo\(url)"
     }
 }
 
@@ -46,6 +46,7 @@ struct Topic: Decodable {
     var likeCount: Int
     var voteCount: Int
     var votedOptions: [Int]?
+    var rankOptions: [Option]?
 }
 
 struct OptionWrite: Encodable {

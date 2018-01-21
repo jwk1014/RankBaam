@@ -21,21 +21,15 @@ enum OrderType: Int, Encodable {
   case vote = 3
 }
 
-/*struct PagingParam {
-    var page: Int
-    var count: Int?
-    init(page: Int, count: Int?) {
-        self.page = page
-        self.count = count
-    }
-    init(page: Int) {
-        self.init(page: page, count: nil)
-    }
-}*/
-
 struct SResult: Decodable{
     var succ: Bool
     var msg: String?
+}
+
+struct SResultCategoryList: Decodable {
+  var succ: Bool
+  var msg: String?
+  var categories: [Category]
 }
 
 struct SResultTopicList: Decodable{
@@ -48,29 +42,6 @@ struct SResultTopicDetail: Decodable{
     var succ: Bool
     var msg: String?
     var topic: Topic?
-    
-    /*enum CodingKeys: String, CodingKey {
-        case succ
-        case msg
-        case topic
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let succ = try container.decode(Bool.self, forKey: .succ)
-        self.succ = succ
-        let msg = try? container.decode(String.self, forKey: .msg)
-        if msg == nil {
-            let msgInt = try? container.decode(Int.self, forKey: .msg)
-            self.msgInt = msgInt
-        } else {
-            self.msg = msg
-            
-        }
-        let topic = try? container.decode(Topic.self, forKey: .topic)
-        self.topic = topic
-    }*/
-    
 }
 
 struct SResultTopicCreate: Decodable {
@@ -109,3 +80,41 @@ struct SResultOptionSubCommentList: Decodable {
   var msg: String?
   var optionSubComments: [OptionSubComment]?
 }
+
+/*
+struct PagingParam {
+  var page: Int
+  var count: Int?
+  init(page: Int, count: Int?) {
+    self.page = page
+    self.count = count
+  }
+  init(page: Int) {
+    self.init(page: page, count: nil)
+  }
+}*/
+
+/*
+struct SResultTopicDetail: Decodable{
+  
+  enum CodingKeys: String, CodingKey {
+    case succ
+    case msg
+    case topic
+  }
+   
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let succ = try container.decode(Bool.self, forKey: .succ)
+    self.succ = succ
+    let msg = try? container.decode(String.self, forKey: .msg)
+    if msg == nil {
+      let msgInt = try? container.decode(Int.self, forKey: .msg)
+      self.msgInt = msgInt
+    } else {
+      self.msg = msg
+    }
+    let topic = try? container.decode(Topic.self, forKey: .topic)
+    self.topic = topic
+  }
+}*/

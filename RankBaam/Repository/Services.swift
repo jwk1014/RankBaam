@@ -32,19 +32,26 @@ struct UserService {
 
 struct TopicService {
   
+  static func categoryList(
+    completion: @escaping (DataResponse<SResultCategoryList>) -> Void
+  ) {
+    Alamofire .request(TopicRouter.categoryList)
+              .responseRankBaam(completion)
+  }
+  
   static func list(
     page: Int, count: Int? = nil, categorySN: Int? = nil, order: OrderType,
     completion: @escaping (DataResponse<SResultTopicList>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicList(page: page, count: count, categorySN: categorySN, order: order))
+    Alamofire .request(TopicRouter.list(page: page, count: count, categorySN: categorySN, order: order))
               .responseRankBaam(completion)
   }
   
   static func weekList(
-    page: Int, count: Int? = nil, categorySN: Int? = nil, order: OrderType,
+    page: Int, count: Int? = nil, categorySN: Int? = nil,
     completion: @escaping (DataResponse<SResultTopicList>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicWeekList(page: page, count: count, categorySN: categorySN, order: order))
+    Alamofire .request(TopicRouter.weekList(page: page, count: count, categorySN: categorySN))
               .responseRankBaam(completion)
   }
   
@@ -52,7 +59,7 @@ struct TopicService {
     page: Int, count: Int? = nil, categorySN: Int? = nil, order: OrderType,
     completion: @escaping (DataResponse<SResultTopicList>) -> Void
     ) {
-    Alamofire .request(TopicRouter.topicLikeList(page: page, count: count, categorySN: categorySN, order: order))
+    Alamofire .request(TopicRouter.likeList(page: page, count: count, categorySN: categorySN, order: order))
               .responseRankBaam(completion)
   }
   
@@ -60,7 +67,7 @@ struct TopicService {
     page: Int, count: Int? = nil, categorySN: Int? = nil, order: OrderType,
     completion: @escaping (DataResponse<SResultTopicList>) -> Void
     ) {
-    Alamofire .request(TopicRouter.topicMyList(page: page, count: count, categorySN: categorySN, order: order))
+    Alamofire .request(TopicRouter.myList(page: page, count: count, categorySN: categorySN, order: order))
               .responseRankBaam(completion)
   }
   
@@ -68,7 +75,7 @@ struct TopicService {
     topicSN: Int,
     completion: @escaping (DataResponse<SResultTopicDetail>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicRead(topicSN: topicSN))
+    Alamofire .request(TopicRouter.read(topicSN: topicSN))
               .responseRankBaam(completion)
   }
   
@@ -76,7 +83,7 @@ struct TopicService {
     topicWrite: TopicWrite,
     completion: @escaping (DataResponse<SResultTopicCreate>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicCreate(topic: topicWrite))
+    Alamofire .request(TopicRouter.create(topic: topicWrite))
               .responseRankBaam(completion)
   }
   
@@ -84,7 +91,7 @@ struct TopicService {
     topicSN: Int, isLike: Bool,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicLike(topicSN: topicSN, isLike: isLike))
+    Alamofire .request(TopicRouter.like(topicSN: topicSN, isLike: isLike))
               .responseRankBaam(completion)
   }
   
@@ -93,7 +100,7 @@ struct TopicService {
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
     
-    Alamofire .request(TopicRouter.topicUnlike(topicSN: topicSN))
+    Alamofire .request(TopicRouter.unlike(topicSN: topicSN))
               .responseRankBaam(completion)
   }
   
@@ -102,7 +109,7 @@ struct TopicService {
     topicSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicUpdatePre(topicSN: topicSN))
+    Alamofire .request(TopicRouter.updatePre(topicSN: topicSN))
       .responseRankBaam(completion)
   }
   
@@ -110,7 +117,7 @@ struct TopicService {
     topicWrite: TopicWrite,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicUpdate(topic: topicWrite))
+    Alamofire .request(TopicRouter.update(topic: topicWrite))
               .responseRankBaam(completion)
   }
   
@@ -118,7 +125,7 @@ struct TopicService {
     topicSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(TopicRouter.topicDelete(topicSN: topicSN))
+    Alamofire .request(TopicRouter.delete(topicSN: topicSN))
               .responseRankBaam(completion)
   }
 }
@@ -129,7 +136,7 @@ struct OptionService {
     topicSN: Int, page: Int, count: Int? = nil,
     completion: @escaping (DataResponse<SResultOptionList>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionList(topicSN: topicSN, page: page, count: count))
+    Alamofire .request(OptionRouter.list(topicSN: topicSN, page: page, count: count))
               .responseRankBaam(completion)
   }
   
@@ -137,7 +144,7 @@ struct OptionService {
     topicSN: Int, optionSN: Int,
     completion: @escaping (DataResponse<SResultOptionDetail>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionRead(topicSN: topicSN, optionSN: optionSN))
+    Alamofire .request(OptionRouter.read(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
   }
   
@@ -145,7 +152,7 @@ struct OptionService {
     optionWrite: OptionWrite,
     completion: @escaping (DataResponse<SResultOptionCreate>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionCreate(option: optionWrite))
+    Alamofire .request(OptionRouter.create(option: optionWrite))
               .responseRankBaam(completion)
   }
   
@@ -154,7 +161,7 @@ struct OptionService {
     topicSN: Int, optionSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionUpdatePre(topicSN: topicSN, optionSN: optionSN))
+    Alamofire .request(OptionRouter.updatePre(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
   }
   
@@ -162,7 +169,7 @@ struct OptionService {
     optionWrite: OptionWrite,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionUpdate(option: optionWrite))
+    Alamofire .request(OptionRouter.update(option: optionWrite))
               .responseRankBaam(completion)
   }
   
@@ -170,7 +177,7 @@ struct OptionService {
     topicSN: Int, optionSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionRouter.optionDelete(topicSN: topicSN, optionSN: optionSN))
+    Alamofire .request(OptionRouter.delete(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
   }
   
@@ -182,7 +189,7 @@ struct OptionCommentService {
     topicSN: Int, optionSN: Int, page: Int, count: Int? = nil,
     completion: @escaping (DataResponse<SResultOptionCommentList>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionCommentList(topicSN: topicSN, optionSN: optionSN, page: page, count: count))
+    Alamofire .request(OptionCommentRouter.list(topicSN: topicSN, optionSN: optionSN, page: page, count: count))
               .responseRankBaam(completion)
   }
   
@@ -190,7 +197,7 @@ struct OptionCommentService {
     optionCommentSN: String, page: Int, count: Int? = nil,
     completion: @escaping (DataResponse<SResultOptionSubCommentList>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionSubCommentList(pOptionCommentSN: optionCommentSN, page: page, count: count))
+    Alamofire .request(OptionCommentRouter.subList(pOptionCommentSN: optionCommentSN, page: page, count: count))
               .responseRankBaam(completion)
   }
   
@@ -198,7 +205,7 @@ struct OptionCommentService {
     topicSN: Int, optionSN: Int, supportType: SupportType, description: String,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionCommentCreate(topicSN: topicSN, optionSN: optionSN, supportType: supportType, description: description))
+    Alamofire .request(OptionCommentRouter.create(topicSN: topicSN, optionSN: optionSN, supportType: supportType, description: description))
               .responseRankBaam(completion)
   }
   
@@ -206,7 +213,7 @@ struct OptionCommentService {
     optionCommentSN: String, description: String,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionSubCommentCreate(optionCommentSN: optionCommentSN, description: description))
+    Alamofire .request(OptionCommentRouter.subCreate(optionCommentSN: optionCommentSN, description: description))
               .responseRankBaam(completion)
   }
   
@@ -214,7 +221,7 @@ struct OptionCommentService {
     optionCommentSN: String, supportType: SupportType? = nil, description: String,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionCommentUpdate(optionCommentSN: optionCommentSN, supportType: supportType, description: description))
+    Alamofire .request(OptionCommentRouter.update(optionCommentSN: optionCommentSN, supportType: supportType, description: description))
               .responseRankBaam(completion)
   }
   
@@ -222,7 +229,7 @@ struct OptionCommentService {
     optionCommentSN: String,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) {
-    Alamofire .request(OptionCommentRouter.optionCommentDelete(optionCommentSN: optionCommentSN))
+    Alamofire .request(OptionCommentRouter.delete(optionCommentSN: optionCommentSN))
               .responseRankBaam(completion)
   }
   
