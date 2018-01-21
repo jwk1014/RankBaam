@@ -74,8 +74,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         guard ( checkField(identificationTextField) { _ in
             self.identificationTextField.becomeFirstResponder()
         } ) else {return}
-        
-        UserService.singin(signForm: SignForm(email: emailTextField.text!, identification: identificationTextField.text!)) {
+      
+        UserService.singin(signData: SignData(email: emailTextField.text!, identification: identificationTextField.text!)) {
             
             switch($0.result) {
                 

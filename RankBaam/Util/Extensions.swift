@@ -60,7 +60,7 @@ extension UIColor {
 
 extension Dictionary where Key == String, Value == Any {
     init(optionalItems: Dictionary<Key,Any?>) {
-        self.init()
+        self.init(minimumCapacity: optionalItems.capacity)
         for (key, value) in optionalItems where value != nil{
             self[key] = value!
         }
@@ -123,18 +123,40 @@ extension DataRequest {
                 log += "[RESPONSE DATA]\n"
                 if let data = response.data{
                     
+                    if let str = String(data: data, encoding: .utf8) {
+                        log += "\(str)\n\n"
+                    } else {
+                        log += "to String fail\n\n"
+                    }
+                    
                     do{
                         let _ = try JSONDecoder().decode(type, from: data)
-                        
-                        if let str = String(data: data, encoding: .utf8) {
-                            log += "\(str)\n\n"
-                        } else {
-                            log += "to String fail\n\n"
-                        }
-                    } catch let error {
+                    } catch let error as DecodingError {
                         log += "decode fail\n"
-                        log += "\(error.localizedDescription)\n\n"
-                    }
+                        switch error {
+                        case .dataCorrupted(let context):
+                            print("dataCorrupted")
+                            print(context.debugDescription)
+                        case .keyNotFound(let type, let context):
+                            print("keyNotFound (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        case .typeMismatch(let type, let context):
+                            print("typeMismatch (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        case .valueNotFound(let type, let context):
+                            print("valueNotFound (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        }
+                    } catch _ { }
                     
                 } else {
                     log += "nil\n\n"
@@ -177,9 +199,8 @@ extension DataRequest {
     }
 }
 
-
-
-/*var errorClosure: ((UIViewController)->Void)? = nil
+/*
+ var errorClosure: ((UIViewController)->Void)? = nil
  if let error = error as? URLError {
  switch error.code {
  case URLError.timedOut:

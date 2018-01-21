@@ -8,61 +8,65 @@
 
 import Foundation
 
-struct Topic: Codable{
-    var topicSN: Int?
-    var writerSN: Int?
-    var user: User?
-    var isMine: Bool?
-    var title: String
-    var photos: [String]
-    var description: String?
-    var createDate: String?
-    var updateDate: String?
-    var likeCount: Int?
-    var isOnlyWriterCreateOption: Bool
-    var votableCountPerUser: Int
-    
-    init(topicSN: Int? = nil, user: User? = nil, title: String, photos: [String] = [], description: String? = nil, createDate: String? = nil, updateDate: String? = nil, likeCount: Int? = nil, isOnlyWriterCreateOption: Bool, votableCountPerUser: Int) {
-        self.topicSN = topicSN
-        self.user = user
-        self.title = title
-        self.photos = photos
-        self.description = description
-        self.createDate = createDate
-        self.updateDate = updateDate
-        self.likeCount = likeCount
-        self.isOnlyWriterCreateOption = isOnlyWriterCreateOption
-        self.votableCountPerUser = votableCountPerUser
+struct Category: Codable {
+    var categorySN: Int
+    var name: String
+}
+
+struct Photo: Codable {
+    var order: Int
+    var url: String
+    var realUrl: String {
+        return "https://www.devwon.com/rankbaam\(url)"
     }
 }
 
-struct Option: Codable{
+struct TopicWrite: Encodable {
+    var topicSN: Int?
+    var category: Category
+    var title: String
+    var description: String
+    var isOnlyWriterCreateOption: Bool?
+    var votableCountPerUser: Int?
+}
+
+struct Topic: Decodable {
+    var topicSN: Int
+    var category: Category
+    var writer: User
+    var title: String
+    var description: String
+    var isOnlyWriterCreateOption: Bool
+    var votableCountPerUser: Int
+    var photos: [Photo]
+    var createDate: String
+    var updateDate: String?
+    var isMine: Bool
+    var isLike: Bool
+    var likeCount: Int
+    var voteCount: Int
+    var votedOptions: [Int]?
+}
+
+struct OptionWrite: Encodable {
     var topicSN: Int
     var optionSN: Int?
-    var writerSN: Int?
-    var user: User?
     var title: String
-    var photos: [String]
     var description: String?
-    var createDate: String?
+}
+
+struct Option: Decodable {
+    var topicSN: Int
+    var optionSN: Int
+    var writer: User
+    var title: String
+    var description: String?
+    var photos: [Photo]
+    var createDate: String
     var updateDate: String?
-    var voteCount: Int?
-    var supportPositiveCount: Int?
-    var supportNegativeCount: Int?
-    
-    init(topicSN: Int, optionSN: Int? = nil, user: User? = nil, title: String, photos: [String] = [], description: String? = nil, createDate: String? = nil, updateDate: String? = nil, voteCount: Int? = nil, supportPositiveCount: Int? = nil, supportNegativeCount: Int? = nil){
-        self.topicSN = topicSN
-        self.optionSN = optionSN
-        self.user = user
-        self.title = title
-        self.photos = photos
-        self.description = description
-        self.createDate = createDate
-        self.updateDate = updateDate
-        self.voteCount = voteCount
-        self.supportPositiveCount = supportPositiveCount
-        self.supportNegativeCount = supportNegativeCount
-    }
+    var voteCount: Int
+    var supportPositiveCount: Int
+    var supportNegativeCount: Int
 }
 
 enum SupportType: Int, Codable {
@@ -70,16 +74,24 @@ enum SupportType: Int, Codable {
     case negative = 2
 }
 
-struct OptionCommentSupport: Codable {
-    var optionCommentSupportSN: String
+struct OptionComment: Decodable {
+    var optionCommentSN: String
     var topicSN: Int
     var optionSN: Int
     var writer: User
+    var description: String
     var supportType: SupportType // 1 = positive 2 = negative
-    var comment: String
-    var createDate: Date
-    var updateDate: Date
-    // likeCount
+    var createDate: String
+    var updateDate: String?
+}
+
+struct OptionSubComment: Decodable {
+  var optionCommentSN: String
+  var pOptionCommentSN: String
+  var writer: User
+  var description: String
+  var createDate: String
+  var updateDate: String?
 }
 
 struct User: Codable{

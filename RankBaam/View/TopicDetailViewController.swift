@@ -25,7 +25,7 @@ class TopicDetailViewController: UIViewController {
         optionTableView.register(UINib.init(nibName: "TopicOptionCell", bundle: nil), forCellReuseIdentifier: NamesWithTableView.TOPICDETAILCELL)
         optionTableView.register(UINib.init(nibName: "TopicDetailHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: NamesWithTableView.TOPICDETAILHEADER)
         
-        OptionService.optionList(topicSN: self.topicSN, pagingParam: PagingParam(page: 1)) {
+        OptionService.list(topicSN: self.topicSN, page: 1) {
                 
             switch($0.result) {
                 
@@ -56,7 +56,7 @@ class TopicDetailViewController: UIViewController {
         let alert = UIAlertController.init(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction.init(title: "확인", style: .default) { _ in
-            TopicService.topicDelete(topicSN: self.topicSN)  {
+            TopicService.delete(topicSN: self.topicSN)  {
                 
                 switch($0.result) {
                     
@@ -103,7 +103,7 @@ extension TopicDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let topicDetailHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: NamesWithTableView.TOPICDETAILHEADER) as! TopicDetailHeader
         
-        TopicService.topicRead(topicSN: self.topicSN) {
+        TopicService.read(topicSN: self.topicSN) {
             
             switch($0.result) {
                 
@@ -160,7 +160,7 @@ protocol TopicDetailHeaderDelegate{
 
 extension TopicDetailViewController: TopicDetailHeaderDelegate {
     func likeButtonTapped() {
-        TopicService.topicLike(topicSN: topicSN, isLike: true) {
+        TopicService.like(topicSN: topicSN, isLike: true) {
             
             switch($0.result) {
                 

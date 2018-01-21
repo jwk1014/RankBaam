@@ -34,7 +34,9 @@ class TopicCreateViewController: UIViewController {
         // TODO: Optional 처리
         guard let detailDescription = topicDetailTextView.text else { return }
         
-        TopicService.topicCreate(topic: Topic(
+        TopicService.create(topicWrite: TopicWrite(
+            topicSN: nil,
+            category: Category(categorySN: 12, name: ""),
             title: titleTextField.text!,
             description: detailDescription,
             isOnlyWriterCreateOption: isOptionCanReviseSwitch.isOn,

@@ -15,8 +15,8 @@ class SplashViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             //if let signForm = SignManager.keychain {
-            let signformTemp = SignForm(email: "fgfg4514@naver.com", identification: "test1234")
-            UserService.singin(signForm: signformTemp) {
+            let signDataTemp = SignData(email: "fgfg4514@naver.com", identification: "test1234")
+            UserService.singin(signData: signDataTemp) {
                 
                         switch($0.result) {
                             
