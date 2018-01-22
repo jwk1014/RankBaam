@@ -65,6 +65,7 @@ struct Option: Decodable {
     var photos: [Photo]
     var createDate: String
     var updateDate: String?
+    var isMine: Bool
     var voteCount: Int
     var supportPositiveCount: Int
     var supportNegativeCount: Int
@@ -81,6 +82,7 @@ struct OptionComment: Decodable {
     var optionSN: Int
     var writer: User
     var description: String
+    var isMine: Bool
     var supportType: SupportType // 1 = positive 2 = negative
     var createDate: String
     var updateDate: String?
@@ -91,6 +93,7 @@ struct OptionSubComment: Decodable {
   var pOptionCommentSN: String
   var writer: User
   var description: String
+  var isMine: Bool
   var createDate: String
   var updateDate: String?
 }

@@ -88,6 +88,7 @@ extension TopicRouter: TargetType {
     case let .create(topic),
          let .update(topic):
       return .init(optionalItems: [
+        "category.categorySN": topic.category.categorySN,
         "title": topic.title,
         "description": topic.description,
         "isOnlyWriterCreateOption": topic.isOnlyWriterCreateOption,
