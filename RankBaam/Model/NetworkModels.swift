@@ -8,17 +8,23 @@
 
 import Foundation
 
-enum SignType: Int, Codable {
+enum SignType: Int, Codable, CustomStringConvertible {
   case email = 1
   case facebook = 2
   case google = 3
   case kakao = 4
+  var description: String {
+    return "\(rawValue)"
+  }
 }
 
-enum OrderType: Int, Encodable {
+enum OrderType: Int, Encodable, CustomStringConvertible {
   case new = 1
   case best = 2
   case vote = 3
+  var description: String {
+    return "\(rawValue)"
+  }
 }
 
 struct SResult: Decodable{
