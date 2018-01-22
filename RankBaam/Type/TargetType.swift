@@ -1,12 +1,12 @@
 import Alamofire
 
-protocol TargetType {
+protocol TargetType: URLRequestConvertible {
   
   var baseURL: URL { get }
   var path: String { get }
   var method: HTTPMethod { get }
-  var header: HTTPHeaders { get }
-  var parameters: Parameters { get }
+  var headers: HTTPHeaders? { get }
+  var parameters: Parameters? { get }
 }
 
 extension TargetType {
@@ -15,10 +15,24 @@ extension TargetType {
     return URL(string: "https://www.devwon.com/rankbaam")!
   }
   
-  var header: HTTPHeaders {
-    return ["Content-Type": "application/x-www-form-urlencoded"]
+  var headers: HTTPHeaders? {
+    return nil
+    //return ["Content-Type": "application/x-www-form-urlencoded"]
   }
-  var parameters: Parameters {
-    return [:]
+    
+  var parameters: Parameters? {
+    return nil
+    //return [:]
+  }
+    
+  func asURLRequest() throws -> URLRequest {
+        
+    let originalRequest = try URLRequest(
+        url: self.baseURL.appendingPathComponent(self.path),
+        method: self.method,
+        headers: self.headers)
+    
+    return try URLEncoding.default.encode(originalRequest, with: parameters)
+        
   }
 }

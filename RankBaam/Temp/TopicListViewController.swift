@@ -42,7 +42,7 @@ class TopicListViewController: UIViewController {
     @objc func refreshControlPulled(_ sender: UIRefreshControl) {
         topicDatas.removeAll()
         topicCollectionView.reloadData()
-        TopicService.topicList(page: self.page, count: nil) {
+      TopicService.list(page: self.page, order: .new) {
             
             switch($0.result) {
                 

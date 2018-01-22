@@ -3,16 +3,14 @@ import Alamofire
 
 /// 유저와 관련된 서비스 (로그인, 회원가입 등)을 위한 URLRequest를 만들어주는 라우터
 enum UserRouter {
-  
-  case signin(signForm: SignForm)
-  case signup(signForm: SignForm)
+  case signin(type: SignType, email: String?, identification: String, fcmToken: String?)
+  case signup(email: String, identification: String)
   case getNickname
   case setNickname(nickname: String)
+  case preNickname
 }
 
-
 // MARK: TargetType
-
 extension UserRouter: TargetType {
   
   var path: String {
@@ -23,56 +21,43 @@ extension UserRouter: TargetType {
       return "/sign/up"
     case .getNickname, .setNickname:
       return "/user/me/nickname"
+    case .preNickname:
+      return "/user/me/nickname/pre"
     }
   }
   
   var method: HTTPMethod {
     switch self {
-    case .signin, .signup, .setNickname:
-      return .post
-    case .getNickname:
+    case .getNickname,
+         .preNickname:
       return .get
+    case .signin,
+         .signup,
+         .setNickname:
+      return .post
     }
   }
   
-  var parameters: Parameters {
+  var parameters: Parameters? {
     switch self {
-    case .signin(let form):
-      return .init(optionalItems: ["type": form.type.rawValue,
-                                   "email": form.email,
-                                   "identification": form.identification])
-    case .signup(let form):
-      return .init(optionalItems: ["email": form.email,
-                                   "identification": form.identification])
+    case let .signin(type, email, identification, fcmToken):
+      return .init(optionalItems: [
+        "type": type.rawValue,
+        "email": email,
+        "identification": identification,
+        "fcmToken": fcmToken
+      ])
+    case let .signup(email, identification):
+      return .init(optionalItems: [
+        "email": email,
+        "identification": identification
+      ])
     case let .setNickname(nickname):
       return ["nickname": nickname]
-    case .getNickname:
-      return [:]
+    case .getNickname,
+         .preNickname:
+      return nil
     }
-  }
-}
-
-// MARK: URLRequestConvertible
-
-extension UserRouter: URLRequestConvertible {
-  
-  func asURLRequest() throws -> URLRequest {
-    let url = self.baseURL
-    
-    var urlRequest = try URLRequest(
-      url: url.appendingPathComponent(self.path),
-      method: self.method,
-      headers: self.header
-    )
-    
-    switch self {
-    case .signin ,.signup, .setNickname:
-      urlRequest = try URLEncoding.httpBody.encode(urlRequest, with: self.parameters)
-    case .getNickname:
-      urlRequest = try URLEncoding.default.encode(urlRequest, with: self.parameters)
-    }
-    
-    return urlRequest
   }
 }
 

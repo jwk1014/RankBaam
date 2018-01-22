@@ -40,7 +40,6 @@ extension UIColor {
         
         var argbValue: UInt64 = 0
         
-        
         scanner.scanHexInt64(&argbValue)
         
         let hexCount = scanner.string.count - scanner.scanLocation
@@ -61,7 +60,7 @@ extension UIColor {
 
 extension Dictionary where Key == String, Value == Any {
     init(optionalItems: Dictionary<Key,Any?>) {
-        self.init()
+        self.init(minimumCapacity: optionalItems.capacity)
         for (key, value) in optionalItems where value != nil{
             self[key] = value!
         }
@@ -80,11 +79,7 @@ extension DataResponse {
     }
 }
 
-
-
 extension DataRequest {
-    
-    
     
     func debug<T: Decodable>(response: DataResponse<Data>, type: T.Type){
         
@@ -133,13 +128,35 @@ extension DataRequest {
                     } else {
                         log += "to String fail\n\n"
                     }
-
+                    
                     do{
                         let _ = try JSONDecoder().decode(type, from: data)
-                    } catch let error {
+                    } catch let error as DecodingError {
                         log += "decode fail\n"
-                        log += "\(error)\n\n"
-                    }
+                        switch error {
+                        case .dataCorrupted(let context):
+                            print("dataCorrupted")
+                            print(context.debugDescription)
+                        case .keyNotFound(let type, let context):
+                            print("keyNotFound (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        case .typeMismatch(let type, let context):
+                            print("typeMismatch (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        case .valueNotFound(let type, let context):
+                            print("valueNotFound (type: \(type)")
+                            print(context.codingPath.enumerated()
+                                .filter({$0.offset % 2 == 0})
+                                .reduce(""){$0+$1.element.stringValue+" "})
+                            print(context.debugDescription)
+                        }
+                    } catch _ { }
                     
                 } else {
                     log += "nil\n\n"
@@ -156,7 +173,6 @@ extension DataRequest {
         _ completionHandler: @escaping (DataResponse<T>)->Void ){
         
         responseData { response in
-            print(response.data)
             
             self.debug(response: response, type: T.self)
             
@@ -183,9 +199,8 @@ extension DataRequest {
     }
 }
 
-
-
-/*var errorClosure: ((UIViewController)->Void)? = nil
+/*
+ var errorClosure: ((UIViewController)->Void)? = nil
  if let error = error as? URLError {
  switch error.code {
  case URLError.timedOut:

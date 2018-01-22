@@ -12,9 +12,11 @@ class SplashViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-       
-            UserService.singin(signForm: SignForm) {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            //if let signData = SignManager.keychain {
+            let signDataTemp = SignData(email: "fgfg4514@naver.com", identification: "test1234")
+            UserService.singin(signData: signDataTemp) {
                 
                         switch($0.result) {
                             

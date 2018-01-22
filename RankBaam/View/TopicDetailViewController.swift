@@ -21,7 +21,7 @@ class TopicDetailViewController: UIViewController {
         rankOpitonCollectionConfigure()
         rankMainBackButtonConfigure()
         navigationController?.isNavigationBarHidden = true
-        OptionService.optionList(topicSN: 12, pagingParam: PagingParam(page: 1, count: 20)) {
+        OptionService.list(topicSN: 12, page: 1, count: 20) {
                 
             switch $0.result {
                 
@@ -69,14 +69,22 @@ class TopicDetailViewController: UIViewController {
     }
     
     @IBAction func createOptionButtonTapped(_ sender: UIButton) {
-        OptionService.optionCreate(topicSN: self.topicSN, optionParam: VoteOptionType(title: "선택지1 입니다", description: "선택지 설명")) { (response) in
+      
+        //TODO title description
+        OptionService.create(
+            optionWrite: OptionWrite(
+                topicSN: self.topicSN,
+                optionSN: nil,
+                title: "test",
+                description: "test")
+        ) { (response) in
             
             DispatchQueue.main.async {
               
             }
         }
         
-        TopicService.topicRead(topicSN: self.topicSN) {
+        TopicService.read(topicSN: self.topicSN) {
             
             switch($0.result) {
                 
@@ -111,7 +119,7 @@ class TopicDetailViewController: UIViewController {
         let alert = UIAlertController.init(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction.init(title: "확인", style: .default) { _ in
-            TopicService.topicDelete(topicSN: self.topicSN)  {
+            TopicService.delete(topicSN: self.topicSN)  {
                 
                 switch($0.result) {
                     
@@ -181,7 +189,7 @@ protocol TopicDetailHeaderDelegate{
 
 extension TopicDetailViewController: TopicDetailHeaderDelegate {
     func likeButtonTapped() {
-        TopicService.topicLike(topicSN: topicSN, isLike: true) {
+        TopicService.like(topicSN: topicSN, isLike: true) {
             
             switch($0.result) {
                 
