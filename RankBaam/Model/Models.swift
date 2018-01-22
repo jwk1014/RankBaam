@@ -71,9 +71,12 @@ struct Option: Decodable {
     var supportNegativeCount: Int
 }
 
-enum SupportType: Int, Codable {
+enum SupportType: Int, Codable, CustomStringConvertible {
     case positive = 1
     case negative = 2
+    var description: String {
+      return "\(rawValue)"
+    }
 }
 
 struct OptionComment: Decodable {
