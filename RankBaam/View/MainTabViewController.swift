@@ -27,7 +27,7 @@ class MainTabViewController: UITabBarController {
         tabHomeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(named: "ic_comment"), tag: 1)
         addChildViewController(tabHomeVC)*/
         
-        let tabHomeVC = TabHomeViewController()
+        let tabHomeVC = TabHomeViewController2()
         tabHomeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(named: "ic_comment"), tag: 1)
         addChildViewController(tabHomeVC)
         

@@ -40,6 +40,7 @@ extension UIColor {
         
         var argbValue: UInt64 = 0
         
+        
         scanner.scanHexInt64(&argbValue)
         
         let hexCount = scanner.string.count - scanner.scanLocation
@@ -79,7 +80,11 @@ extension DataResponse {
     }
 }
 
+
+
 extension DataRequest {
+    
+    
     
     func debug<T: Decodable>(response: DataResponse<Data>, type: T.Type){
         
@@ -123,17 +128,17 @@ extension DataRequest {
                 log += "[RESPONSE DATA]\n"
                 if let data = response.data{
                     
+                    if let str = String(data: data, encoding: .utf8) {
+                        log += "\(str)\n\n"
+                    } else {
+                        log += "to String fail\n\n"
+                    }
+
                     do{
                         let _ = try JSONDecoder().decode(type, from: data)
-                        
-                        if let str = String(data: data, encoding: .utf8) {
-                            log += "\(str)\n\n"
-                        } else {
-                            log += "to String fail\n\n"
-                        }
                     } catch let error {
                         log += "decode fail\n"
-                        log += "\(error.localizedDescription)\n\n"
+                        log += "\(error)\n\n"
                     }
                     
                 } else {
@@ -151,6 +156,7 @@ extension DataRequest {
         _ completionHandler: @escaping (DataResponse<T>)->Void ){
         
         responseData { response in
+            print(response.data)
             
             self.debug(response: response, type: T.self)
             

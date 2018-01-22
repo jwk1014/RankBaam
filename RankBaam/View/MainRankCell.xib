@@ -118,6 +118,13 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="likeNumberLabel" destination="1ZE-S8-M8o" id="YNi-aG-jwj"/>
+                <outlet property="profileImgView" destination="w9p-Ki-TpM" id="wk2-BF-vIE"/>
+                <outlet property="topicTitleLabel" destination="1BA-ua-6SM" id="vTU-T9-mLU"/>
+                <outlet property="userIDlabel" destination="oVF-xy-lZK" id="qJ3-EF-kHO"/>
+                <outlet property="votedNumberLabel" destination="kyg-Rk-HtT" id="Hnr-0R-Yle"/>
+            </connections>
             <point key="canvasLocation" x="33.5" y="54"/>
         </tableViewCell>
     </objects>

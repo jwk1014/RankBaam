@@ -8,23 +8,24 @@
 
 import Foundation
 
+
 struct Topic: Codable{
     var topicSN: Int?
     var writerSN: Int?
-    var user: User?
     var isMine: Bool?
+    var user: User?
     var title: String
-    var photos: [String]
+    var photos: [Photo]?
     var description: String?
-    var createDate: String?
+    var createDate: String
     var updateDate: String?
-    var likeCount: Int?
+    var likeCount: Int
     var isOnlyWriterCreateOption: Bool
     var votableCountPerUser: Int
     
-    init(topicSN: Int? = nil, user: User? = nil, title: String, photos: [String] = [], description: String? = nil, createDate: String? = nil, updateDate: String? = nil, likeCount: Int? = nil, isOnlyWriterCreateOption: Bool, votableCountPerUser: Int) {
+    init(topicSN: Int = 0, writer: User? = nil, title: String, photos: [Photo] = [], description: String, createDate: String = "", updateDate: String = "", likeCount: Int = 0, isOnlyWriterCreateOption: Bool, votableCountPerUser: Int) {
         self.topicSN = topicSN
-        self.user = user
+        self.user = writer
         self.title = title
         self.photos = photos
         self.description = description
@@ -35,6 +36,13 @@ struct Topic: Codable{
         self.votableCountPerUser = votableCountPerUser
     }
 }
+
+struct Photo: Codable {
+    var order: Int
+    var url: String
+    
+}
+
 
 struct Option: Codable{
     var topicSN: Int

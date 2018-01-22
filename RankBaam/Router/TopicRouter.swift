@@ -9,6 +9,7 @@ enum TopicRouter {
   case topicUnlike(topicSN: Int)
   case topicUpdate(topic: Topic)
   case topicDelete(topicSN: Int)
+    
 }
 
 // MARK: TargetType

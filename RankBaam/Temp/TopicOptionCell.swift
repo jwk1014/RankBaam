@@ -10,9 +10,13 @@ import UIKit
 
 class TopicOptionCell: UITableViewCell {
 
+    @IBOutlet weak var optionTitleLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

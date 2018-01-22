@@ -13,19 +13,16 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            //if let signForm = SignManager.keychain {
-            let signformTemp = SignForm(email: "fgfg4514@naver.com", identification: "test1234")
-            UserService.singin(signForm: signformTemp) {
+       
+            UserService.singin(signForm: SignForm) {
                 
                         switch($0.result) {
                             
                         case .success(let sResult):
                             if sResult.succ {
-                                let vc = MainTabViewController()
+                                let vc = TabHomePageViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
-                                naviVC.title = "RankBaam"
+
                                 self.present(naviVC, animated: true, completion: nil)
                             } else if let msg = sResult.msg {
                                 switch msg {
@@ -72,7 +69,7 @@ class SplashViewController: UIViewController {
             }*/
         }
  
-    }
+    
 
 }
 

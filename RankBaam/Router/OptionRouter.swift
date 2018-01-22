@@ -28,10 +28,10 @@ extension OptionRouter: TargetType {
     }
   }
   
-  var parameters: Parameters {
+  var parameters: Parameters? {
     switch self {
     case .optionList:
-      return ["count" : 20]
+      return nil
     case .optionCreate(_, let voteOption ):
       return .init(optionalItems: [
         "title" : voteOption.title,

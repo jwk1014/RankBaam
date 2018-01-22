@@ -8,9 +8,16 @@
 
 import UIKit
 
-class MainHotRankCell: UITableViewCell {
+protocol MainHotRankCollectionCellDetailDelege {
+    func mainHotRankCollectionCellTapped()
+    
+}
 
+class MainHotRankCell: UITableViewCell {
     @IBOutlet weak var MainHotRankCollectionView: UICollectionView!
+    @IBOutlet weak var pageControll: UIPageControl!
+    var delegate: MainHotRankCollectionCellDetailDelege?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.MainHotRankCollectionView.delegate = self
@@ -51,11 +58,15 @@ extension MainHotRankCell: UICollectionViewDataSource, UICollectionViewDelegateF
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainHotRankCollectionCell", for: indexPath)
         return cell
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.mainHotRankCollectionCellTapped()
+    }
 
 }
 
 extension MainHotRankCell: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+        let page: Int = Int(scrollView.contentOffset.x / self.frame.width)
+        self.pageControll.currentPage = page
     }
 }

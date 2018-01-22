@@ -116,18 +116,17 @@ struct OptionService {
       .responseRankBaam(completion)
   }
   
-  /*static func optionCreate(
+  static func optionCreate(
     topicSN: Int,
     optionParam: VoteOptionType,
-    completion: @escaping (DataResponse<Void>) -> Void
+    completion: @escaping (DataResponse<SResult>) -> Void
   ) {
     
-    // FIXME: Option처리 다시하기
     Alamofire
       .request(OptionRouter.optionCreate(topicSN: topicSN, optionParam: optionParam))
       .responseRankBaam(completion)
-  }*/
-  
+  }
+
 }
 
 

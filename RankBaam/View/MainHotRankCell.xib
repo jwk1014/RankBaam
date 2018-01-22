@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,22 +30,27 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                     </collectionView>
-                    <pageControl opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="5" translatesAutoresizingMaskIntoConstraints="NO" id="50h-gw-xCo">
-                        <rect key="frame" x="132" y="166" width="110" height="37"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <pageControl opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="5" translatesAutoresizingMaskIntoConstraints="NO" id="50h-gw-xCo">
+                        <rect key="frame" x="137" y="166" width="100" height="37"/>
                         <color key="backgroundColor" red="0.78814870120000002" green="0.78828507660000002" blue="0.78814005850000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="vLc-Pi-7eL"/>
+                        </constraints>
                     </pageControl>
                 </subviews>
                 <constraints>
                     <constraint firstItem="iSd-UH-5RC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="5Vx-jx-gcZ"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="50h-gw-xCo" secondAttribute="bottom" constant="6" id="6xj-he-63K"/>
                     <constraint firstAttribute="trailing" secondItem="iSd-UH-5RC" secondAttribute="trailing" id="8sj-4W-E04"/>
                     <constraint firstItem="iSd-UH-5RC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Cre-oM-X9s"/>
                     <constraint firstAttribute="bottom" secondItem="iSd-UH-5RC" secondAttribute="bottom" id="fxz-BI-4Pj"/>
+                    <constraint firstItem="50h-gw-xCo" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="qiC-NL-RHU"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="MainHotRankCollectionView" destination="iSd-UH-5RC" id="y0Z-yS-pNM"/>
+                <outlet property="pageControll" destination="50h-gw-xCo" id="DDE-NY-w1y"/>
             </connections>
             <point key="canvasLocation" x="33.5" y="115"/>
         </tableViewCell>

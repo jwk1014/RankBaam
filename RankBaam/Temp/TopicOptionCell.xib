@@ -17,7 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TopicDetailCell" id="9B2-ag-bra" customClass="TopicOptionCell" customModule="RankBaamProtoType" customModuleProvider="target">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TopicDetailCell" id="9B2-ag-bra" customClass="TopicOptionCell" customModule="RankBaam" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9B2-ag-bra" id="sCL-69-TxT">
@@ -71,6 +71,9 @@
                     <constraint firstAttribute="trailing" secondItem="xLs-FN-o58" secondAttribute="trailing" id="njl-0p-DtL"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="optionTitleLabel" destination="TVi-kJ-L9n" id="Wlw-gL-A6L"/>
+            </connections>
             <point key="canvasLocation" x="14.5" y="84"/>
         </tableViewCell>
     </objects>

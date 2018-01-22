@@ -9,29 +9,85 @@
 import UIKit
 
 class TopicDetailViewController: UIViewController {
+    @IBOutlet weak var rankOptionCollectionView: UICollectionView!
+    @IBOutlet weak var rankMainBackButton: UIImageView!
     var topicSN: Int!
     var topic: Topic?
-    
     var optionDatas: [Option] = []
-    
-    @IBOutlet weak var optionTableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        optionTableView.dataSource = self
-        optionTableView.delegate = self
-        
-        optionTableView.register(UINib.init(nibName: "TopicOptionCell", bundle: nil), forCellReuseIdentifier: NamesWithTableView.TOPICDETAILCELL)
-        optionTableView.register(UINib.init(nibName: "TopicDetailHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: NamesWithTableView.TOPICDETAILHEADER)
-        
-        OptionService.optionList(topicSN: self.topicSN, pagingParam: PagingParam(page: 1)) {
+        rankOpitonCollectionConfigure()
+        rankMainBackButtonConfigure()
+        navigationController?.isNavigationBarHidden = true
+        OptionService.optionList(topicSN: 12, pagingParam: PagingParam(page: 1, count: 20)) {
                 
+            switch $0.result {
+                
+            case .success(let sResult):
+                if sResult.succ {
+                    guard let options = sResult.options else { return }
+                    self.optionDatas = options
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        }
+    }
+    
+    fileprivate func rankMainBackButtonConfigure() {
+        rankMainBackButton.isUserInteractionEnabled = true
+        rankMainBackButton.image?.withRenderingMode(.alwaysTemplate)
+        rankMainBackButton.tintColor = UIColor.rankbaamOrange
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(rankMainBackButtonTapped))
+        rankMainBackButton.addGestureRecognizer(tapGesture)
+        
+    }
+    
+    @objc func rankMainBackButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    fileprivate func rankOpitonCollectionConfigure() {
+        
+        let headerNib = UINib(nibName: "TopicDetailHeaderView", bundle: nil)
+        
+        rankOptionCollectionView.register(headerNib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "TopicDetailHeader")
+        rankOptionCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "tempCell")
+        
+    }
+    
+    @IBAction func createOptionButtonTapped(_ sender: UIButton) {
+        OptionService.optionCreate(topicSN: self.topicSN, optionParam: VoteOptionType(title: "선택지1 입니다", description: "선택지 설명")) { (response) in
+            
+            DispatchQueue.main.async {
+              
+            }
+        }
+        
+        TopicService.topicRead(topicSN: self.topicSN) {
+            
             switch($0.result) {
                 
             case .success(let sResult):
                 if sResult.succ {
-                    //TODO
+                    guard let topic = sResult.topic else {return}
+                    DispatchQueue.main.async {
+//                        topicDetailHeader.titleLabel.text = topic.title
+//                        topicDetailHeader.descriptionLabel.text = topic.description ?? ""
+//                        topicDetailHeader.likeCountButton.titleLabel?.text = "\(topic.likeCount ?? 0)"
+                    }
                 } else if let msg = sResult.msg {
                     switch msg {
                     default:
@@ -47,7 +103,6 @@ class TopicDetailViewController: UIViewController {
                 }
                 
             }
-            
         }
         
     }
@@ -86,72 +141,38 @@ class TopicDetailViewController: UIViewController {
     }
 }
 
-extension TopicDetailViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+extension TopicDetailViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "tempCell", for: indexPath)
+        return optionCell
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return optionDatas.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let topicDetailCell = tableView.dequeueReusableCell(withIdentifier: NamesWithTableView.TOPICDETAILCELL, for: indexPath) as! TopicOptionCell
-        return topicDetailCell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let topicDetailHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: NamesWithTableView.TOPICDETAILHEADER) as! TopicDetailHeader
-        
-        TopicService.topicRead(topicSN: self.topicSN) {
-            
-            switch($0.result) {
-                
-            case .success(let sResult):
-                if sResult.succ {
-                    guard let topic = sResult.topic else {return}
-                    DispatchQueue.main.async {
-                        topicDetailHeader.titleLabel.text = topic.title
-                        topicDetailHeader.descriptionLabel.text = topic.description ?? ""
-                        topicDetailHeader.likeCountButton.titleLabel?.text = "\(topic.likeCount ?? 0)"
-                    }
-                } else if let msg = sResult.msg {
-                    switch msg {
-                    default:
-                        break
-                    }
-                }
-                
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                    
-                }
-                
-            }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            let optionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "TopicDetailHeader", for: indexPath)
+            return optionHeader
+        case UICollectionElementKindSectionFooter:
+            let optionFooter = UICollectionReusableView()
+            return optionFooter
+        default:
+            return UICollectionReusableView()
         }
-        
-        topicDetailHeader.delegate = self
-        
-        return topicDetailHeader
     }
 }
 
-extension TopicDetailViewController: UITableViewDelegate {
+extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: self.view.frame.width, height: 478)
     }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 200
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
-    
 }
 
 protocol TopicDetailHeaderDelegate{
