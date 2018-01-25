@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6C0875992009349A00366889 /* MainHotRankCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0875972009349A00366889 /* MainHotRankCollectionCell.swift */; };
-		6C08759A2009349A00366889 /* MainHotRankCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */; };
-		6C08759D200935CA00366889 /* MainHotRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C08759B200935CA00366889 /* MainHotRankCell.swift */; };
-		6C08759E200935CA00366889 /* MainHotRankCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C08759C200935CA00366889 /* MainHotRankCell.xib */; };
-		6C0875A32009D25900366889 /* MainArrangedRankHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */; };
-		6C0875A42009D25900366889 /* MainArrangedRankHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */; };
 		6C0A98632015ADD700D9D704 /* TopicDetailOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0A98612015ADD700D9D704 /* TopicDetailOptionCell.swift */; };
 		6C0A98642015ADD700D9D704 /* TopicDetailOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0A98622015ADD700D9D704 /* TopicDetailOptionCell.xib */; };
 		6C0A9868201713FB00D9D704 /* TopicDetailImgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0A9866201713FB00D9D704 /* TopicDetailImgCell.swift */; };
@@ -24,21 +18,16 @@
 		6C0A98732017990B00D9D704 /* TopicDetailImagesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0A98712017990B00D9D704 /* TopicDetailImagesViewController.xib */; };
 		6C0A987520186E1800D9D704 /* RankBaamIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0A987420186E1800D9D704 /* RankBaamIndicator.swift */; };
 		6C0A987B2018DFE100D9D704 /* TabHomePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C0A987A2018DFE100D9D704 /* TabHomePageViewController.xib */; };
-		6CFD54342009D49000289BDB /* MainRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD54322009D49000289BDB /* MainRankCell.swift */; };
-		6CFD54352009D49000289BDB /* MainRankCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD54332009D49000289BDB /* MainRankCell.xib */; };
-		6CFD543E2009F11C00289BDB /* MyRankTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD543C2009F11C00289BDB /* MyRankTableHeader.swift */; };
-		6CFD543F2009F11C00289BDB /* MyRankTableHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD543D2009F11C00289BDB /* MyRankTableHeader.xib */; };
 		6CFD5442200A0A3200289BDB /* loadIndicatorFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD5440200A0A3200289BDB /* loadIndicatorFooter.swift */; };
 		6CFD5443200A0A3200289BDB /* loadIndicatorFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD5441200A0A3200289BDB /* loadIndicatorFooter.xib */; };
 		6CFD549020104C9300289BDB /* TabMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD548F20104C9200289BDB /* TabMainViewController.swift */; };
-		6CFD549520104CE400289BDB /* TabHomeViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549320104CE400289BDB /* TabHomeViewController2.swift */; };
-		6CFD549620104CE400289BDB /* TabHomeViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD549420104CE400289BDB /* TabHomeViewController2.xib */; };
+		6CFD549520104CE400289BDB /* TabHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549320104CE400289BDB /* TabHomeViewController.swift */; };
+		6CFD549620104CE400289BDB /* TabHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD549420104CE400289BDB /* TabHomeViewController.xib */; };
 		6CFD549820104FA400289BDB /* ConstantsNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549720104FA400289BDB /* ConstantsNames.swift */; };
 		6CFD549A20104FBD00289BDB /* MainAllRankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549920104FBD00289BDB /* MainAllRankCell.swift */; };
 		6CFD549C20104FE200289BDB /* MainAllRankCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD549B20104FE100289BDB /* MainAllRankCell.xib */; };
 		6CFD549E2010501000289BDB /* MainAllRankTopTabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549D2010501000289BDB /* MainAllRankTopTabbar.swift */; };
 		6CFD54A02010508B00289BDB /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549F2010508B00289BDB /* UIColor+Extension.swift */; };
-		6CFD54A42010532600289BDB /* TabHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD54A32010532500289BDB /* TabHomeViewController.swift */; };
 		6CFD54A7201058C400289BDB /* MainAllRankLoadingFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD54A5201058C400289BDB /* MainAllRankLoadingFooterView.swift */; };
 		6CFD54A8201058C400289BDB /* MainAllRankLoadingFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD54A6201058C400289BDB /* MainAllRankLoadingFooterView.xib */; };
 		6CFD54AD2011D3AB00289BDB /* TopicDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD54AB2011D3AB00289BDB /* TopicDetailHeaderView.swift */; };
@@ -56,21 +45,10 @@
 		E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997801FF6088D0064BBC1 /* SignUpViewController.swift */; };
 		E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997811FF6088D0064BBC1 /* SignUpViewController.xib */; };
 		E3CC20F120010409006DE641 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F020010409006DE641 /* Extensions.swift */; };
-		E3CC20FC2001053A006DE641 /* TopicDetailHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F32001053A006DE641 /* TopicDetailHeader.swift */; };
-		E3CC20FD2001053A006DE641 /* TopicOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F42001053A006DE641 /* TopicOptionCell.swift */; };
-		E3CC20FE2001053A006DE641 /* TopicDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CC20F52001053A006DE641 /* TopicDetailHeader.xib */; };
 		E3CC20FF2001053A006DE641 /* CardFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F62001053A006DE641 /* CardFlowLayout.swift */; };
-		E3CC21002001053A006DE641 /* RBMainRankingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CC20F72001053A006DE641 /* RBMainRankingCell.xib */; };
-		E3CC21012001053A006DE641 /* TopicOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CC20F82001053A006DE641 /* TopicOptionCell.xib */; };
-		E3CC21022001053A006DE641 /* RBMainRankingHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CC20F92001053A006DE641 /* RBMainRankingHeader.xib */; };
-		E3CC21032001053A006DE641 /* RBMainRankingHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20FA2001053A006DE641 /* RBMainRankingHeader.swift */; };
-		E3CC21042001053B006DE641 /* RBMainRankingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20FB2001053A006DE641 /* RBMainRankingCell.swift */; };
-		E3CC210720010AF0006DE641 /* NamesWithTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC210520010AF0006DE641 /* NamesWithTableView.swift */; };
-		E3CC210820010AF0006DE641 /* NamesWithCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */; };
 		E3CC210B200119E2006DE641 /* YunTaemin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3CC210A200119E2006DE641 /* YunTaemin.ttf */; };
 		E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */; };
 		E3CF6FD72006073400DE3D41 /* MainTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */; };
-		E3CF6FDB2006080000DE3D41 /* TabHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */; };
 		E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */; };
 		E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */; };
 		E3CF6FE22006088D00DE3D41 /* TabLikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */; };
@@ -96,20 +74,12 @@
 		E3EEB6EA1FF50B8600EEE241 /* KakaoOpenSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3EEB6E91FF50B8600EEE241 /* KakaoOpenSDK.framework */; };
 		E3FEB4571FF6149C0074D778 /* TopicCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */; };
 		E3FEB4581FF6149C0074D778 /* TopicCreateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */; };
-		E3FEB45B1FF614A90074D778 /* TopicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FEB4591FF614A90074D778 /* TopicListViewController.swift */; };
-		E3FEB45C1FF614A90074D778 /* TopicListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FEB45A1FF614A90074D778 /* TopicListViewController.xib */; };
 		E3FEB4611FF615690074D778 /* TopicDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */; };
 		E3FEB4621FF615690074D778 /* TopicDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3200F22B635D81C27B2E50AC /* Pods-RankBaam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RankBaam.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RankBaam/Pods-RankBaam.debug.xcconfig"; sourceTree = "<group>"; };
-		6C0875972009349A00366889 /* MainHotRankCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHotRankCollectionCell.swift; sourceTree = "<group>"; };
-		6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHotRankCollectionCell.xib; sourceTree = "<group>"; };
-		6C08759B200935CA00366889 /* MainHotRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHotRankCell.swift; sourceTree = "<group>"; };
-		6C08759C200935CA00366889 /* MainHotRankCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainHotRankCell.xib; sourceTree = "<group>"; };
-		6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainArrangedRankHeader.swift; sourceTree = "<group>"; };
-		6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainArrangedRankHeader.xib; sourceTree = "<group>"; };
 		6C0A98612015ADD700D9D704 /* TopicDetailOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailOptionCell.swift; sourceTree = "<group>"; };
 		6C0A98622015ADD700D9D704 /* TopicDetailOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicDetailOptionCell.xib; sourceTree = "<group>"; };
 		6C0A9866201713FB00D9D704 /* TopicDetailImgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailImgCell.swift; sourceTree = "<group>"; };
@@ -121,21 +91,16 @@
 		6C0A98712017990B00D9D704 /* TopicDetailImagesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicDetailImagesViewController.xib; sourceTree = "<group>"; };
 		6C0A987420186E1800D9D704 /* RankBaamIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankBaamIndicator.swift; sourceTree = "<group>"; };
 		6C0A987A2018DFE100D9D704 /* TabHomePageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabHomePageViewController.xib; sourceTree = "<group>"; };
-		6CFD54322009D49000289BDB /* MainRankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRankCell.swift; sourceTree = "<group>"; };
-		6CFD54332009D49000289BDB /* MainRankCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainRankCell.xib; sourceTree = "<group>"; };
-		6CFD543C2009F11C00289BDB /* MyRankTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRankTableHeader.swift; sourceTree = "<group>"; };
-		6CFD543D2009F11C00289BDB /* MyRankTableHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyRankTableHeader.xib; sourceTree = "<group>"; };
 		6CFD5440200A0A3200289BDB /* loadIndicatorFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadIndicatorFooter.swift; sourceTree = "<group>"; };
 		6CFD5441200A0A3200289BDB /* loadIndicatorFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = loadIndicatorFooter.xib; sourceTree = "<group>"; };
 		6CFD548F20104C9200289BDB /* TabMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabMainViewController.swift; sourceTree = "<group>"; };
-		6CFD549320104CE400289BDB /* TabHomeViewController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabHomeViewController2.swift; sourceTree = "<group>"; };
-		6CFD549420104CE400289BDB /* TabHomeViewController2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabHomeViewController2.xib; sourceTree = "<group>"; };
+		6CFD549320104CE400289BDB /* TabHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabHomeViewController.swift; sourceTree = "<group>"; };
+		6CFD549420104CE400289BDB /* TabHomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabHomeViewController.xib; sourceTree = "<group>"; };
 		6CFD549720104FA400289BDB /* ConstantsNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantsNames.swift; sourceTree = "<group>"; };
 		6CFD549920104FBD00289BDB /* MainAllRankCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAllRankCell.swift; sourceTree = "<group>"; };
 		6CFD549B20104FE100289BDB /* MainAllRankCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainAllRankCell.xib; sourceTree = "<group>"; };
 		6CFD549D2010501000289BDB /* MainAllRankTopTabbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAllRankTopTabbar.swift; sourceTree = "<group>"; };
 		6CFD549F2010508B00289BDB /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		6CFD54A32010532500289BDB /* TabHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabHomeViewController.swift; sourceTree = "<group>"; };
 		6CFD54A5201058C400289BDB /* MainAllRankLoadingFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAllRankLoadingFooterView.swift; sourceTree = "<group>"; };
 		6CFD54A6201058C400289BDB /* MainAllRankLoadingFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainAllRankLoadingFooterView.xib; sourceTree = "<group>"; };
 		6CFD54AB2011D3AB00289BDB /* TopicDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailHeaderView.swift; sourceTree = "<group>"; };
@@ -154,21 +119,10 @@
 		E35997801FF6088D0064BBC1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		E35997811FF6088D0064BBC1 /* SignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
 		E3CC20F020010409006DE641 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		E3CC20F32001053A006DE641 /* TopicDetailHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicDetailHeader.swift; sourceTree = "<group>"; };
-		E3CC20F42001053A006DE641 /* TopicOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicOptionCell.swift; sourceTree = "<group>"; };
-		E3CC20F52001053A006DE641 /* TopicDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicDetailHeader.xib; sourceTree = "<group>"; };
 		E3CC20F62001053A006DE641 /* CardFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardFlowLayout.swift; sourceTree = "<group>"; };
-		E3CC20F72001053A006DE641 /* RBMainRankingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RBMainRankingCell.xib; sourceTree = "<group>"; };
-		E3CC20F82001053A006DE641 /* TopicOptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicOptionCell.xib; sourceTree = "<group>"; };
-		E3CC20F92001053A006DE641 /* RBMainRankingHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RBMainRankingHeader.xib; sourceTree = "<group>"; };
-		E3CC20FA2001053A006DE641 /* RBMainRankingHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RBMainRankingHeader.swift; sourceTree = "<group>"; };
-		E3CC20FB2001053A006DE641 /* RBMainRankingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RBMainRankingCell.swift; sourceTree = "<group>"; };
-		E3CC210520010AF0006DE641 /* NamesWithTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamesWithTableView.swift; sourceTree = "<group>"; };
-		E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamesWithCollectionView.swift; sourceTree = "<group>"; };
 		E3CC210A200119E2006DE641 /* YunTaemin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YunTaemin.ttf; sourceTree = "<group>"; };
 		E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
 		E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTabViewController.xib; sourceTree = "<group>"; };
-		E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabHomeViewController.xib; sourceTree = "<group>"; };
 		E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSearchViewController.swift; sourceTree = "<group>"; };
 		E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabSearchViewController.xib; sourceTree = "<group>"; };
 		E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabLikeViewController.swift; sourceTree = "<group>"; };
@@ -197,8 +151,6 @@
 		E3EEB6EB1FF50BFB00EEE241 /* RankBaam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RankBaam-Bridging-Header.h"; sourceTree = "<group>"; };
 		E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCreateViewController.swift; sourceTree = "<group>"; };
 		E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCreateViewController.xib; sourceTree = "<group>"; };
-		E3FEB4591FF614A90074D778 /* TopicListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicListViewController.swift; sourceTree = "<group>"; };
-		E3FEB45A1FF614A90074D778 /* TopicListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicListViewController.xib; sourceTree = "<group>"; };
 		E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailViewController.swift; sourceTree = "<group>"; };
 		E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicDetailViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -226,10 +178,8 @@
 				E35997801FF6088D0064BBC1 /* SignUpViewController.swift */,
 				E35997811FF6088D0064BBC1 /* SignUpViewController.xib */,
 				E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */,
-				6CFD54A32010532500289BDB /* TabHomeViewController.swift */,
 				E3CF6FD52006073400DE3D41 /* MainTabViewController.xib */,
 				6CFD548F20104C9200289BDB /* TabMainViewController.swift */,
-				E3CF6FD92006080000DE3D41 /* TabHomeViewController.xib */,
 				E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */,
 				E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */,
 				E3CF6FE02006088D00DE3D41 /* TabLikeViewController.swift */,
@@ -242,10 +192,10 @@
 				E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */,
 				6CFD55142013818300289BDB /* TabHomePageViewController.swift */,
 				6C0A987A2018DFE100D9D704 /* TabHomePageViewController.xib */,
-				6CFD549320104CE400289BDB /* TabHomeViewController2.swift */,
+				6CFD549320104CE400289BDB /* TabHomeViewController.swift */,
 				6CFD550C2013711E00289BDB /* TabHomeWeeklyRankViewController.swift */,
 				6CFD550D2013711E00289BDB /* TabHomeWeeklyRankViewController.xib */,
-				6CFD549420104CE400289BDB /* TabHomeViewController2.xib */,
+				6CFD549420104CE400289BDB /* TabHomeViewController.xib */,
 				6C0A98702017990B00D9D704 /* TopicDetailImagesViewController.swift */,
 				6C0A98712017990B00D9D704 /* TopicDetailImagesViewController.xib */,
 			);
@@ -264,25 +214,6 @@
 				E3CC20F62001053A006DE641 /* CardFlowLayout.swift */,
 			);
 			path = Util;
-			sourceTree = "<group>";
-		};
-		E3CC20F220010442006DE641 /* Temp */ = {
-			isa = PBXGroup;
-			children = (
-				E3FEB4591FF614A90074D778 /* TopicListViewController.swift */,
-				E3FEB45A1FF614A90074D778 /* TopicListViewController.xib */,
-				E3CC210620010AF0006DE641 /* NamesWithCollectionView.swift */,
-				E3CC210520010AF0006DE641 /* NamesWithTableView.swift */,
-				E3CC20FB2001053A006DE641 /* RBMainRankingCell.swift */,
-				E3CC20F72001053A006DE641 /* RBMainRankingCell.xib */,
-				E3CC20FA2001053A006DE641 /* RBMainRankingHeader.swift */,
-				E3CC20F92001053A006DE641 /* RBMainRankingHeader.xib */,
-				E3CC20F32001053A006DE641 /* TopicDetailHeader.swift */,
-				E3CC20F52001053A006DE641 /* TopicDetailHeader.xib */,
-				E3CC20F42001053A006DE641 /* TopicOptionCell.swift */,
-				E3CC20F82001053A006DE641 /* TopicOptionCell.xib */,
-			);
-			path = Temp;
 			sourceTree = "<group>";
 		};
 		E3CC2109200111EF006DE641 /* SupportingFiles */ = {
@@ -344,7 +275,6 @@
 				6C0A98652015E70A00D9D704 /* Controllers */,
 				E3DE12CE1FEBB01600738EE1 /* View */,
 				E3CC2109200111EF006DE641 /* SupportingFiles */,
-				E3CC20F220010442006DE641 /* Temp */,
 				E3DE12C31FEBAFD000738EE1 /* Assets.xcassets */,
 				E3DE12C81FEBAFD000738EE1 /* Info.plist */,
 				E3DE12D71FEBB7DA00738EE1 /* GoogleService-Info.plist */,
@@ -356,16 +286,6 @@
 		E3DE12CE1FEBB01600738EE1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6C0875972009349A00366889 /* MainHotRankCollectionCell.swift */,
-				6C0875982009349A00366889 /* MainHotRankCollectionCell.xib */,
-				6C08759B200935CA00366889 /* MainHotRankCell.swift */,
-				6CFD54322009D49000289BDB /* MainRankCell.swift */,
-				6CFD54332009D49000289BDB /* MainRankCell.xib */,
-				6C0875A12009D25900366889 /* MainArrangedRankHeader.swift */,
-				6C0875A22009D25900366889 /* MainArrangedRankHeader.xib */,
-				6C08759C200935CA00366889 /* MainHotRankCell.xib */,
-				6CFD543C2009F11C00289BDB /* MyRankTableHeader.swift */,
-				6CFD543D2009F11C00289BDB /* MyRankTableHeader.xib */,
 				6CFD5440200A0A3200289BDB /* loadIndicatorFooter.swift */,
 				6CFD5441200A0A3200289BDB /* loadIndicatorFooter.xib */,
 				6CFD549920104FBD00289BDB /* MainAllRankCell.swift */,
@@ -487,13 +407,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CFD549620104CE400289BDB /* TabHomeViewController2.xib in Resources */,
+				6CFD549620104CE400289BDB /* TabHomeViewController.xib in Resources */,
 				E3DE12C71FEBAFD000738EE1 /* LaunchScreen.storyboard in Resources */,
-				6CFD543F2009F11C00289BDB /* MyRankTableHeader.xib in Resources */,
-				E3CC21002001053A006DE641 /* RBMainRankingCell.xib in Resources */,
 				E3FEB4581FF6149C0074D778 /* TopicCreateViewController.xib in Resources */,
 				6C0A9869201713FB00D9D704 /* TopicDetailImgCell.xib in Resources */,
-				6C08759E200935CA00366889 /* MainHotRankCell.xib in Resources */,
 				6CFD54A8201058C400289BDB /* MainAllRankLoadingFooterView.xib in Resources */,
 				E3DE12D81FEBB7DA00738EE1 /* GoogleService-Info.plist in Resources */,
 				E3FEB4621FF615690074D778 /* TopicDetailViewController.xib in Resources */,
@@ -503,24 +420,16 @@
 				E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */,
 				6C0A987B2018DFE100D9D704 /* TabHomePageViewController.xib in Resources */,
 				6C0A986D2017183200D9D704 /* TopicDetailFooterView.xib in Resources */,
-				E3CC20FE2001053A006DE641 /* TopicDetailHeader.xib in Resources */,
 				6C0A98732017990B00D9D704 /* TopicDetailImagesViewController.xib in Resources */,
 				E3CF6FE7200608A600DE3D41 /* TabMyViewController.xib in Resources */,
 				E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */,
-				E3CF6FDB2006080000DE3D41 /* TabHomeViewController.xib in Resources */,
 				E3CF6FD72006073400DE3D41 /* MainTabViewController.xib in Resources */,
-				6CFD54352009D49000289BDB /* MainRankCell.xib in Resources */,
-				6C08759A2009349A00366889 /* MainHotRankCollectionCell.xib in Resources */,
 				6CFD54AE2011D3AB00289BDB /* TopicDetailHeaderView.xib in Resources */,
 				6C0A98642015ADD700D9D704 /* TopicDetailOptionCell.xib in Resources */,
 				6CFD55132013737B00289BDB /* MainWeeklyRankCell.xib in Resources */,
 				6CFD5443200A0A3200289BDB /* loadIndicatorFooter.xib in Resources */,
 				6CFD550F2013711E00289BDB /* TabHomeWeeklyRankViewController.xib in Resources */,
-				E3CC21022001053A006DE641 /* RBMainRankingHeader.xib in Resources */,
-				6C0875A42009D25900366889 /* MainArrangedRankHeader.xib in Resources */,
-				E3CC21012001053A006DE641 /* TopicOptionCell.xib in Resources */,
 				E359977B1FF608540064BBC1 /* SplashViewController.xib in Resources */,
-				E3FEB45C1FF614A90074D778 /* TopicListViewController.xib in Resources */,
 				E359977F1FF6087F0064BBC1 /* SignInViewController.xib in Resources */,
 				6CFD549C20104FE200289BDB /* MainAllRankCell.xib in Resources */,
 			);
@@ -606,40 +515,27 @@
 				6CFD549A20104FBD00289BDB /* MainAllRankCell.swift in Sources */,
 				6C0A986F201797FE00D9D704 /* SpreadTransition.swift in Sources */,
 				E3DE12BD1FEBAFD000738EE1 /* AppDelegate.swift in Sources */,
-				6C0875A32009D25900366889 /* MainArrangedRankHeader.swift in Sources */,
-				E3CC210820010AF0006DE641 /* NamesWithCollectionView.swift in Sources */,
 				6CFD55152013818300289BDB /* TabHomePageViewController.swift in Sources */,
 				6CFD549E2010501000289BDB /* MainAllRankTopTabbar.swift in Sources */,
-				E3CC21042001053B006DE641 /* RBMainRankingCell.swift in Sources */,
 				E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */,
 				E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */,
-				E3CC21032001053A006DE641 /* RBMainRankingHeader.swift in Sources */,
-				6C08759D200935CA00366889 /* MainHotRankCell.swift in Sources */,
 				E3CF6FF620060BEA00DE3D41 /* TargetType.swift in Sources */,
-				E3CC210720010AF0006DE641 /* NamesWithTableView.swift in Sources */,
 				E3DE12D61FEBB0AF00738EE1 /* KeychainManager.swift in Sources */,
-				E3CC20FC2001053A006DE641 /* TopicDetailHeader.swift in Sources */,
 				E3CC20FF2001053A006DE641 /* CardFlowLayout.swift in Sources */,
 				6CFD5442200A0A3200289BDB /* loadIndicatorFooter.swift in Sources */,
-				E3FEB45B1FF614A90074D778 /* TopicListViewController.swift in Sources */,
 				E3FEB4611FF615690074D778 /* TopicDetailViewController.swift in Sources */,
-				6C0875992009349A00366889 /* MainHotRankCollectionCell.swift in Sources */,
 				6CFD54A02010508B00289BDB /* UIColor+Extension.swift in Sources */,
 				6CFD550E2013711E00289BDB /* TabHomeWeeklyRankViewController.swift in Sources */,
 				6C0A9868201713FB00D9D704 /* TopicDetailImgCell.swift in Sources */,
-				E3CC20FD2001053A006DE641 /* TopicOptionCell.swift in Sources */,
 				6CFD54AD2011D3AB00289BDB /* TopicDetailHeaderView.swift in Sources */,
 				E3CF6FF220060BDC00DE3D41 /* DataResponse+Map.swift in Sources */,
-				6CFD543E2009F11C00289BDB /* MyRankTableHeader.swift in Sources */,
 				E359977E1FF6087F0064BBC1 /* SignInViewController.swift in Sources */,
 				E3FEB4571FF6149C0074D778 /* TopicCreateViewController.swift in Sources */,
-				6CFD54A42010532600289BDB /* TabHomeViewController.swift in Sources */,
 				E3DE12DC1FEBD17D00738EE1 /* NetworkModels.swift in Sources */,
 				E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */,
 				6CFD549020104C9300289BDB /* TabMainViewController.swift in Sources */,
 				E3DE12DA1FEBD14B00738EE1 /* Models.swift in Sources */,
 				E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */,
-				6CFD54342009D49000289BDB /* MainRankCell.swift in Sources */,
 				E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */,
 				E3CF6FEE20060BC900DE3D41 /* UserRouter.swift in Sources */,
 				E3CF6FF720060BEA00DE3D41 /* Error.swift in Sources */,
@@ -651,7 +547,7 @@
 				E359977A1FF608540064BBC1 /* SplashViewController.swift in Sources */,
 				6C0A987520186E1800D9D704 /* RankBaamIndicator.swift in Sources */,
 				6CFD55122013737B00289BDB /* MainWeeklyRankCell.swift in Sources */,
-				6CFD549520104CE400289BDB /* TabHomeViewController2.swift in Sources */,
+				6CFD549520104CE400289BDB /* TabHomeViewController.swift in Sources */,
 				E3CC20F120010409006DE641 /* Extensions.swift in Sources */,
 				6CFD54A7201058C400289BDB /* MainAllRankLoadingFooterView.swift in Sources */,
 			);

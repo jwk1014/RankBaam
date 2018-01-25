@@ -5,7 +5,7 @@
 //  Created by 김정원 on 2017. 12. 29..
 //  Copyright © 2017년 김정원. All rights reserved.
 //
-
+/*
 import UIKit
 import Alamofire
 
@@ -76,3 +76,4 @@ class TopicCreateViewController: UIViewController {
     }
 
 }
+ */

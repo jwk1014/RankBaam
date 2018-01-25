@@ -70,9 +70,9 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  useridgogo22" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eMk-gG-J3k">
-                            <rect key="frame" x="48" y="276" width="100" height="18"/>
+                            <rect key="frame" x="48" y="276" width="70" height="18"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="100" id="af8-el-PHv"/>
+                                <constraint firstAttribute="width" constant="70" id="af8-el-PHv"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.78814870120000002" green="0.78828507660000002" blue="0.78814005850000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -142,7 +142,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GYS-Ll-4zF">
-                            <rect key="frame" x="148" y="280" width="2" height="11"/>
+                            <rect key="frame" x="118" y="280" width="2" height="11"/>
                             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="11" id="rzF-DG-wCI"/>
@@ -150,7 +150,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="flK-bV-EOc">
-                            <rect key="frame" x="160" y="276" width="100" height="18"/>
+                            <rect key="frame" x="130" y="276" width="100" height="18"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="1Gu-Jr-MgG"/>
                                 <constraint firstAttribute="width" constant="100" id="Z9Z-zs-qRw"/>

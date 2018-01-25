@@ -28,7 +28,7 @@ class TabHomePageViewController: UIPageViewController {
     }()
     
     lazy var mainViewControllers: [UIViewController] = {
-        let tabHomeViewController = TabHomeViewController2()
+        let tabHomeViewController = TabHomeViewController()
         let tabHomeWeeklyViewController = TabHomeWeeklyRankViewController()
         return [tabHomeViewController, tabHomeWeeklyViewController]
     }()
@@ -107,8 +107,13 @@ extension TabHomePageViewController: UIScrollViewDelegate {
         
         let x = scrollView.contentOffset.x + scrollView.contentInset.left
     
-        upperTabView?.selectedUnderBarLeadingConstraint?.constant  =
-            ((x < view.bounds.width) ? 0 : (view.bounds.width)/2 ) + 61
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            self.upperTabView?.selectedUnderBarLeadingConstraint?.constant  =
+                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + 61
+            self.upperTabView?.layoutIfNeeded()
+        }, completion: nil)
+        
         
         ( x < view.bounds.width ) ? (upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : ( upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
         ( x < view.bounds.width ) ? (upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
