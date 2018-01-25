@@ -39,9 +39,14 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDataSource {
 
 extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 258, height: 406)
+        return CGSize(width:collectionView.bounds.size.height * 0.35, height: collectionView.bounds.size.height * 0.6)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 40
+        return 0
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let sideInset = (collectionView.bounds.size.width - collectionView.bounds.size.height * 0.35)/2
+        
+        return UIEdgeInsets(top: 0, left:sideInset , bottom: 0, right: sideInset)
     }
 }

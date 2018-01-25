@@ -10,11 +10,10 @@ import UIKit
 
 class MainAllRankTopTabbar: UIView {
     
-    
     var selectedUnderBarLeadingConstraint: NSLayoutConstraint?
     
     var allRankTab: UIButton = {
-       let allranktab = UIButton()
+        let allranktab = UIButton()
         allranktab.backgroundColor = UIColor.white
         allranktab.tag = 0
         return allranktab
@@ -58,18 +57,16 @@ class MainAllRankTopTabbar: UIView {
        return selectedunderbar
     }()
     
-    
-    
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.layer.shadowRadius = 5
+        self.layer.shadowRadius = 7
         self.layer.shadowColor = UIColor.gray.cgColor
-        self.layer.shadowOpacity = 0.5
-        self.layer.shadowOffset = CGSize(width: 0, height: 3)
+        self.layer.shadowOpacity = 0.2
+        self.layer.shadowOffset = CGSize(width: 0, height: 12)
         self.layer.masksToBounds = false
         setupStackView()
     }
@@ -80,9 +77,6 @@ class MainAllRankTopTabbar: UIView {
         
         weeklyRankTab.addTarget(self, action: #selector(upperBarSelected(_:)), for: .touchUpInside)
         allRankTab.addTarget(self, action: #selector(upperBarSelected(_:)), for: .touchUpInside)
-        
-        
-        
         mainRankUpperTabStackView.translatesAutoresizingMaskIntoConstraints = false
         mainRankUpperTabStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         mainRankUpperTabStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -92,11 +86,11 @@ class MainAllRankTopTabbar: UIView {
         allRankTab.setTitle("모든랭킹", for: .normal)
         allRankTab.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         allRankTab.contentHorizontalAlignment = .center
-        allRankTab.contentEdgeInsets = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
+        allRankTab.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)
         weeklyRankTab.setTitle("주간랭킹", for: .normal)
         weeklyRankTab.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        weeklyRankTab.contentEdgeInsets = UIEdgeInsets(top: 30, left: 0, bottom: 0, right: 0)
+        weeklyRankTab.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         weeklyRankTab.setTitleColor(UIColor.gray, for: .normal)
         mainRankUpperTabStackView.addArrangedSubview(weeklyRankTab)
         mainRankUpperTabStackView.distribution = .fillEqually
@@ -130,8 +124,6 @@ class MainAllRankTopTabbar: UIView {
         selectedUnderBar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
         selectedUnderBar.widthAnchor.constraint(equalToConstant: 62).isActive = true
         selectedUnderBar.heightAnchor.constraint(equalToConstant: 3).isActive = true
-        
-        
     }
     
     

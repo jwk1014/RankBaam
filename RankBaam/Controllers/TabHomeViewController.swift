@@ -148,7 +148,7 @@ extension TabHomeViewController {
     
     func loadMainRankCellDatas() {
         
-        TopicService.topicList(page: page, count: 15) {
+        TopicService.list(page: page, count: 15, categorySN: 1, order: .best) {
             switch $0.result {
             case .success(let result):
                 if result.succ {

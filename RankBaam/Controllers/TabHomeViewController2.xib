@@ -22,7 +22,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="f0B-M5-PhJ">
-                    <rect key="frame" x="0.0" y="99" width="375" height="568"/>
+                    <rect key="frame" x="0.0" y="103" width="375" height="564"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7Wq-Uy-nUb">
                         <size key="itemSize" width="50" height="50"/>
@@ -39,12 +39,12 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="f0B-M5-PhJ" secondAttribute="bottom" id="Pgo-yK-YTx"/>
-                <constraint firstItem="f0B-M5-PhJ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="35" id="m26-HH-fIl"/>
+                <constraint firstItem="f0B-M5-PhJ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="103" id="bQR-63-qlv"/>
                 <constraint firstItem="f0B-M5-PhJ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="xf6-W9-8Tg"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="f0B-M5-PhJ" secondAttribute="trailing" id="zfm-00-89a"/>
             </constraints>
-            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>
     </objects>
 </document>

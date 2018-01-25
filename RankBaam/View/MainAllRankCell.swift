@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MainAllRankCell: UICollectionViewCell {
 
     @IBOutlet weak var mainRankCellImg: UIImageView!
     @IBOutlet weak var mainRankCellTitleLabel: UILabel!
     @IBOutlet weak var mainRankCellLikeCountLabel: UILabel!
+    @IBOutlet weak var mainRankCellBackgroundView: UIView!
+    @IBOutlet weak var mainRankCellImgShadowView: UIView!
+    @IBOutlet weak var mainRankCellWriterNicknameLabel: UILabel!
     
     var likeCount: Int = 0 {
         
@@ -28,7 +32,7 @@ class MainAllRankCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         
         // MARK: shadowOffset은 translate 같이 그림자를 이동시키는 역할
         
@@ -36,7 +40,9 @@ class MainAllRankCell: UICollectionViewCell {
         self.layer.shadowRadius = 5
         self.layer.shadowOpacity = 0.5
         self.layer.cornerRadius = 20
+        self.clipsToBounds = false
         self.layer.masksToBounds = false
+        
         /*self.layer.shadowPath = UIBezierPath(rect: self.bounds).cgPath*/
         cellComponentConfigure()
     }
@@ -44,13 +50,33 @@ class MainAllRankCell: UICollectionViewCell {
     func cellDatasConfigure(topic: Topic) {
         mainRankCellTitleLabel.text = topic.title
         likeCount = topic.likeCount
-        
+        mainRankCellWriterNicknameLabel.text = " \(topic.writer.nickname)"
+        /*if !topic.photos.isEmpty {
+        let imgURL = URL(string: topic.photos[0].realUrl)
+            mainRankCellImg.kf.indicatorType = .activity
+            mainRankCellImg.kf.indicator?.startAnimatingView()
+            mainRankCellImg.kf.setImage(with: imgURL) { (_, _, _, _) in
+                self.mainRankCellImg.kf.indicator?.stopAnimatingView()
+            }
+        }*/
     }
     
     func cellComponentConfigure() {
+        
         mainRankCellImg.layer.cornerRadius = 12
         mainRankCellImg.layer.masksToBounds = true
         mainRankCellImg.clipsToBounds = true
+        
+        mainRankCellBackgroundView.layer.cornerRadius = 10
+        mainRankCellBackgroundView.layer.masksToBounds = true
+        
+        mainRankCellImgShadowView.layer.shadowColor = UIColor.black.withAlphaComponent(0.3).cgColor
+        mainRankCellImgShadowView.layer.shadowOffset = CGSize(width: 15, height: 15)
+        mainRankCellImgShadowView.layer.shadowOpacity = 0.5
+        mainRankCellImgShadowView.layer.shadowRadius = 5
+        mainRankCellImgShadowView.backgroundColor = UIColor.white
+        mainRankCellImgShadowView.clipsToBounds = false
+        mainRankCellImgShadowView.layer.masksToBounds = false
         
     }
     required init?(coder aDecoder: NSCoder) {
@@ -63,6 +89,8 @@ class MainAllRankCell: UICollectionViewCell {
         self.layer.borderColor = UIColor.black.cgColor
         cellComponentConfigure()
     }
-    
+    override func prepareForReuse() {
+        mainRankCellImg.image = UIImage(named: "noimage")
+    }
 
 }

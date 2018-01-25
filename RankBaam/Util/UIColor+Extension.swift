@@ -13,5 +13,6 @@ extension UIColor {
     static let rankbaamOrange: UIColor = UIColor(red: 255/255, green: 195/255, blue: 75/255, alpha: 1)
     static let rankbaamGray: UIColor = UIColor(red: 246/255, green: 248/255, blue: 250/255, alpha: 1)
     static let rankbaamSeperatorColor: UIColor = UIColor(red: 233/255, green: 233/255, blue: 233/255, alpha: 1)
+    static let rankbaamDarkgray: UIColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
     
 }
