@@ -105,8 +105,18 @@ extension TabHomePageViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("\(scrollView.contentOffset.x)")
         
+        let x = scrollView.contentOffset.x + scrollView.contentInset.left
+    
+        upperTabView?.selectedUnderBarLeadingConstraint?.constant  =
+            ((x < view.bounds.width) ? 0 : (view.bounds.width)/2 ) + 61
         
-        upperTabView?.selectedUnderBarLeadingConstraint?.constant += scrollView.contentOffset.x * 1 / 1000
+        ( x < view.bounds.width ) ? (upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : ( upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
+        ( x < view.bounds.width ) ? (upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
+            
+        
+        
+        //upperTabView?.layoutIfNeeded()
+        /*+= scrollView.contentOffset.x * 1 / 1000*/
         
         /*self.lastPosition = scrollView.contentOffset.x
         
