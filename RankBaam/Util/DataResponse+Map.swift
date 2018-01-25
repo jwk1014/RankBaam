@@ -29,6 +29,5 @@ extension DataResponse {
       return .success(transform(value))
     }
   }
-  
 }
 

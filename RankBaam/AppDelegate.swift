@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 
+var categories: [Category] = []
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -18,14 +20,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        
+      
         if window == nil {
-            window = UIWindow(frame: UIScreen.main.bounds)
+          window = UIWindow(frame: UIScreen.main.bounds)
         }
-        let splashViewController = SplashViewController()
-        window?.rootViewController = splashViewController
-        window?.makeKeyAndVisible()
-        
+      
+        TopicService.categoryList{
+          if let resultCategoryList = $0.value {
+            categories = resultCategoryList.categories
+            let splashViewController = SplashViewController()
+            self.window?.rootViewController = splashViewController
+            self.window?.makeKeyAndVisible()
+          }
+        }
         return true
     }
 

@@ -16,6 +16,14 @@ extension String {
     }
 }
 
+extension UIViewController {
+  func present(_ vc: UIViewController, animated: Bool, transitioningDelegate: UIViewControllerTransitioningDelegate, completion: (() -> Void)?){
+    vc.transitioningDelegate = transitioningDelegate
+    vc.modalPresentationStyle = .custom
+    present(vc, animated: animated, completion: completion)
+  }
+}
+
 extension UITextField {
     var isEmpty: Bool {
         return text == nil || text!.isEmpty
@@ -31,31 +39,34 @@ extension UIAlertController {
 }
 
 extension UIColor {
-    convenience init(hex: String) {
-        let scanner = Scanner(string: hex.trimmingCharacters(in: [" "]))
-        
-        if( hex.hasPrefix("#") ) {
-            scanner.scanLocation = 1
-        }
-        
-        var argbValue: UInt64 = 0
-        
-        scanner.scanHexInt64(&argbValue)
-        
-        let hexCount = scanner.string.count - scanner.scanLocation
-        
-        let a = (hexCount > 2 * 3) ? ((argbValue >> 8 * 3) & 0xff) : 0xff
-        let r = (hexCount > 2 * 2) ? ((argbValue >> 8 * 2) & 0xff) : 0x00
-        let g = (hexCount > 2 * 1) ? ((argbValue >> 8 * 1) & 0xff) : 0x00
-        let b = argbValue & 0xff
-        
-        self.init(
-            red:    CGFloat(r) / 0xff,
-            green:  CGFloat(g) / 0xff,
-            blue:   CGFloat(b) / 0xff,
-            alpha:  CGFloat(a) / 0xff
-        )
-    }
+  convenience init(hex: String) {
+      let scanner = Scanner(string: hex.trimmingCharacters(in: [" "]))
+    
+      if( hex.hasPrefix("#") ) {
+          scanner.scanLocation = 1
+      }
+    
+      var argbValue: UInt64 = 0
+    
+      scanner.scanHexInt64(&argbValue)
+    
+      let hexCount = scanner.string.count - scanner.scanLocation
+    
+      let a = (hexCount > 2 * 3) ? ((argbValue >> 8 * 3) & 0xff) : 0xff
+      let r = (hexCount > 2 * 2) ? ((argbValue >> 8 * 2) & 0xff) : 0x00
+      let g = (hexCount > 2 * 1) ? ((argbValue >> 8 * 1) & 0xff) : 0x00
+      let b = argbValue & 0xff
+    
+      self.init(
+          red:    CGFloat(r) / 0xff,
+          green:  CGFloat(g) / 0xff,
+          blue:   CGFloat(b) / 0xff,
+          alpha:  CGFloat(a) / 0xff
+      )
+  }
+  convenience init(r: Int, g: Int, b: Int, a: CGFloat = 1.0) {
+    self.init(red: CGFloat(Double(r)/255.0), green: CGFloat(Double(g)/255.0), blue: CGFloat(Double(b)/255.0), alpha: a)
+  }
 }
 
 extension Dictionary where Key == String, Value == Any {
