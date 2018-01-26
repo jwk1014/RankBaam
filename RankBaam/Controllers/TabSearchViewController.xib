@@ -12,7 +12,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TabSearchViewController" customModule="RankBaam" customModuleProvider="target">
             <connections>
-                <outlet property="searchResultTableView" destination="GNv-Ui-Th0" id="5Ql-TD-BvL"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,21 +20,17 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GNv-Ui-Th0">
-                    <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="2ID-Lu-KI9"/>
-                        <outlet property="delegate" destination="-1" id="Ero-FP-fQ6"/>
-                    </connections>
-                </tableView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ojg-Ma-5JV">
+                    <rect key="frame" x="160.5" y="333" width="53.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GNv-Ui-Th0" secondAttribute="trailing" id="Snn-q3-ipV"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="GNv-Ui-Th0" secondAttribute="bottom" id="eOc-rr-5em"/>
-                <constraint firstItem="GNv-Ui-Th0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="rsH-sh-Zkq"/>
-                <constraint firstItem="GNv-Ui-Th0" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="vSb-kl-HtE"/>
+                <constraint firstItem="ojg-Ma-5JV" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" id="Aoj-ra-Xq1"/>
+                <constraint firstItem="ojg-Ma-5JV" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="QXe-5z-omG"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
         </view>

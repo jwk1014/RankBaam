@@ -15,12 +15,12 @@ protocol MainUpperTabScrollViewDelegate {
 
 class TabHomePageViewController: UIPageViewController {
 
-
 //    fileprivate var currentIndex = 0
 //    fileprivate var lastPosition: CGFloat = 0
     
     var scrollDelegate: MainUpperTabScrollViewDelegate?
     var upperTabView: MainAllRankTopTabbar?
+  
     var mainCustomNavigationBar: UIView = {
        let customNavigationBar = UIView()
        customNavigationBar.backgroundColor = UIColor.white
@@ -91,6 +91,14 @@ extension TabHomePageViewController: UIPageViewControllerDataSource, UIPageViewC
         return mainViewControllers[nextIndex]
         
     }
+  
+  func pageViewControllerSupportedInterfaceOrientations(_ pageViewController: UIPageViewController) -> UIInterfaceOrientationMask {
+    return UIInterfaceOrientationMask.portrait
+  }
+  
+  func pageViewControllerPreferredInterfaceOrientationForPresentation(_ pageViewController: UIPageViewController) -> UIInterfaceOrientation {
+    return UIInterfaceOrientation.portrait
+  }
     /*func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
         if completed {
@@ -118,8 +126,7 @@ extension TabHomePageViewController: UIScrollViewDelegate {
         ( x < view.bounds.width ) ? (upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : ( upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
         ( x < view.bounds.width ) ? (upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
             
-        
-        
+      
         //upperTabView?.layoutIfNeeded()
         /*+= scrollView.contentOffset.x * 1 / 1000*/
         

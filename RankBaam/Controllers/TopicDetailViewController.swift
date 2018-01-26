@@ -181,12 +181,12 @@ class TopicDetailViewController: UIViewController {
                 
             case .success(let sResult):
                 if sResult.succ {
-                    guard let topic = sResult.topic else {return}
-                    DispatchQueue.main.async {
+                    //guard let topic = sResult.topic else {return}
+                    //DispatchQueue.main.async {
 //                        topicDetailHeader.titleLabel.text = topic.title
 //                        topicDetailHeader.descriptionLabel.text = topic.description ?? ""
 //                        topicDetailHeader.likeCountButton.titleLabel?.text = "\(topic.likeCount ?? 0)"
-                    }
+                    //}
                 } else if let msg = sResult.msg {
                     switch msg {
                     default:
@@ -362,7 +362,7 @@ extension TopicDetailViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 //        spreadTransition.startFrame = self.startFrameForspreadTransition ?? CGRect.zero
         
-        let test = self.view.convert(rankOptionCollectionView.visibleCells[0].frame, to: nil)
+        //let test = self.view.convert(rankOptionCollectionView.visibleCells[0].frame, to: nil)
         
         /*let test = self.rankOptionCollectionView.visibleCells[0].superview?.superview
         print("####SuperView is :\(test)####")*/

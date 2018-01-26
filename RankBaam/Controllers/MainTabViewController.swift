@@ -17,8 +17,9 @@ class MainTabViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    navigationController?.navigationBar.isHidden = true
     
-    tabVCs.addTabViewClosure(index: 0, closure: (TabHomeViewController.init))
+    tabVCs.addTabViewClosure(index: 0, closure: (TabHomePageViewController.init))
     tabVCs.addTabViewClosure(index: 1, closure: (TabSearchViewController.init))
     tabVCs.addTabViewClosure(index: 2, closure: (TabLikeViewController.init))
     tabVCs.addTabViewClosure(index: 3, closure: (TabMyViewController.init))
@@ -56,26 +57,34 @@ class MainTabViewController: UIViewController {
   }
   
   func changeTabContentView(tab: TabIcn){
+    guard let contentView = contentView else { return }
     let vc = tabVCs[tab.rawValue-1]
     if vc.parent == nil {
       addChildViewController(vc)
     }
-    if let count = contentView?.subviews.count, count > 0 {
-      contentView?.subviews[0].removeFromSuperview()
+    if contentView.subviews.count > 0 {
+      contentView.subviews[0].removeFromSuperview()
     }
-    contentView?.addSubview(vc.view)
+    contentView.addSubview(vc.view)
+    vc.view.translatesAutoresizingMaskIntoConstraints = false
+    vc.view.snp.makeConstraints {
+      $0.top.equalTo(contentView)
+      $0.leading.equalTo(contentView)
+      $0.trailing.equalTo(contentView)
+      $0.bottom.equalTo(contentView)
+    }
   }
   
   func initView() {
     let contentView = UIView()
     self.contentView = contentView
     view.addSubview(contentView)
-    contentView.snp.makeConstraints {
-      $0.top.equalTo(view)
-      $0.leading.equalTo(view)
-      $0.trailing.equalTo(view)
-      $0.bottom.equalTo(view)
-    }
+    contentView.translatesAutoresizingMaskIntoConstraints = false
+    contentView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    contentView.isUserInteractionEnabled = true
     
     guard let tabBarBgImage = UIImage(named: "tab_bar_bg") else {return}
     let vcSize = view.bounds.size

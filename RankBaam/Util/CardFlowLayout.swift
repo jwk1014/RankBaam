@@ -19,11 +19,6 @@ class CoverFlowLayout : UICollectionViewFlowLayout {
         self.minimumLineSpacing = 80.0
     }
     
-   
-    
-    
-    
-    
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         
         guard  let attributes = super.layoutAttributesForElements(in: rect) else {return nil}

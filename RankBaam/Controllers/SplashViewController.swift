@@ -14,6 +14,10 @@ class SplashViewController: UIViewController {
         super.viewDidLoad()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+          TopicService.categoryList{
+            if let resultCategoryList = $0.value {
+              categories = resultCategoryList.categories
+            }
             //if let signData = SignManager.keychain {
             let signDataTemp = SignData(email: "fgfg4514@naver.com", identification: "test1234")
             UserService.singin(signData: signDataTemp) {
@@ -22,7 +26,7 @@ class SplashViewController: UIViewController {
                             
                         case .success(let sResult):
                             if sResult.succ {
-                                let vc = TabHomePageViewController()
+                                let vc = MainTabViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
 
                                 self.present(naviVC, animated: true, completion: nil)
@@ -70,8 +74,6 @@ class SplashViewController: UIViewController {
                 self.present(naviVC, animated: true, completion: nil)
             }*/
         }
- 
-    
-
-}
+      }
+    }
 }

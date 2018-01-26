@@ -59,9 +59,22 @@ class TopicCreateViewController: UIViewController {
     }
   }
   
+  
+  
+  @objc func handleView(_ sender: UIGestureRecognizer) {
+    if let titleTextField = titleTextField, titleTextField.isFirstResponder {
+      titleTextField.resignFirstResponder()
+    } else if let descriptionTextView = descriptionTextView, descriptionTextView.isFirstResponder {
+      descriptionTextView.resignFirstResponder()
+    }
+  }
+  
   func initView(){
     
     view.backgroundColor = .init(r: 246, g: 248, b: 250)
+    
+    view.addGestureRecognizer(UITapGestureRecognizer(
+      target: self, action: #selector(handleView)))
     
     backButton?.imageView?.tintColor = UIColor.init(r: 255, g: 195, b: 75)
     //titleLabel?.text = "글쓰기"

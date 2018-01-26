@@ -25,14 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           window = UIWindow(frame: UIScreen.main.bounds)
         }
       
-        TopicService.categoryList{
-          if let resultCategoryList = $0.value {
-            categories = resultCategoryList.categories
-            let splashViewController = SplashViewController()
-            self.window?.rootViewController = splashViewController
-            self.window?.makeKeyAndVisible()
-          }
-        }
+        let splashViewController = SplashViewController()
+        window?.rootViewController = splashViewController
+        window?.makeKeyAndVisible()
+      
         return true
     }
 
