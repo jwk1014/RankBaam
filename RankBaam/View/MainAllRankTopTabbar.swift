@@ -8,10 +8,14 @@
 
 import UIKit
 
+protocol UpperCustomTabbarDelegate {
+    func upperCustomTabbarTapped(sender: UIButton)
+}
+
 class MainAllRankTopTabbar: UIView {
     
     var selectedUnderBarLeadingConstraint: NSLayoutConstraint?
-    
+    var delegate: UpperCustomTabbarDelegate?
     var allRankTab: UIButton = {
         let allranktab = UIButton()
         allranktab.backgroundColor = UIColor.white
@@ -102,16 +106,17 @@ class MainAllRankTopTabbar: UIView {
     @objc func upperBarSelected(_ sender: UIButton) {
         let constants = (self.frame.width / 2 * CGFloat(sender.tag) ) + CGFloat(63)
         self.selectedUnderBarLeadingConstraint?.constant = constants
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         }
-        if sender === allRankTab {
+        if sender == allRankTab {
             isAllRankTabSelected = true
             isWeeklyRankTabSelected = false
         } else {
             isWeeklyRankTabSelected = true
             isAllRankTabSelected = false
         }
+        delegate?.upperCustomTabbarTapped(sender: sender)
         
     }
     

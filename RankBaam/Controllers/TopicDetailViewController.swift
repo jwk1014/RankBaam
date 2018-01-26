@@ -28,12 +28,23 @@ class TopicDetailViewController: UIViewController {
     var selectedOptionIndexPath: [Int] = [] {
         didSet {
             if selectedOptionIndexPath.isEmpty {
-                
+                rankVoteButton.backgroundColor = UIColor.rankbaamDarkgray
             } else {
-                
+                rankVoteButton.backgroundColor = UIColor.rankbaamOrange
             }
         }
     }
+    /*
+     TODO: Add optionSN
+    var selectedOptionIndexPath: [(indexPath: Int, optionSN: Int)] = [] {
+        didSet {
+            if selectedOptionIndexPath.isEmpty {
+                rankVoteButton.backgroundColor = UIColor.rankbaamDarkgray
+            } else {
+                rankVoteButton.backgroundColor = UIColor.rankbaamOrange
+            }
+        }
+    }*/
     
     var isLikedForHeartButton: Bool = false {
         didSet {
@@ -255,7 +266,10 @@ extension TopicDetailViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicDetailOptionCell", for: indexPath)
+        let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicDetailOptionCell", for: indexPath) as! TopicDetailOptionCell
+        if selectedOptionIndexPath.contains(indexPath.item) {
+            optionCell.isSelectedForVote = true
+        }
         return optionCell
     }
     
@@ -307,7 +321,22 @@ extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
         collectionView.deselectItem(at: indexPath, animated: false)
         let selectedCell = collectionView.cellForItem(at: indexPath) as! TopicDetailOptionCell
         selectedCell.isSelectedForVote = !selectedCell.isSelectedForVote
-        rankVoteButton.backgroundColor = UIColor.rankbaamOrange
+        if selectedCell.isSelectedForVote {
+            self.selectedOptionIndexPath.append(indexPath.item)
+        } else {
+            if let removeIndexPath = selectedOptionIndexPath.index(of: indexPath.item) {
+                self.selectedOptionIndexPath.remove(at: removeIndexPath)
+            }
+        }
+        // rankVoteButton.backgroundColor = UIColor.rankbaamOrange
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if selectedOptionIndexPath.contains(indexPath.item) {
+            if let selectedCell = collectionView.cellForItem(at: indexPath)
+                as? TopicDetailOptionCell {
+                selectedCell.isSelectedForVote = true
+            }
+        }
     }
 }
 
@@ -360,9 +389,6 @@ extension TopicDetailViewController: UIViewControllerTransitioningDelegate {
         return nil
     }
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        spreadTransition.startFrame = self.startFrameForspreadTransition ?? CGRect.zero
-        
-        let test = self.view.convert(rankOptionCollectionView.visibleCells[0].frame, to: nil)
         
         /*let test = self.rankOptionCollectionView.visibleCells[0].superview?.superview
         print("####SuperView is :\(test)####")*/

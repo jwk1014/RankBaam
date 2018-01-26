@@ -63,4 +63,10 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellBackgroundView.layer.cornerRadius = 8
         optionCellBackgroundView.layer.masksToBounds = true
     }
+    override func prepareForReuse() {
+        if isSelectedForVote {
+            isSelectedForVote = false
+        }
+    }
+    
 }

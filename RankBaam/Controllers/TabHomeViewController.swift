@@ -163,13 +163,16 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
         if !cellDatas[indexPath.item].photos.isEmpty {
             let imgURL = URL(string: cellDatas[indexPath.item].photos[0].realUrl)
             mainAllRankCell.mainRankCellImg.kf.indicatorType = .activity
-            mainAllRankCell.mainRankCellImg.kf.indicator?.startAnimatingView()
-            mainAllRankCell.mainRankCellImg.kf.setImage(with: imgURL) { (_, _, _, _) in
-                mainAllRankCell.mainRankCellImg.kf.indicator?.stopAnimatingView()
-            }
+            mainAllRankCell.mainRankCellImg.kf.setImage(with: imgURL,
+                options: [.backgroundDecode],
+                completionHandler: { (img, _, _, _) in
+                mainAllRankCell.mainRankCellImg.animationImages = nil
+                mainAllRankCell.mainRankCellImg.stopAnimating()
+                mainAllRankCell.mainRankCellImg.image = img?.images?[10]
+                mainAllRankCell.mainRankCellImg.layoutIfNeeded()
+            })
         }
         return mainAllRankCell
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
