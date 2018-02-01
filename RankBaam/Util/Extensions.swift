@@ -181,9 +181,8 @@ extension DataRequest {
     }
     
     func responseRankBaam<T: Decodable>(
-        _ completionHandler: @escaping (DataResponse<T>)->Void ){
-        
-        responseData { response in
+        _ completionHandler: @escaping (DataResponse<T>)->Void ) -> DataRequest {
+        return responseData { response in
             
             self.debug(response: response, type: T.self)
             

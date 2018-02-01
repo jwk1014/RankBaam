@@ -43,9 +43,10 @@
 		E359977F1FF6087F0064BBC1 /* SignInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E359977D1FF6087F0064BBC1 /* SignInViewController.xib */; };
 		E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997801FF6088D0064BBC1 /* SignUpViewController.swift */; };
 		E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997811FF6088D0064BBC1 /* SignUpViewController.xib */; };
+		E38608B5201F7568009E252D /* NanumSquareR.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E38608B4201F7568009E252D /* NanumSquareR.ttf */; };
+		E38608B7201F756E009E252D /* NanumSquareB.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E38608B6201F756E009E252D /* NanumSquareB.ttf */; };
 		E3CC20F120010409006DE641 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F020010409006DE641 /* Extensions.swift */; };
 		E3CC20FF2001053A006DE641 /* CardFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F62001053A006DE641 /* CardFlowLayout.swift */; };
-		E3CC210B200119E2006DE641 /* YunTaemin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3CC210A200119E2006DE641 /* YunTaemin.ttf */; };
 		E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */; };
 		E3CF6FDE2006081C00DE3D41 /* TabSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */; };
 		E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */; };
@@ -72,7 +73,6 @@
 		E3E90F202014F1C4002B41F6 /* OptionCommentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E90F1F2014F1C4002B41F6 /* OptionCommentRouter.swift */; };
 		E3EEB6EA1FF50B8600EEE241 /* KakaoOpenSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3EEB6E91FF50B8600EEE241 /* KakaoOpenSDK.framework */; };
 		E3FEB4571FF6149C0074D778 /* TopicCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */; };
-		E3FEB4581FF6149C0074D778 /* TopicCreateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */; };
 		E3FEB4611FF615690074D778 /* TopicDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */; };
 		E3FEB4621FF615690074D778 /* TopicDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */; };
 /* End PBXBuildFile section */
@@ -116,9 +116,10 @@
 		E359977D1FF6087F0064BBC1 /* SignInViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignInViewController.xib; sourceTree = "<group>"; };
 		E35997801FF6088D0064BBC1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		E35997811FF6088D0064BBC1 /* SignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
+		E38608B4201F7568009E252D /* NanumSquareR.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareR.ttf; sourceTree = "<group>"; };
+		E38608B6201F756E009E252D /* NanumSquareB.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareB.ttf; sourceTree = "<group>"; };
 		E3CC20F020010409006DE641 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3CC20F62001053A006DE641 /* CardFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardFlowLayout.swift; sourceTree = "<group>"; };
-		E3CC210A200119E2006DE641 /* YunTaemin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YunTaemin.ttf; sourceTree = "<group>"; };
 		E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
 		E3CF6FDC2006081C00DE3D41 /* TabSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSearchViewController.swift; sourceTree = "<group>"; };
 		E3CF6FDD2006081C00DE3D41 /* TabSearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabSearchViewController.xib; sourceTree = "<group>"; };
@@ -148,7 +149,6 @@
 		E3EEB6E91FF50B8600EEE241 /* KakaoOpenSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoOpenSDK.framework; sourceTree = "<group>"; };
 		E3EEB6EB1FF50BFB00EEE241 /* RankBaam-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RankBaam-Bridging-Header.h"; sourceTree = "<group>"; };
 		E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCreateViewController.swift; sourceTree = "<group>"; };
-		E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCreateViewController.xib; sourceTree = "<group>"; };
 		E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailViewController.swift; sourceTree = "<group>"; };
 		E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicDetailViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -183,7 +183,6 @@
 				E3CF6FE4200608A600DE3D41 /* TabMyViewController.swift */,
 				E3CF6FE5200608A600DE3D41 /* TabMyViewController.xib */,
 				E3FEB4551FF6149C0074D778 /* TopicCreateViewController.swift */,
-				E3FEB4561FF6149C0074D778 /* TopicCreateViewController.xib */,
 				E3FEB45F1FF615690074D778 /* TopicDetailViewController.swift */,
 				E3FEB4601FF615690074D778 /* TopicDetailViewController.xib */,
 				6CFD55142013818300289BDB /* TabHomePageViewController.swift */,
@@ -216,7 +215,8 @@
 		E3CC2109200111EF006DE641 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
-				E3CC210A200119E2006DE641 /* YunTaemin.ttf */,
+				E38608B6201F756E009E252D /* NanumSquareB.ttf */,
+				E38608B4201F7568009E252D /* NanumSquareR.ttf */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -406,21 +406,21 @@
 			files = (
 				6CFD549620104CE400289BDB /* TabHomeViewController.xib in Resources */,
 				E3DE12C71FEBAFD000738EE1 /* LaunchScreen.storyboard in Resources */,
-				E3FEB4581FF6149C0074D778 /* TopicCreateViewController.xib in Resources */,
 				6C0A9869201713FB00D9D704 /* TopicDetailImgCell.xib in Resources */,
 				6CFD54A8201058C400289BDB /* MainAllRankLoadingFooterView.xib in Resources */,
 				E3DE12D81FEBB7DA00738EE1 /* GoogleService-Info.plist in Resources */,
 				E3FEB4621FF615690074D778 /* TopicDetailViewController.xib in Resources */,
 				E3CF6FE32006088D00DE3D41 /* TabLikeViewController.xib in Resources */,
-				E3CC210B200119E2006DE641 /* YunTaemin.ttf in Resources */,
 				E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */,
 				E3CF6FDF2006081C00DE3D41 /* TabSearchViewController.xib in Resources */,
 				6C0A987B2018DFE100D9D704 /* TabHomePageViewController.xib in Resources */,
 				6C0A986D2017183200D9D704 /* TopicDetailFooterView.xib in Resources */,
 				6C0A98732017990B00D9D704 /* TopicDetailImagesViewController.xib in Resources */,
+				E38608B5201F7568009E252D /* NanumSquareR.ttf in Resources */,
 				E3CF6FE7200608A600DE3D41 /* TabMyViewController.xib in Resources */,
 				E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */,
 				6CFD54AE2011D3AB00289BDB /* TopicDetailHeaderView.xib in Resources */,
+				E38608B7201F756E009E252D /* NanumSquareB.ttf in Resources */,
 				6C0A98642015ADD700D9D704 /* TopicDetailOptionCell.xib in Resources */,
 				6CFD55132013737B00289BDB /* MainWeeklyRankCell.xib in Resources */,
 				6CFD5443200A0A3200289BDB /* loadIndicatorFooter.xib in Resources */,

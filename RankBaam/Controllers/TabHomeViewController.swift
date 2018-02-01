@@ -130,15 +130,26 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
     }
     
     func loadedDataHandle(_ loadedData: [Topic]) {
+      
+        let loadedData = loadedData.reduce([Topic]()) { (tmp, item) -> [Topic] in
+          var item = item
+          if !cellDatas.contains{ $0.topicSN == item.topicSN } {
+            item.sortPhotos()
+            return tmp + [item]
+          }
+          return tmp
+        }
+      
         refreshCellDataIfNeeded()
         page += 1
         if loadedData.isEmpty {
             isMoreDataExist = false
             mainAllRankLoadingFooterView?.endLoad()
+        } else {
+          self.cellDatas += loadedData
+          self.mainAllRankCollectionView.reloadData()
         }
         self.mainRankRefreshControl.endRefreshing()
-        self.cellDatas.append(contentsOf: loadedData)
-        self.mainAllRankCollectionView.reloadData()
     }
     
     func footerViewLoadDataHandler(_ indexPath: IndexPath){

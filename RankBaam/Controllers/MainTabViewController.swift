@@ -135,13 +135,15 @@ class MainTabViewController: UIViewController {
     
     let button = UIButton()
     button.setImage(UIImage(named: "w_btn"), for: .normal)
+    let padding = vcSize.width * 15.0/375.0
+    button.imageEdgeInsets = .init(top: padding, left: padding, bottom: padding, right: padding)
     button.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
     view.addSubview(button)
     button.snp.makeConstraints {
-      $0.width.equalTo(vcSize.width * 46.0/375.0)
+      $0.width.equalTo(vcSize.width * 76.0/375.0)
       $0.height.equalTo(button.snp.width)
       $0.centerX.equalTo(view)
-      $0.bottom.equalTo(view).offset(-vcSize.height * 40.0/667.0)
+      $0.bottom.equalTo(view).offset((-vcSize.height * 40.0/667.0)+padding)
     }
   }
   
@@ -163,14 +165,15 @@ class MainTabViewController: UIViewController {
       let image = UIImage(named: imageName)
       switch self {
       case .home, .search, .heart:
-        return image?.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplet: true)
+        return image?.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplate: true)
       case .profile:
-        return image?.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplet: false)
+        return image?.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplate: false)
       }
     }
   }
   
   struct TabVC {
+    
     var tabVCs: [UIViewController?]
     var tabViewClosure: [(() -> UIViewController)?]
     
@@ -204,19 +207,33 @@ class MainTabViewController: UIViewController {
 
 }
 
-
-
-
-
 extension UIImage {
-  func copy(with: UIEdgeInsets, isTemplet: Bool) -> UIImage? {
+  func copy(with: UIEdgeInsets, isTemplate: Bool) -> UIImage? {
     UIGraphicsBeginImageContextWithOptions(
       CGSize(width: self.size.width + with.left + with.right,
              height: self.size.height + with.top + with.bottom), false, self.scale)
-    let _ = UIGraphicsGetCurrentContext()
-    self.draw(at: .init(x: with.top, y: with.left))
+    if let _ = UIGraphicsGetCurrentContext() {
+      self.draw(at: .init(x: with.left, y: with.top))
+      let result = UIGraphicsGetImageFromCurrentImageContext()
+      UIGraphicsEndImageContext()
+      return (isTemplate) ? result?.withRenderingMode(.alwaysTemplate) : result
+    }
+    return nil
+  }
+}
+
+extension UIColor {
+  var image1x1: UIImage? {
+    guard let components = cgColor.components else { return nil }
+    UIGraphicsBeginImageContextWithOptions(
+      CGSize(width: 1.0,height: 1.0), false, 1.0)
+    let context = UIGraphicsGetCurrentContext()
+    context?.setFillColor(red: components[0], green: components[1], blue: components[2], alpha: components[3])
+    //let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+    context?.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+    //context?.setBlendMode(.sourceAtop)
     let result = UIGraphicsGetImageFromCurrentImageContext()
     UIGraphicsEndImageContext()
-    return (isTemplet) ? result?.withRenderingMode(.alwaysTemplate) : result
+    return result
   }
 }
