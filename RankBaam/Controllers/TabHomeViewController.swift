@@ -33,10 +33,6 @@ extension CellDataRefreshable {
 }
 
 class TabHomeViewController: UIViewController, CellDataRefreshable {
-
-
-    @IBOutlet weak var mainAllRankCollectionView: UICollectionView!
-    @IBOutlet weak var mainAllRankCustomNavigationBar: UIView!
     
     var loadThreshold: Int = 3
     typealias dataType = Topic
@@ -49,28 +45,36 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
     var mainAllRankLoadingFooterView: MainAllRankLoadingFooterView?
     let mainRankRefreshControl: UIRefreshControl = UIRefreshControl()
     
+    var mainAllRankCollectionView: UICollectionView = {
+        let flowlayout = UICollectionViewFlowLayout()
+        let mainAllRankCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowlayout)
+        return mainAllRankCollectionView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //upperTabbarConfigure()
+        viewInitConfigure()
         loadMainRankCellDatas()
         mainRankCollectionViewConfigure()
         
         navigationController?.navigationBar.isHidden = true
-        /*navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.foregroundColor : UIColor.rankbaamOrange
-        ]
-        navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
-        navigationController?.navigationBar.topItem?.title = "Rank Baam"
-        
-        navigationController?.navigationBar.barTintColor = UIColor.white*/
         
     }
     
+    fileprivate func viewInitConfigure() {
+        self.view.addSubview(mainAllRankCollectionView)
+        mainAllRankCollectionView.snp.makeConstraints {
+            $0.left.right.bottom.equalToSuperview()
+            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+        }
+    }
+    
     func mainRankCollectionViewConfigure() {
-        let cellNib = UINib(nibName: "MainAllRankCell", bundle: nil)
+        mainAllRankCollectionView.dataSource = self
+        mainAllRankCollectionView.delegate = self
         let footerNib = UINib(nibName: "MainAllRankLoadingFooterView", bundle: nil)
-        mainAllRankCollectionView.register(cellNib, forCellWithReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL)
+        mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL)
         mainAllRankCollectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "loadingFooterView")
         mainRankRefreshControl.tintColor = UIColor.rankbaamOrange
         mainAllRankCollectionView.refreshControl = mainRankRefreshControl
@@ -86,17 +90,6 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         setRefreshAllDataNeeded()
         loadMainRankCellDatas()
         self.mainAllRankLoadingFooterView?.backToInit()
-    }
-    
-    func upperTabbarConfigure() {
-        
-        let upperTabber = MainAllRankTopTabbar(frame: CGRect(x: 0, y: 68, width: self.view.frame.width, height: 35))
-        self.view.addSubview(upperTabber)
-        upperTabber.translatesAutoresizingMaskIntoConstraints = false
-        upperTabber.topAnchor.constraint(equalTo: self.mainAllRankCustomNavigationBar.bottomAnchor).isActive = true
-        upperTabber.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 1).isActive = true
-        upperTabber.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        upperTabber.heightAnchor.constraint(equalToConstant: 35).isActive = true
     }
     
     func loadMainRankCellDatas() {
@@ -130,15 +123,27 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
     }
     
     func loadedDataHandle(_ loadedData: [Topic]) {
+        
         refreshCellDataIfNeeded()
+        
+        let loadedData = loadedData.reduce([Topic]()) { (tmp, item) -> [Topic] in
+            var item = item
+            if !cellDatas.contains{ $0.topicSN == item.topicSN } {
+                item.sortPhotos()
+                return tmp + [item]
+            }
+            return tmp
+        }
+        
         page += 1
         if loadedData.isEmpty {
             isMoreDataExist = false
             mainAllRankLoadingFooterView?.endLoad()
+        } else {
+            self.cellDatas += loadedData
+            self.mainAllRankCollectionView.reloadData()
         }
         self.mainRankRefreshControl.endRefreshing()
-        self.cellDatas.append(contentsOf: loadedData)
-        self.mainAllRankCollectionView.reloadData()
     }
     
     func footerViewLoadDataHandler(_ indexPath: IndexPath){
@@ -160,18 +165,6 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
         let mainAllRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL, for: indexPath) as! MainAllRankCell
         
         mainAllRankCell.cellDatasConfigure(topic: cellDatas[indexPath.item])
-        if !cellDatas[indexPath.item].photos.isEmpty {
-            let imgURL = URL(string: cellDatas[indexPath.item].photos[0].realUrl)
-            mainAllRankCell.mainRankCellImg.kf.indicatorType = .activity
-            mainAllRankCell.mainRankCellImg.kf.setImage(with: imgURL,
-                options: [.backgroundDecode],
-                completionHandler: { (img, _, _, _) in
-                mainAllRankCell.mainRankCellImg.animationImages = nil
-                mainAllRankCell.mainRankCellImg.stopAnimating()
-                mainAllRankCell.mainRankCellImg.image = img?.images?[10]
-                mainAllRankCell.mainRankCellImg.layoutIfNeeded()
-            })
-        }
         return mainAllRankCell
     }
     
@@ -190,7 +183,6 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionReusableView()
         }
     }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let topicDetailViewController = TopicDetailViewController()
         let topicSN = cellDatas[indexPath.item].topicSN
@@ -207,18 +199,22 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 10
+        return 0
     }
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return Constants.screenHeight * (12 / 667)
+    }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 327, height: 128)
+        return Constants.screenHeight == 812 ?
+            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :
+            CGSize(width: Constants.screenWidth * (343 / 375), height: Constants.screenHeight * (122 / 667))
     }
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //         print("\(scrollView.contentOffset.x)")
 //    }
 }
 //
-//extension TabHomeViewController2: UIScrollViewDelegate {
+//extension TabHomeViewController: UIScrollViewDelegate {
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //
 //    }

@@ -14,17 +14,11 @@ protocol MainUpperTabScrollViewDelegate {
 }
 
 class TabHomePageViewController: UIPageViewController {
-
-
-//    fileprivate var currentIndex = 0
-//    fileprivate var lastPosition: CGFloat = 0
     
-    let screenHeight: CGFloat = UIScreen.main.bounds.height
-    let screenWidth: CGFloat = UIScreen.main.bounds.width
     var scrollDelegate: MainUpperTabScrollViewDelegate?
     
     var upperTabView: MainAllRankTopTabbar =  {
-       let upperTabView = MainAllRankTopTabbar()
+       let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "모든랭킹", rightTabTitle: "주간랭킹")
        return upperTabView
     }()
     
@@ -40,7 +34,12 @@ class TabHomePageViewController: UIPageViewController {
         return mainnaviTitle
     }()
     
-    lazy var mainViewControllers: [UIViewController] = {
+    var mainFilterButton: UIButton = {
+        let mainFilterButton = UIButton()
+        return mainFilterButton
+    }()
+    
+    var mainViewControllers: [UIViewController] = {
         let tabHomeViewController = TabHomeViewController()
         let tabHomeWeeklyViewController = TabHomeWeeklyRankViewController()
         return [tabHomeViewController, tabHomeWeeklyViewController]
@@ -74,24 +73,40 @@ class TabHomePageViewController: UIPageViewController {
     
     fileprivate func customNavigationBarTabBarConfigure() {
         self.view.addSubview(mainCustomNavigationBar)
+        mainCustomNavigationBar.addSubview(mainNavigationBarTitle)
+        mainCustomNavigationBar.addSubview(mainFilterButton)
+        mainFilterButton.setImage(UIImage(named: "filterIcnN"), for: .normal)
+        mainFilterButton.contentMode = .scaleAspectFit
+        
         mainCustomNavigationBar.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview()
-            make.height.equalTo(screenHeight * (68/667))
+            make.height.equalTo(Constants.screenHeight * (68/667))
         }
-        mainCustomNavigationBar.addSubview(mainNavigationBarTitle)
+        
         mainNavigationBarTitle.text = "RANK BAAM"
-        mainNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: 18)
-        mainNavigationBarTitle.snp.makeConstraints { (make) in
-            make.top.equalTo(mainCustomNavigationBar.snp.top).offset(screenHeight * (38 / 667))
-            make.left.equalTo(mainCustomNavigationBar.snp.left).offset(screenWidth * (136 / 375))
-            make.height.equalTo(screenHeight * (21 / 667))
+        mainNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
+        mainNavigationBarTitle.snp.makeConstraints {
+            $0.top.equalTo(mainCustomNavigationBar.snp.top)
+                .offset(Constants.screenHeight * (38 / 667))
+            $0.left.equalTo(mainCustomNavigationBar.snp.left)
+                .offset(Constants.screenWidth * (136 / 375))
+            $0.height.equalTo(Constants.screenHeight * (21 / 667))
+        }
+        mainFilterButton.snp.makeConstraints {
+           
+            $0.left.equalTo(mainNavigationBarTitle.snp.right)
+                .offset(Constants.screenWidth * (335 / 375))
+            $0.top.equalTo(mainCustomNavigationBar.snp.top)
+                .offset(Constants.screenHeight * (36 / 667))
+            $0.width.equalTo(Constants.screenWidth * (24 / 375))
+            $0.height.equalTo(Constants.screenHeight * (24 / 667))
         }
         self.view.addSubview(upperTabView)
         upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: mainCustomNavigationBar.bottomAnchor).isActive = true
         upperTabView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         upperTabView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        upperTabView.heightAnchor.constraint(equalToConstant: screenHeight * (35 / 667)).isActive = true
+        upperTabView.heightAnchor.constraint(equalToConstant: Constants.screenHeight * (35 / 667)).isActive = true
         upperTabView.delegate = self
         
         
@@ -138,7 +153,7 @@ extension TabHomePageViewController: UIScrollViewDelegate {
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
             self.upperTabView.selectedUnderBarLeadingConstraint?.constant  =
-                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + 61
+                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + Constants.screenWidth * (61 / 375)
             self.upperTabView.layoutIfNeeded()
         }, completion: nil)
         

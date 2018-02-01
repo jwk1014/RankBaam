@@ -180,7 +180,6 @@ struct OptionService {
     Alamofire .request(OptionRouter.delete(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
   }
-  
 }
 
 struct OptionCommentService {

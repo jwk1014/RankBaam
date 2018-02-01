@@ -20,10 +20,10 @@ class SpreadTransition: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         let transitionedView = transitionContext.view(forKey: .to)!
-        
-        
+        containerView.backgroundColor = UIColor.clear
         let startFrameSize = startFrame
         let endFrameSize = transitionedView.frame
+        let preseinting = transitionContext.viewController(forKey: .from)
         
         transitionedView.transform = CGAffineTransform(scaleX: startFrameSize.width / endFrameSize.width, y: startFrameSize.height / endFrameSize.height)
         transitionedView.center = CGPoint(x: startFrameSize.midX, y: startFrameSize.midY)
@@ -35,8 +35,9 @@ class SpreadTransition: NSObject, UIViewControllerAnimatedTransitioning {
             transitionedView.transform = CGAffineTransform.identity
             transitionedView.center = CGPoint(x: endFrameSize.midX, y: endFrameSize.midY)
             transitionedView.alpha = 1
-        }, completion: { _ in
-            transitionContext.completeTransition(true)
+        }, completion: { finished in
+        
+            transitionContext.completeTransition(finished)
         }
       )
     }

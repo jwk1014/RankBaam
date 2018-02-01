@@ -19,9 +19,9 @@ class MainTabViewController: UIViewController {
     super.viewDidLoad()
     
     tabVCs.addTabViewClosure(index: 0, closure: (TabHomeViewController.init))
-    tabVCs.addTabViewClosure(index: 1, closure: (TabSearchViewController.init))
-    tabVCs.addTabViewClosure(index: 2, closure: (TabLikeViewController.init))
-    tabVCs.addTabViewClosure(index: 3, closure: (TabMyViewController.init))
+//    tabVCs.addTabViewClosure(index: 1, closure: (TabSearchViewController.init))
+//    tabVCs.addTabViewClosure(index: 2, closure: (TabLikeViewController.init))
+//    tabVCs.addTabViewClosure(index: 3, closure: (TabMyViewController.init))
     
     initView()
   }
