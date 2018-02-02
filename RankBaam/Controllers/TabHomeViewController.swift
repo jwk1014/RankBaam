@@ -82,11 +82,8 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         mainAllRankCollectionView.refreshControl = mainRankRefreshControl
         mainRankRefreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         mainAllRankCollectionView.backgroundColor = UIColor.rankbaamGray
-        if Constants.screenHeight == 812 {
-            mainAllRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: 90, right: 0)
-        } else {
-            mainAllRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: Constants.screenHeight * (90 / 667), right: 0)
-        }
+       
+        mainAllRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
         
     }
     

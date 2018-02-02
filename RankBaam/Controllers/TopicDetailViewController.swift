@@ -330,7 +330,7 @@ class TopicDetailViewController: UIViewController {
                     guard let topic = sResult.topic else {return}
                     DispatchQueue.main.async {
                         self.topic = topic
-                        self.isLikedForHeartButton = topic.isLike
+                        self.topicDetailHeartLikeButtonImageView.image = topic.isLike ? self.heartButtonImgForLiked : self.heartButtonImgForUnliked
                         self.topicDetailRankOptionCollectionView.reloadData()
                     }
                 } else if let msg = sResult.msg {

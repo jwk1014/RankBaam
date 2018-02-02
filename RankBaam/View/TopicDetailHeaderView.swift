@@ -263,8 +263,8 @@ class TopicDetailHeaderView: UICollectionReusableView {
             .backgroundColor = UIColor.rankbaamSeperatorColor
         topicDetailHeaderCreationDateLabel.textColor = UIColor.rankbaamDarkgray
         topicDetailHeaderCreationDateLabel.font = topicDetailHeaderNicknameLabel
-            .font
-            .withSize(Constants.screenHeight * ( 12 / 667 ))
+                                                    .font
+                                                    .withSize(Constants.screenHeight * ( 12 / 667 ))
         topicDetailHeaderVoteBoxImageView.image = UIImage(named: "voteImg")
         topicDetailHeaderVoteBoxImageView.contentMode = .scaleAspectFit
         topicDetailHeaderVoteCountLabel.textColor = UIColor.rankbaamBlack
@@ -288,7 +288,6 @@ class TopicDetailHeaderView: UICollectionReusableView {
                                                     .withSize(self.frame.height * (13 / 520))
         topicDetailHeaderDescriptionLabel.sizeToFit()
         topicDetailHeaderDescriptionLabel.numberOfLines = 0
-        //topicDetailHeaderDescriptionLabel.adjustsFontSizeToFitWidth = true
         topicDetailHeaderVoteCountCoachTextLabel
             .textColor = UIColor.rankbaamDarkgray
         topicDetailHeaderVoteCountCoachTextLabel.font = topicDetailHeaderVoteCountLabel
@@ -474,7 +473,7 @@ extension TopicDetailHeaderView: UICollectionViewDelegate, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.screenHeight * (16 / 667)
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
