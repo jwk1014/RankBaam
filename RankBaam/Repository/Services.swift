@@ -97,6 +97,28 @@ struct TopicService {
               .responseRankBaam(completion)
   }
   
+  /*
+  @discardableResult
+  static func photoCreate(
+    topicSN: Int,
+    completion: @escaping (DataResponse<SResultTopicCreate>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(TopicRouter.photoCreate(topic: topicWrite))
+      .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func photoDelete(
+    topicSN: Int,
+    order: Int,
+    completion: @escaping (DataResponse<SResultTopicCreate>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(TopicRouter.photoDelete(topicSN: topicSN, order: order))
+      .responseRankBaam(completion)
+  }*/
+  
+  
+  
   @discardableResult
   static func like(
     topicSN: Int, isLike: Bool,
@@ -172,6 +194,30 @@ struct OptionService {
   ) -> DataRequest {
     return Alamofire .request(OptionRouter.create(option: optionWrite))
               .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func photoCreate(
+    topicSN: Int,
+    optionSN: Int,
+    photoUrl: URL,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire.upload(photoUrl,
+             to: OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url)
+           .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func photoDelete(
+    topicSN: Int,
+    optionSN: Int,
+    order: Int,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(
+      OptionRouter.photoDelete(topicSN: topicSN, optionSN: optionSN, order: order))
+      .responseRankBaam(completion)
   }
   
   @discardableResult

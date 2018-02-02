@@ -8,6 +8,8 @@ enum TopicRouter {
   case likeList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case myList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case create(topic: TopicWrite)
+  //case photoCreate(topicSN: Int)
+  //case photoDelete(topicSN: Int, order: Int)
   case read(topicSN: Int)
   case like(topicSN: Int, isLike: Bool)
   case unlike(topicSN: Int)

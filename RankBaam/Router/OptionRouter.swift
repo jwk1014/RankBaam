@@ -5,6 +5,8 @@ enum OptionRouter {
   case list(topicSN: Int, page: Int, count: Int?)
   case read(topicSN: Int, optionSN: Int)
   case create(option: OptionWrite)
+  case photoCreate(topicSN: Int, optionSN: Int)
+  case photoDelete(topicSN: Int, optionSN: Int, order: Int)
   case updatePre(topicSN: Int, optionSN: Int)
   case update(option: OptionWrite)
   case delete(topicSN: Int, optionSN: Int)
@@ -24,6 +26,10 @@ extension OptionRouter: TargetType {
       return "/topic/\(topicSN)/option/\(optionSN)"
     case let .create(option):
       return "/topic/\(option.topicSN)/option/create"
+    case let .photoCreate(topicSN, optionSN):
+      return "/topic/\(topicSN)/option/\(optionSN)/photo/create"
+    case let .photoDelete(topicSN, optionSN, order):
+      return "/topic/\(topicSN)/option/\(optionSN)/photo/\(order)/delete"
     case let .updatePre(topicSN, optionSN):
       return "/topic/\(topicSN)/option/\(optionSN)/update/pre"
     case let .update(option):
@@ -46,6 +52,8 @@ extension OptionRouter: TargetType {
          .voteList:
       return .get
     case .create,
+         .photoCreate,
+         .photoDelete,
          .update,
          .delete,
          .vote:
@@ -67,7 +75,9 @@ extension OptionRouter: TargetType {
       ])
     case let .vote(_, _, isVoted):
       return ["isVoted": isVoted]
-    case .read,
+    case .photoCreate,
+         .photoDelete,
+         .read,
          .updatePre,
          .delete,
          .voteList:

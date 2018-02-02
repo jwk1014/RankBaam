@@ -11,6 +11,10 @@ protocol TargetType: URLRequestConvertible {
 
 extension TargetType {
   
+  var url: URLConvertible {
+    return baseURL.appendingPathComponent(path)
+  }
+  
   var baseURL: URL {
     return URL(string: "https://www.devwon.com/rankbaam")!
   }

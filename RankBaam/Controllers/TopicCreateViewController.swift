@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SnapKit
+//import Photos
 
 fileprivate enum TopicCreateButtonTag: Int {
   case back = 1
@@ -20,7 +21,7 @@ fileprivate enum TopicCreateButtonTag: Int {
 }
 
 class TopicCreateViewController: UIViewController, TopicCreateViewControllerCallback {
-  typealias OptionCellData = (image: UIImage?, text: String?)
+  typealias OptionCellData = (image: UIImage?, imageUrl: URL?, text: String?)
   var topicCategory: Category? = nil
   var topicTitle: String? = nil
   var topicDescription: String? = nil
@@ -150,7 +151,10 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
             guard let topicSN = sResult.topicSN else { return }
             
             let topicDetailClosure = {
-              //TODO
+              let vc = TopicDetailViewController()
+              vc.topicSN = topicSN
+              (self.presentingViewController as? UINavigationController)?.pushViewController(vc, animated: false)
+              self.dismiss(animated: true, completion: nil)
             }
             
             if let collectionView = self.collectionView, self.optionCount > 0 {
@@ -166,31 +170,49 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
                       count: cell.index+1-optionCellDatas.count)
                   }
                   optionCellDatas[cell.index] = OptionCellData(
-                    image: (cell.imageView?.tag != 0) ? cell.imageView?.image : nil,
+                    image: (cell.imageView?.tag != 0) ? cell.imageView?.image : nil, //TODO
+                    imageUrl: (cell.imageView?.tag != 0) ? cell.imageUrl : nil,
                     text: cell.textField?.text)
                 }
               
-              //TODO
-              var options = optionCellDatas
+              optionCellDatas = optionCellDatas
                 .filter({$0 != nil})
                 .map({$0!})
                 .filter({$0.text != nil && $0.text!.count > 0})
-                .map({ optionCellData in
+                /*.map({ optionCellData in
                   return OptionWrite.init(topicSN: topicSN, optionSN: nil, title: optionCellData.text!, description: nil)
-                })
+                })*/
               
-              if options.count > 0 {
+              if optionCellDatas.count > 0 {
                 
                 var optionCreateResponseClosure: ((DataResponse<SResultOptionCreate>) -> Void)!
+                var optionPhotoCreateResponseClosure: ((DataResponse<SResult>) -> Void)!
+                
                 optionCreateResponseClosure = {
                   switch($0.result) {
                     
                   case .success(let sResult):
                     if sResult.succ {
-                      if options.count > 0 {
+                      guard let optionCellData = optionCellDatas.remove(at: 0) else {
+                        topicDetailClosure()
+                        return
+                      }
+                      /*if  let imageUrl = optionCellData.imageUrl,
+                          let optionSN = sResult.optionSN {
+                        OptionService.photoCreate(
+                          topicSN: topicSN,
+                          optionSN: optionSN,
+                          photoUrl: imageUrl,
+                          completion: optionPhotoCreateResponseClosure)
+                      } else */if optionCellDatas.count > 0,
+                                let title = optionCellDatas[0]?.text {
                         OptionService.create(
-                          optionWrite: options.remove(at: 0),
-                          completion: optionCreateResponseClosure)
+                          optionWrite: OptionWrite(
+                            topicSN: topicSN,
+                            optionSN: nil,
+                            title: title,
+                            description: nil),
+                            completion: optionCreateResponseClosure)
                       } else {
                         topicDetailClosure()
                       }
@@ -210,9 +232,47 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
                   }
                 }
                 
-                OptionService.create(
-                  optionWrite: options.remove(at: 0),
-                  completion: optionCreateResponseClosure)
+                optionPhotoCreateResponseClosure = {
+                  switch($0.result) {
+                    
+                  case .success(let sResult):
+                    if sResult.succ {
+                      if let optionCellData = optionCellDatas[0] {
+                        OptionService.create(
+                          optionWrite: OptionWrite(
+                            topicSN: topicSN,
+                            optionSN: nil,
+                            title: optionCellData.text!,
+                            description: nil),
+                            completion: optionCreateResponseClosure)
+                      } else {
+                        topicDetailClosure()
+                      }
+                    } else if let msg = sResult.msg {
+                      switch msg {
+                      default:
+                        break
+                      }
+                      topicDetailClosure()
+                    }
+                    break
+                  case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                      error.handle(self)
+                    }
+                    topicDetailClosure()
+                  }
+                }
+                
+                if let title = optionCellDatas[0]?.text {
+                  OptionService.create(
+                    optionWrite: OptionWrite(
+                      topicSN: topicSN,
+                      optionSN: nil,
+                      title: title,
+                      description: nil),
+                      completion: optionCreateResponseClosure)
+                }
                 
                 return
               }
@@ -223,6 +283,10 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
             
           } else if let msg = sResult.msg {
             switch msg {
+            case "TitleExists":
+              alertClosure("같은 제목을 가진 랭킹 주제가 존재합니다.") { _ in
+                self.headerView?.titleTextField?.becomeFirstResponder()
+              }
             default:
               break
             }
@@ -409,6 +473,13 @@ extension TopicCreateViewController: UICollectionViewDataSource {
     if let cell = cell as? TopicCreateOptionCell {
       if  indexPath.row < optionCellDatas.count,
           let optionCellData = optionCellDatas[indexPath.row] {
+        /*if  let url = optionCellData.imageUrl,
+            let data = try? Data(contentsOf: url),
+            let image = UIImage(data: data) {
+          cell.imageView?.tag = 1
+          cell.imageView?.image = image
+          cell.imageUrl = optionCellData.imageUrl
+        }*/
         if let image = optionCellData.image {
           cell.imageView?.tag = 1
           cell.imageView?.image = image
@@ -496,11 +567,11 @@ extension TopicCreateViewController: UICollectionViewDataSource {
 }
 
 extension TopicCreateViewController: TopicCreateOptionCellDelegate {
-  func cellDelegate(index: Int, image: UIImage?, text: String?) {
+  func cellDelegate(index: Int, image: UIImage?, imageUrl: URL?, text: String?) { //TODO
     if optionCellDatas.count-1 < index {
       optionCellDatas += Array<OptionCellData?>(repeating: nil, count: index+1-optionCellDatas.count)
     }
-    optionCellDatas[index] = OptionCellData(image: image, text: text)
+    optionCellDatas[index] = OptionCellData(image: image, imageUrl: imageUrl, text: text)
   }
   
   func present(vc: UIViewController) {
@@ -603,7 +674,7 @@ class TopicCreateOptionCellTextFieldDelegateManager: NSObject, UITextFieldDelega
 }
 
 protocol TopicCreateOptionCellDelegate {
-  func cellDelegate(index: Int, image: UIImage?, text: String?)
+  func cellDelegate(index: Int, image: UIImage?, imageUrl: URL?, text: String?)
   func present(vc: UIViewController)
 }
 
@@ -621,11 +692,12 @@ class TopicCreateOptionCell: UICollectionViewCell {
   }
   
   var index: Int = 0
+  var imageUrl: URL?
   private(set) weak var imageView: UIImageView?
   private(set) weak var textField: UITextField?
   
   override func prepareForReuse() {
-    delegate?.cellDelegate(index: index, image: (imageView?.tag != 0) ? imageView?.image : nil, text: textField?.text)
+    delegate?.cellDelegate(index: index, image: (imageView?.tag != 0) ? imageView?.image : nil, imageUrl: (imageView?.tag != 0) ? imageUrl : nil, text: textField?.text)
     index = -1
     imageView?.tag = 0
     imageView?.image = UIImage(named: "image_icn")
@@ -680,6 +752,8 @@ extension TopicCreateOptionCell: UIImagePickerControllerDelegate, UINavigationCo
       imageView?.tag = 1
       imageView?.image = image
     }
+    //imageUrl = info[UIImagePickerControllerMediaURL] as? URL
+    
     picker.dismiss(animated: true, completion: nil)
   }
 }
