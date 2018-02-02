@@ -150,7 +150,7 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellImageViewShadowView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         mainAllRankCellImageViewShadowView.layer.shadowRadius = 5
         mainAllRankCellImageView.image = UIImage(named: "noimage")
-        mainAllRankCellImageView.contentMode = .scaleAspectFit
+        mainAllRankCellImageView.contentMode = .scaleAspectFill
         mainAllRankCellImageView.layer.cornerRadius = 8
         mainAllRankCellImageView.layer.masksToBounds = true
         mainAllRankCellTitleLabel.text = "겨울에 가기 좋은 해외 여행지는?"
