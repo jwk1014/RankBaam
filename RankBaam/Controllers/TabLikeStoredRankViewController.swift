@@ -128,7 +128,7 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCollectionView.dataSource = self
         tabLikeStoredRankCollectionView.delegate = self
         tabLikeStoredRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: "likedStoredCell")
-        tabLikeStoredRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: Constants.screenHeight * (60 / 667), right: 0)
+        tabLikeStoredRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
     }
     
     @objc fileprivate func tabLikeStoredRankButtonsHandler(_ sender: UIButton) {

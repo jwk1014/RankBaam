@@ -38,6 +38,7 @@ class TabMyViewPageViewController: UIPageViewController {
         let tabMyViewRankingsViewController = TabMyViewRankingsViewController()
         let tabHomeViewController = TabHomeViewController()
         
+        
         return [tabHomeViewController, tabMyViewRankingsViewController]
     }()
     

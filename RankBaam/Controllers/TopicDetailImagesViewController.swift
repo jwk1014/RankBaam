@@ -151,11 +151,10 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
             
         }
         topicImagesDismissButton.snp.makeConstraints {
-            $0.right.equalTo(self.view.snp.right).offset(-(Constants.screenWidth * (15 / 375)))
+            $0.right.equalTo(self.view.snp.right)
             $0.top.equalTo(self.view.snp.top)
-                .offset(Constants.screenHeight * ( 15 / 667))
-            $0.width.equalTo(Constants.screenWidth * (30 / 375))
-            $0.height.equalTo(Constants.screenHeight * ( 30 / 667))
+            $0.width.equalTo(Constants.screenWidth * (70 / 375))
+            $0.height.equalTo(Constants.screenHeight * ( 70 / 667))
         }
         imagesPageCounterLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
