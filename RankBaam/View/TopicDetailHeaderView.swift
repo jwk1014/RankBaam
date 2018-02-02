@@ -288,7 +288,7 @@ class TopicDetailHeaderView: UICollectionReusableView {
                                                     .withSize(self.frame.height * (13 / 520))
         topicDetailHeaderDescriptionLabel.sizeToFit()
         topicDetailHeaderDescriptionLabel.numberOfLines = 0
-        topicDetailHeaderDescriptionLabel.adjustsFontSizeToFitWidth = true
+        //topicDetailHeaderDescriptionLabel.adjustsFontSizeToFitWidth = true
         topicDetailHeaderVoteCountCoachTextLabel
             .textColor = UIColor.rankbaamDarkgray
         topicDetailHeaderVoteCountCoachTextLabel.font = topicDetailHeaderVoteCountLabel
