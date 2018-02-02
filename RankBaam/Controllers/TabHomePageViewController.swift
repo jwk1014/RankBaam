@@ -6,6 +6,10 @@
 //  Copyright © 2018년 김정원. All rights reserved.
 //
 
+
+
+
+
 import UIKit
 import SnapKit
 
@@ -111,6 +115,10 @@ class TabHomePageViewController: UIPageViewController {
         
         
     }
+  
+  override func viewDidLayoutSubviews() {
+    print("a")
+  }
 }
 
 extension TabHomePageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {

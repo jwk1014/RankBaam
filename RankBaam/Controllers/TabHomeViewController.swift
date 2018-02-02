@@ -205,8 +205,8 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
         return Constants.screenHeight * (12 / 667)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return Constants.screenHeight == 812 ?
-            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :
+        return /*Constants.screenHeight == 812 ?
+            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :*/
             CGSize(width: Constants.screenWidth * (343 / 375), height: Constants.screenHeight * (122 / 667))
     }
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {

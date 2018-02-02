@@ -9,7 +9,17 @@
 import UIKit
 import Alamofire
 
+func width375(_ width: CGFloat) -> CGFloat {
+  return UIScreen.main.bounds.width * width / 375.0
+}
 
+func height667(_ height: CGFloat, forX: CGFloat? = nil) -> CGFloat {
+  let screenHeight = UIScreen.main.bounds.height
+  if screenHeight == 812.0, let forX = forX { //if X
+    return forX
+  }
+  return screenHeight * height / 667.0
+}
 
 extension String {
     func isMatch(regex: String) -> Bool {

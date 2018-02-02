@@ -18,10 +18,10 @@ class MainTabViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    tabVCs.addTabViewClosure(index: 0, closure: (TabHomeViewController.init))
-//    tabVCs.addTabViewClosure(index: 1, closure: (TabSearchViewController.init))
-//    tabVCs.addTabViewClosure(index: 2, closure: (TabLikeViewController.init))
-//    tabVCs.addTabViewClosure(index: 3, closure: (TabMyViewController.init))
+    tabVCs.addTabViewClosure(index: 0, closure: (TabHomePageViewController.init))
+    tabVCs.addTabViewClosure(index: 1, closure: (TabSearchRankViewController.init))
+    tabVCs.addTabViewClosure(index: 2, closure: (TabLikeStoredRankViewController.init))
+    tabVCs.addTabViewClosure(index: 3, closure: (TabMyViewPageViewController.init))
     
     initView()
   }
@@ -64,6 +64,10 @@ class MainTabViewController: UIViewController {
       contentView?.subviews[0].removeFromSuperview()
     }
     contentView?.addSubview(vc.view)
+  }
+  
+  override func viewDidLayoutSubviews() {
+    print("a")
   }
   
   func initView() {
@@ -120,6 +124,7 @@ class MainTabViewController: UIViewController {
       if tab == currentFocusedTab {
         selectedTabImageView = imageView
         changeTabImage(tab: tab, imageView: imageView, focused: true)
+        contentView.frame = view.frame
         changeTabContentView(tab: tab)
       }
     }
