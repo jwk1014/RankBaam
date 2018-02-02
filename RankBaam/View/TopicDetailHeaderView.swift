@@ -232,7 +232,8 @@ class TopicDetailHeaderView: UICollectionReusableView {
             .addSubview(topicDetailHeaderBottomOptionCellsTopView)
         topicDetailHeaderBackgroundView
             .addSubview(topicDetailHeaderDescriptionLabel)
-        topicDetailHeaderBackgroundView.addSubview(topicDetailHeaderTextLikeButton)
+        topicDetailHeaderBackgroundView
+            .addSubview(topicDetailHeaderTextLikeButton)
         topicDetailHeaderBackgroundView.addSubview(topicDetailHeaderNicknameLabel)
         topicDetailHeaderBottomOptionCellsTopView
             .addSubview(topicDetailHeaderVoteCountCoachTextLabel)
@@ -287,7 +288,7 @@ class TopicDetailHeaderView: UICollectionReusableView {
                                                     .withSize(self.frame.height * (13 / 520))
         topicDetailHeaderDescriptionLabel.sizeToFit()
         topicDetailHeaderDescriptionLabel.numberOfLines = 0
-        topicDetailHeaderDescriptionLabel.adjustsFontSizeToFitWidth = true
+        //topicDetailHeaderDescriptionLabel.adjustsFontSizeToFitWidth = true
         topicDetailHeaderVoteCountCoachTextLabel
             .textColor = UIColor.rankbaamDarkgray
         topicDetailHeaderVoteCountCoachTextLabel.font = topicDetailHeaderVoteCountLabel
@@ -321,8 +322,8 @@ class TopicDetailHeaderView: UICollectionReusableView {
             $0.height.equalTo(self.frame.height * (32 / 520))
         }
         topicDetailHeaderTitleLabel.snp.makeConstraints {
-        $0.top.equalTo(topicDetailHeaderBackgroundView.snp.top)
-                .offset(self.frame.height * (243 / 520))
+            $0.top.equalTo(topicDetailHeaderImagesCollectionView.snp.bottom)
+                .offset(self.frame.height * (35 / 520))
             $0.left.equalTo(topicDetailHeaderBackgroundView.snp.left)
                 .offset(self.frame.width * (20 / 375))
             $0.width.equalTo(self.frame.width * (335 / 375))

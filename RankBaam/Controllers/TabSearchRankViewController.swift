@@ -62,7 +62,7 @@ class TabSearchRankViewController: UIViewController {
         tabSearchCustomNavigationBarTitleLabel.text = "RANK BAAM"
         tabSearchCustomNavigationBarTitleLabel.textColor = UIColor.rankbaamOrange
         tabSearchCustomNavigationBarTitleLabel.textAlignment = .center
-        tabSearchCustomNavigationBarTitleLabel.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
+        tabSearchCustomNavigationBarTitleLabel.font = UIFont.boldSystemFont(ofSize: Constants.screenWidth * (18 / 375))
         tabSearchCustomSearchBar.borderStyle = .none
         tabSearchCustomSearchBar.layer.borderColor = UIColor.rankbaamOrange.cgColor
         tabSearchCustomSearchBar.layer.borderWidth = 1

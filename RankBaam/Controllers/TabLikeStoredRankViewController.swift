@@ -70,7 +70,7 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCustomNavigationBar.layer.shadowOffset = CGSize(width: 0, height: 12)
         tabLikeStoredRankCustomNavigationBar.layer.masksToBounds = false
         tabLikeStoredRankCustomNavigationBarTitleLabel.text = "저장 랭킹"
-        tabLikeStoredRankCustomNavigationBarTitleLabel.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
+        tabLikeStoredRankCustomNavigationBarTitleLabel.font = UIFont.boldSystemFont(ofSize: Constants.screenWidth * (18 / 375))
         tabLikeStoredRankCustomNavigationBarTitleLabel.textAlignment = .center
         tabLikeStoredRankEditingButton
             .setTitle("편집", for: .normal)
@@ -128,6 +128,7 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCollectionView.dataSource = self
         tabLikeStoredRankCollectionView.delegate = self
         tabLikeStoredRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: "likedStoredCell")
+        tabLikeStoredRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: Constants.screenHeight * (60 / 667), right: 0)
     }
     
     @objc fileprivate func tabLikeStoredRankButtonsHandler(_ sender: UIButton) {

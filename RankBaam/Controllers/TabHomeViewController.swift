@@ -68,6 +68,8 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
             $0.left.right.bottom.equalToSuperview()
             $0.top.equalTo(Constants.screenHeight * (103 / 667))
         }
+      
+        
     }
     
     func mainRankCollectionViewConfigure() {
@@ -80,7 +82,11 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         mainAllRankCollectionView.refreshControl = mainRankRefreshControl
         mainRankRefreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         mainAllRankCollectionView.backgroundColor = UIColor.rankbaamGray
-        mainAllRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        if Constants.screenHeight == 812 {
+            mainAllRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: 90, right: 0)
+        } else {
+            mainAllRankCollectionView.contentInset = UIEdgeInsets(top: Constants.screenHeight * (20 / 667), left: 0, bottom: Constants.screenHeight * (90 / 667), right: 0)
+        }
         
     }
     
@@ -204,6 +210,9 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return Constants.screenHeight * (12 / 667)
     }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//    }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return /*Constants.screenHeight == 812 ?
             CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :*/
