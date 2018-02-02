@@ -14,6 +14,44 @@ enum optionDataFetchState {
     case NewOptionAdded
 }
 
+enum BottomButtonTitleConverter: CustomStringConvertible {
+    
+    case isAlreadyVoted
+    case isForRevisingTopic
+    case isFirstTimeForVote
+    
+    var description: String {
+        get{
+            switch self {
+            case .isAlreadyVoted:
+                return "다시 투표하기"
+            case .isFirstTimeForVote:
+                return "투표하기"
+            case .isForRevisingTopic:
+                return "수정하기"
+            }
+        }
+    }
+}
+
+enum NavigationTitleConverter: CustomStringConvertible {
+    
+    case isMain
+    case isSettingMyView
+    
+    var description: String {
+        get{
+            switch self {
+            case .isMain:
+                return "RANK BAAM"
+            case .isSettingMyView:
+                return "내 글 관리"
+            }
+        }
+    }
+}
+
+
 class TopicDetailViewController: UIViewController {
     
     var topicSN: Int!
@@ -29,6 +67,8 @@ class TopicDetailViewController: UIViewController {
     var topicDetailFooterView: TopicDetailFooterView?
     var semaphore = DispatchSemaphore(value: 1)
     var optionDataFetchState: optionDataFetchState = .FetchAllDatas
+    var navigationTitleConverter: NavigationTitleConverter?
+    var bottomButtonTitleConverter: BottomButtonTitleConverter?
 
      var selectedOptionIndexPath: [(indexPath: Int, optionSN: Int)] = [] {
          didSet {
@@ -207,7 +247,7 @@ class TopicDetailViewController: UIViewController {
             .withRenderingMode(.alwaysTemplate)
         topicDetailrankMainBackButtonImageView.tintColor = UIColor.rankbaamOrange
         topicDetailrankMainBackButton.addTarget(self, action: #selector(rankMainBackButtonTapped), for: .touchUpInside)
-        topicDetailNavigationBarTitleLabel.text = "RANK BAAM"
+        topicDetailNavigationBarTitleLabel.text = navigationTitleConverter?.description ?? "RANK BAAM"
         topicDetailNavigationBarTitleLabel.textColor = UIColor.rankbaamOrange
         topicDetailNavigationBarTitleLabel.font = topicDetailNavigationBarTitleLabel
                                                     .font
@@ -222,7 +262,7 @@ class TopicDetailViewController: UIViewController {
         topicDetailHeartLikeButton.backgroundColor = UIColor.rankbaamBlue
         topicDetailShareButton.backgroundColor = UIColor.rankbaamDarkgray*/
         topicDetailRankVoteButton.backgroundColor = UIColor.rankbaamDarkgray
-        topicDetailRankVoteButton.setTitle("투표하기", for: .normal)
+        topicDetailRankVoteButton.setTitle(bottomButtonTitleConverter?.description ?? "투표하기", for: .normal)
         topicDetailRankVoteButton.titleLabel?.font = topicDetailRankVoteButton.titleLabel?
             .font
             .withSize(Constants.screenHeight * (16 / 667))

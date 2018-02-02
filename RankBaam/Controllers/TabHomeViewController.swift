@@ -9,6 +9,9 @@
 import UIKit
 import Kingfisher
 
+
+
+
 protocol CellDataRefreshable: class {
     
     associatedtype dataType
@@ -189,6 +192,13 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let topicDetailViewController = TopicDetailViewController()
         let topicSN = cellDatas[indexPath.item].topicSN
+        
+        if let parentViewCon = self.parent as? TabMyViewPageViewController {
+            topicDetailViewController.bottomButtonTitleConverter =
+                .isForRevisingTopic
+            topicDetailViewController.navigationTitleConverter =
+                .isSettingMyView
+        }
         topicDetailViewController.topicSN = topicSN
         navigationController?.pushViewController(topicDetailViewController, animated: true)
     }
