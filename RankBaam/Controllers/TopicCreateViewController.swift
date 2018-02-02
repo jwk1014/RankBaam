@@ -150,7 +150,10 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
             guard let topicSN = sResult.topicSN else { return }
             
             let topicDetailClosure = {
-              //TODO
+              let vc = TopicDetailViewController()
+              vc.topicSN = topicSN
+              (self.presentingViewController as? UINavigationController)?.pushViewController(vc, animated: false)
+              self.dismiss(animated: true, completion: nil)
             }
             
             if let collectionView = self.collectionView, self.optionCount > 0 {
@@ -223,6 +226,10 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
             
           } else if let msg = sResult.msg {
             switch msg {
+            case "TitleExists":
+              alertClosure("같은 제목을 가진 랭킹 주제가 존재합니다.") { _ in
+                self.headerView?.titleTextField?.becomeFirstResponder()
+              }
             default:
               break
             }
