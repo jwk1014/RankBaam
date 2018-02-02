@@ -604,18 +604,21 @@ extension TopicDetailViewController: UICollectionViewDataSource {
 extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let targetSize = CGSize(width: self.view.frame.width, height: Constants.screenHeight * (520 / 667))
         
-        return CGSize(width: self.view.frame.width, height: Constants.screenHeight * (520 / 667))
+        guard let topicDetailHeaderView = topicDetailHeaderView else { return targetSize }
+        
+        let fittingSizeHeight = topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height > 520 ? topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height : 520
+        return .init(width: self.view.frame.width, height: fittingSizeHeight)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        let standardHeight = Constants.screenHeight == 812 ? 700 : Constants.screenHeight
-        let targetSize = CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (520 / 667))
         
-        guard let topicDetailHeaderView = topicDetailHeaderView else { return targetSize }
-        let fittingSize = topicDetailHeaderView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: UILayoutPriority.required, verticalFittingPriority: UILayoutPriority.required)
-        return fittingSize
+        let standardHeight = Constants.screenHeight == 812 ? 700 : Constants.screenHeight
+        
+        return CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (120 / 667))
     }
+    
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return (Constants.screenHeight * (16 / 667))
