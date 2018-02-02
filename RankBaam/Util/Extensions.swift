@@ -117,6 +117,8 @@ extension DataRequest {
         #if DEBUG
             
             var log: String = "\n===== \((response.request?.url?.absoluteString)!) =====\n\n"
+          
+            log += "[TIMELINE]\n\(response.timeline)\n\n"
             
             if let error = response.error {
                 log += "[ERROR]\n\(error.localizedDescription)\n\n"
@@ -149,6 +151,14 @@ extension DataRequest {
                         }
                         log += "\n"
                     }
+                }
+              
+                if  let request = response.request,
+                    request.httpMethod == "POST",
+                    let data = request.httpBody,
+                    let str = String(data: data, encoding: .utf8),
+                    !str.isEmpty {
+                  log += "[POST BODY]\n\(str)\n\n"
                 }
                 
                 log += "[RESPONSE DATA]\n"
