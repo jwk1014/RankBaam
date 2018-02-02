@@ -12,5 +12,5 @@ target 'RankBaam' do
   pod 'Firebase/Messaging', '4.8.0'
   pod 'SnapKit', '4.0.0'
   pod 'SwiftKeychainWrapper', '3.0.1'
-
+  pod 'SDWebImage', '~> 4.2.3'
 end

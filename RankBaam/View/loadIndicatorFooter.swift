@@ -14,6 +14,7 @@ class loadIndicatorFooter: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         loadIndicator.startAnimating()
+        
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -23,7 +24,6 @@ class loadIndicatorFooter: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
     
 }

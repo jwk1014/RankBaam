@@ -8,9 +8,14 @@
 
 import UIKit
 
+protocol UpperCustomTabbarDelegate {
+    func upperCustomTabbarTapped(sender: UIButton)
+}
+
 class MainAllRankTopTabbar: UIView {
     
     var selectedUnderBarLeadingConstraint: NSLayoutConstraint?
+    var delegate: UpperCustomTabbarDelegate?
     
     var allRankTab: UIButton = {
         let allranktab = UIButton()
@@ -18,6 +23,19 @@ class MainAllRankTopTabbar: UIView {
         allranktab.tag = 0
         return allranktab
     }()
+    
+    var weeklyRankTab: UIButton = {
+        let weeklyranktab = UIButton()
+        weeklyranktab.backgroundColor = UIColor.white
+        weeklyranktab.tag = 1
+        return weeklyranktab
+    }()
+    
+    var mainRankUpperTabStackView: UIStackView = {
+        let mainrankupperstack = UIStackView()
+        return mainrankupperstack
+    }()
+    
     
     var isAllRankTabSelected: Bool = true {
         didSet{
@@ -39,18 +57,6 @@ class MainAllRankTopTabbar: UIView {
         }
     }
     
-    var weeklyRankTab: UIButton = {
-        let weeklyranktab = UIButton()
-        weeklyranktab.backgroundColor = UIColor.white
-        weeklyranktab.tag = 1
-        return weeklyranktab
-    }()
-    
-    var mainRankUpperTabStackView: UIStackView = {
-       let mainrankupperstack = UIStackView()
-        mainrankupperstack.backgroundColor = UIColor.brown
-       return mainrankupperstack
-    }()
     
     var selectedUnderBar: UIView = {
        let selectedunderbar = UIView()
@@ -63,32 +69,40 @@ class MainAllRankTopTabbar: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+    }
+    convenience init(frame: CGRect, leftTabTitle: String, rightTabTitle: String) {
+        self.init(frame: frame)
         self.layer.shadowRadius = 7
-        self.layer.shadowColor = UIColor.gray.cgColor
-        self.layer.shadowOpacity = 0.2
+        self.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
+        self.layer.shadowOpacity = 0.5
         self.layer.shadowOffset = CGSize(width: 0, height: 12)
         self.layer.masksToBounds = false
-        setupStackView()
+        setupStackView(leftTabTitle, rightTabTitle)
+        print("\(selectedUnderBarLeadingConstraint)")
     }
     
-    func setupStackView() {
+    
+    func setupStackView(_ leftTabTitle: String?, _ rightTabTitle: String?) {
         
         self.addSubview(mainRankUpperTabStackView)
         
-        weeklyRankTab.addTarget(self, action: #selector(upperBarSelected(_:)), for: .touchUpInside)
-        allRankTab.addTarget(self, action: #selector(upperBarSelected(_:)), for: .touchUpInside)
+        weeklyRankTab.addTarget(self, action: #selector(upperBarSelected), for: .touchUpInside)
+        allRankTab.addTarget(self, action: #selector(upperBarSelected), for: .touchUpInside)
+        
         mainRankUpperTabStackView.translatesAutoresizingMaskIntoConstraints = false
         mainRankUpperTabStackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         mainRankUpperTabStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         mainRankUpperTabStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         mainRankUpperTabStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         mainRankUpperTabStackView.addArrangedSubview(allRankTab)
-        allRankTab.setTitle("모든랭킹", for: .normal)
+        
+        allRankTab.setTitle(leftTabTitle, for: .normal)
         allRankTab.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         allRankTab.contentHorizontalAlignment = .center
         allRankTab.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)
-        weeklyRankTab.setTitle("주간랭킹", for: .normal)
+        weeklyRankTab.setTitle(rightTabTitle, for: .normal)
         weeklyRankTab.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         weeklyRankTab.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         weeklyRankTab.setTitleColor(UIColor.gray, for: .normal)
@@ -100,30 +114,35 @@ class MainAllRankTopTabbar: UIView {
     }
     
     @objc func upperBarSelected(_ sender: UIButton) {
-        let constants = (self.frame.width / 2 * CGFloat(sender.tag) ) + CGFloat(63)
+        let constants = (self.frame.width / 2 * CGFloat(sender.tag) ) + CGFloat( Constants.screenWidth * (61 / 375))
         self.selectedUnderBarLeadingConstraint?.constant = constants
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         }
-        if sender === allRankTab {
+        if sender == allRankTab {
             isAllRankTabSelected = true
             isWeeklyRankTabSelected = false
         } else {
             isWeeklyRankTabSelected = true
             isAllRankTabSelected = false
         }
+        delegate?.upperCustomTabbarTapped(sender: sender)
         
     }
     
     func setupSelectedUnderBar() {
         selectedUnderBar.backgroundColor = UIColor.rankbaamOrange
         selectedUnderBar.translatesAutoresizingMaskIntoConstraints = false
-        let leading = selectedUnderBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 63)
+        let leading = selectedUnderBar.leadingAnchor.constraint(equalTo: self.leadingAnchor,
+                                                            constant: Constants.screenWidth * (61 / 375))
         leading.isActive = true
         self.selectedUnderBarLeadingConstraint = leading
-        selectedUnderBar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
-        selectedUnderBar.widthAnchor.constraint(equalToConstant: 62).isActive = true
-        selectedUnderBar.heightAnchor.constraint(equalToConstant: 3).isActive = true
+        selectedUnderBar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
+            .isActive = true
+        selectedUnderBar.widthAnchor.constraint(equalToConstant: Constants.screenWidth * ( 62 / 375 ))
+            .isActive = true
+        selectedUnderBar.heightAnchor.constraint(equalToConstant: Constants.screenHeight * ( 3 / 667 ))
+            .isActive = true
     }
     
     

@@ -10,14 +10,62 @@ import UIKit
 
 class TabHomeWeeklyRankViewController: UIViewController {
 
-    @IBOutlet weak var weeklyRankCollectionView: UICollectionView!
+    var tabHomeWeeklyRankCollectionView: UICollectionView = {
+        let coverFlowlayout = CoverFlowLayout()
+        coverFlowlayout.scrollDirection = .horizontal
+        let tabHomeWeeklyRankCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: coverFlowlayout)
+        return tabHomeWeeklyRankCollectionView
+    }()
+    
+    var tabHomeWeeklyRankCollectionViewCustomNumberPageControl: UILabel = {
+        let tabHomeWeeklyRankCollectionViewCustomNumberPageControl = UILabel()
+        return tabHomeWeeklyRankCollectionViewCustomNumberPageControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let weeklyRankCellNib = UINib(nibName: "MainWeeklyRankCell", bundle: nil)
-        weeklyRankCollectionView.register(weeklyRankCellNib, forCellWithReuseIdentifier: "MainWeeklyRankCell")
-        weeklyRankCollectionView.backgroundColor = UIColor.rankbaamGray
-       
+        viewInitConfigure()
+        tabHomeWeeklyRankCollectionViewConfigure()
+        
+    }
+    
+    fileprivate func tabHomeWeeklyRankCollectionViewConfigure() {
+        tabHomeWeeklyRankCollectionView.dataSource = self
+        tabHomeWeeklyRankCollectionView.delegate = self
+        // tabHomeWeeklyRankCollectionView.isPagingEnabled = true
+        tabHomeWeeklyRankCollectionView.showsHorizontalScrollIndicator = false
+        tabHomeWeeklyRankCollectionView.register(MainWeeklyRankCell.self, forCellWithReuseIdentifier: "MainWeeklyRankCell")
+        tabHomeWeeklyRankCollectionView.backgroundColor = UIColor.rankbaamGray
+        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, Constants.screenHeight * (50 / 667), 0)
+
+    }
+    
+    fileprivate func viewInitConfigure() {
+        self.view.addSubview(tabHomeWeeklyRankCollectionView)
+        self.view.addSubview(tabHomeWeeklyRankCollectionViewCustomNumberPageControl)
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text = "1 / 10"
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textColor =  UIColor.rankbaamDarkgray
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textAlignment = .right
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = tabHomeWeeklyRankCollectionViewCustomNumberPageControl
+            .font
+            .withSize(Constants.screenHeight * ( 13 / 667 ))
+        
+        
+        tabHomeWeeklyRankCollectionView.snp.makeConstraints {
+            $0.left.right.bottom.equalToSuperview()
+            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+        }
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl
+            .snp.makeConstraints {
+            let standardHeight =
+                    Constants.screenHeight == 812 ? 1010 : Constants.screenHeight
+            $0.right.equalTo(self.view.snp.right)
+                .offset(-(Constants.screenWidth * (61 / 375)))
+            $0.bottom.equalTo(self.view.snp.bottom)
+                .offset(-(standardHeight * (70 / 667)))
+            $0.width.equalTo(Constants.screenWidth * (70 / 375))
+            $0.height.equalTo(Constants.screenHeight * (15 / 667))
+        }
     }
 
 }
@@ -31,6 +79,7 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDataSource {
         let weeklyRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainWeeklyRankCell", for: indexPath)
         return weeklyRankCell
     }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -39,14 +88,29 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDataSource {
 
 extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width:collectionView.bounds.size.height * 0.35, height: collectionView.bounds.size.height * 0.6)
+        if Constants.screenHeight == 812 {
+            return CGSize(width:collectionView.bounds.size.width * 0.7 * ( 258 / 375 ), height: 625 * 0.7 * ( 406 / 564 ))
+        }
+        return CGSize(width:collectionView.bounds.size.width * 0.7 * ( 258 / 375 ), height: collectionView.bounds.size.height * 0.7 * ( 406 / 564 ))
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let sideInset = (collectionView.bounds.size.width - collectionView.bounds.size.height * 0.35)/2
+        let sideInset = (collectionView.bounds.size.width - collectionView.bounds.size.width * 0.7 * ( 258 / 375 ))/2
         
         return UIEdgeInsets(top: 0, left:sideInset , bottom: 0, right: sideInset)
+    }
+    
+}
+
+extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageNumber: Int = Int(scrollView.contentOffset.x / (self.view.frame.width / 2))
+        print("\(pageNumber)")
+        self.tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text =
+                "\(pageNumber + 1) / 10"
     }
 }

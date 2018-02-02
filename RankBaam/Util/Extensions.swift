@@ -9,10 +9,20 @@
 import UIKit
 import Alamofire
 
+
+
 extension String {
     func isMatch(regex: String) -> Bool {
         let regex = try? NSRegularExpression(pattern: regex, options: [])
         return regex?.firstMatch(in: self, options: [], range: NSRange(location: 0, length: utf16.count)) != nil
+    }
+    
+    func tempDateFommatConverter() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy H:mm:ss a"
+        guard let result = dateFormatter.date(from: self) else { return "" }
+        dateFormatter.dateFormat = "yyyy.MM.dd"
+        return dateFormatter.string(from: result)
     }
 }
 

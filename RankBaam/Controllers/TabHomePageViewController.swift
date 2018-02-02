@@ -14,20 +14,32 @@ protocol MainUpperTabScrollViewDelegate {
 }
 
 class TabHomePageViewController: UIPageViewController {
-
-//    fileprivate var currentIndex = 0
-//    fileprivate var lastPosition: CGFloat = 0
     
     var scrollDelegate: MainUpperTabScrollViewDelegate?
-    var upperTabView: MainAllRankTopTabbar?
-  
-    var mainCustomNavigationBar: UIView = {
-       let customNavigationBar = UIView()
-       customNavigationBar.backgroundColor = UIColor.white
-       return customNavigationBar
+    
+    var upperTabView: MainAllRankTopTabbar =  {
+       let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "모든랭킹", rightTabTitle: "주간랭킹")
+       return upperTabView
     }()
     
-    lazy var mainViewControllers: [UIViewController] = {
+    var mainCustomNavigationBar: UIView = {
+        let customNavigationBar = UIView()
+        customNavigationBar.backgroundColor = UIColor.white
+        return customNavigationBar
+    }()
+    
+    var mainNavigationBarTitle: UILabel = {
+        let mainnaviTitle = UILabel()
+        mainnaviTitle.textColor = UIColor.rankbaamOrange
+        return mainnaviTitle
+    }()
+    
+    var mainFilterButton: UIButton = {
+        let mainFilterButton = UIButton()
+        return mainFilterButton
+    }()
+    
+    var mainViewControllers: [UIViewController] = {
         let tabHomeViewController = TabHomeViewController()
         let tabHomeWeeklyViewController = TabHomeWeeklyRankViewController()
         return [tabHomeViewController, tabHomeWeeklyViewController]
@@ -61,12 +73,43 @@ class TabHomePageViewController: UIPageViewController {
     
     fileprivate func customNavigationBarTabBarConfigure() {
         self.view.addSubview(mainCustomNavigationBar)
+        mainCustomNavigationBar.addSubview(mainNavigationBarTitle)
+        mainCustomNavigationBar.addSubview(mainFilterButton)
+        mainFilterButton.setImage(UIImage(named: "filterIcnN"), for: .normal)
+        mainFilterButton.contentMode = .scaleAspectFit
+        
         mainCustomNavigationBar.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview()
-            make.height.equalTo(self.view.frame.height * (68/667))
+            make.height.equalTo(Constants.screenHeight * (68/667))
         }
-        upperTabView = MainAllRankTopTabbar(frame: CGRect(x: 0, y: 68, width: self.view.frame.width, height: 35))
-        self.view.addSubview(upperTabView!)
+        
+        mainNavigationBarTitle.text = "RANK BAAM"
+        mainNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
+        mainNavigationBarTitle.snp.makeConstraints {
+            $0.top.equalTo(mainCustomNavigationBar.snp.top)
+                .offset(Constants.screenHeight * (38 / 667))
+            $0.left.equalTo(mainCustomNavigationBar.snp.left)
+                .offset(Constants.screenWidth * (136 / 375))
+            $0.height.equalTo(Constants.screenHeight * (21 / 667))
+        }
+        mainFilterButton.snp.makeConstraints {
+           
+            $0.left.equalTo(mainNavigationBarTitle.snp.right)
+                .offset(Constants.screenWidth * (335 / 375))
+            $0.top.equalTo(mainCustomNavigationBar.snp.top)
+                .offset(Constants.screenHeight * (36 / 667))
+            $0.width.equalTo(Constants.screenWidth * (24 / 375))
+            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+        }
+        self.view.addSubview(upperTabView)
+        upperTabView.translatesAutoresizingMaskIntoConstraints = false
+        upperTabView.topAnchor.constraint(equalTo: mainCustomNavigationBar.bottomAnchor).isActive = true
+        upperTabView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        upperTabView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        upperTabView.heightAnchor.constraint(equalToConstant: Constants.screenHeight * (35 / 667)).isActive = true
+        upperTabView.delegate = self
+        
+        
     }
 }
 
@@ -91,14 +134,6 @@ extension TabHomePageViewController: UIPageViewControllerDataSource, UIPageViewC
         return mainViewControllers[nextIndex]
         
     }
-  
-  func pageViewControllerSupportedInterfaceOrientations(_ pageViewController: UIPageViewController) -> UIInterfaceOrientationMask {
-    return UIInterfaceOrientationMask.portrait
-  }
-  
-  func pageViewControllerPreferredInterfaceOrientationForPresentation(_ pageViewController: UIPageViewController) -> UIInterfaceOrientation {
-    return UIInterfaceOrientation.portrait
-  }
     /*func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
         if completed {
@@ -117,16 +152,17 @@ extension TabHomePageViewController: UIScrollViewDelegate {
     
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
-            self.upperTabView?.selectedUnderBarLeadingConstraint?.constant  =
-                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + 61
-            self.upperTabView?.layoutIfNeeded()
+            self.upperTabView.selectedUnderBarLeadingConstraint?.constant  =
+                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + Constants.screenWidth * (61 / 375)
+            self.upperTabView.layoutIfNeeded()
         }, completion: nil)
         
         
-        ( x < view.bounds.width ) ? (upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : ( upperTabView?.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
-        ( x < view.bounds.width ) ? (upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView?.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
+        ( x < view.bounds.width ) ? (upperTabView.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : (upperTabView.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
+        ( x < view.bounds.width ) ? (upperTabView.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
             
-      
+        
+        
         //upperTabView?.layoutIfNeeded()
         /*+= scrollView.contentOffset.x * 1 / 1000*/
         
@@ -142,5 +178,29 @@ extension TabHomePageViewController: UIScrollViewDelegate {
         }*/
     }
     
+}
+
+extension TabHomePageViewController: UpperCustomTabbarDelegate {
+    func upperCustomTabbarTapped(sender: UIButton) {
+        let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
+        scrollView.delegate = nil
+        
+        if sender == self.upperTabView.allRankTab {
+            
+            if let firstViewController = mainViewControllers.first {
+                self.setViewControllers([firstViewController], direction: .reverse, animated: true, completion: nil)
+            }
+        } else {
+            let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
+            scrollView.delegate = nil
+            if let lastViewController = mainViewControllers.last {
+                self.setViewControllers([lastViewController], direction: .forward, animated: true, completion: nil)
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+            scrollView.delegate = self
+        }
+    }
 }
 

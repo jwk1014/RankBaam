@@ -38,6 +38,7 @@ struct Topic: Decodable {
     var description: String
     var isOnlyWriterCreateOption: Bool
     var votableCountPerUser: Int
+    var photoMain: Int
     var photos: [Photo]
     var createDate: String
     var updateDate: String?
@@ -47,6 +48,21 @@ struct Topic: Decodable {
     var voteCount: Int
     var votedOptions: [Int]?
     var rankOptions: [Option]?
+    
+    mutating func sortPhotos(){
+        photos.sort{
+            switch($0.order, $1.order) {
+            case (photoMain, _):
+                return true
+                //case (_, photoMain):
+            //  return false
+            case let (order1, order2):
+                return order1 < order2
+            default:
+                return false
+            }
+        }
+    }
 }
 
 struct OptionWrite: Encodable {
@@ -67,8 +83,9 @@ struct Option: Decodable {
     var updateDate: String?
     var isMine: Bool
     var voteCount: Int
-    var supportPositiveCount: Int
-    var supportNegativeCount: Int
+    var commentPositiveCount: Int
+    var commentNegativeCount: Int
+    
 }
 
 enum SupportType: Int, Codable, CustomStringConvertible {
