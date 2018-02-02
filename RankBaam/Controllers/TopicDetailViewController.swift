@@ -610,7 +610,7 @@ extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         let standardHeight = Constants.screenHeight == 812 ? 700 : Constants.screenHeight
-        let targetSize = CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (120 / 667))
+        let targetSize = CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (520 / 667))
         
         guard let topicDetailHeaderView = topicDetailHeaderView else { return targetSize }
         let fittingSize = topicDetailHeaderView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: UILayoutPriority.required, verticalFittingPriority: UILayoutPriority.required)
