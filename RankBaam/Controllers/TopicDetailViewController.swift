@@ -86,7 +86,7 @@ class TopicDetailViewController: UIViewController {
         didSet {
             topicDetailHeartLikeButtonImageView.image = isLikedForHeartButton ?heartButtonImgForLiked : heartButtonImgForUnliked
             semaphore.wait()
-            TopicService.like(topicSN: topicSN, isLike: isLikedForHeartButton) {
+            TopicService.like(topicSN: topicSN, isLiked: isLikedForHeartButton) {
                 switch($0.result) {
                 case .success(let sResult):
                     if sResult.succ {

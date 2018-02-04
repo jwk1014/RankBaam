@@ -118,6 +118,12 @@ struct OptionSubComment: Decodable {
   var updateDate: String?
 }
 
+struct Vote: Decodable {
+  var optionSN: Int
+  var count: Int
+  var isVoted: Bool
+}
+
 struct User: Codable{
     var userSN: Int
     var photoUrl: String?

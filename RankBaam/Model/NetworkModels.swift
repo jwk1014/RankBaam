@@ -56,6 +56,12 @@ struct SResultTopicCreate: Decodable {
     var topicSN: Int?
 }
 
+struct SResultVote: Decodable {
+    var succ: Bool
+    var msg: String?
+    var vote: Vote?
+}
+
 struct SResultOptionList: Decodable{
     var succ: Bool
     var msg: String?
