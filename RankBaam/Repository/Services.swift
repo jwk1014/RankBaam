@@ -99,11 +99,20 @@ struct TopicService {
   
   @discardableResult
   static func like(
-    topicSN: Int, isLike: Bool,
+    topicSN: Int, isLiked: Bool,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) -> DataRequest {
-    return Alamofire .request(TopicRouter.like(topicSN: topicSN, isLike: isLike))
+    return Alamofire .request(TopicRouter.like(topicSN: topicSN, isLiked: isLiked))
               .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func likes(
+    topicSNs: [Int], isLiked: Bool,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(TopicRouter.likes(topicSNs: topicSNs, isLiked: isLiked))
+      .responseRankBaam(completion)
   }
   
   @discardableResult
@@ -143,6 +152,7 @@ struct TopicService {
     return Alamofire .request(TopicRouter.delete(topicSN: topicSN))
               .responseRankBaam(completion)
   }
+  
 }
 
 struct OptionService {
@@ -200,6 +210,15 @@ struct OptionService {
   ) -> DataRequest {
     return Alamofire .request(OptionRouter.delete(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func vote(
+    topicSN: Int, optionSN: Int, isVoted: Bool,
+    completion: @escaping (DataResponse<SResultVote>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(OptionRouter.vote(topicSN: topicSN, optionSN: optionSN, isVoted: isVoted))
+      .responseRankBaam(completion)
   }
 }
 

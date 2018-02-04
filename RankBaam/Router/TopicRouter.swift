@@ -9,7 +9,8 @@ enum TopicRouter {
   case myList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case create(topic: TopicWrite)
   case read(topicSN: Int)
-  case like(topicSN: Int, isLike: Bool)
+  case like(topicSN: Int, isLiked: Bool)
+  case likes(topicSNs: [Int], isLiked: Bool)
   case unlike(topicSN: Int)
   case updatePre(topicSN: Int)
   case update(topic: TopicWrite)
@@ -38,6 +39,8 @@ extension TopicRouter: TargetType {
       return "/topic/\(topicSN)"
     case let .like(topicSN, _):
       return "/topic/\(topicSN)/like"
+    case let .likes(_, _):
+      return "/topic/likes"
     case let .unlike(topicSN):
       return "/topic/\(topicSN)/unlike"
     case let .updatePre(topicSN):
@@ -63,6 +66,7 @@ extension TopicRouter: TargetType {
       return .get
     case .create,
          .like,
+         .likes,
          .unlike,
          .update,
          .delete:
@@ -95,7 +99,15 @@ extension TopicRouter: TargetType {
         "votableCountPerUser": topic.votableCountPerUser
       ])
     case let .like(_, isLike):
-      return ["isLike" : isLike]
+      return ["isLiked" : isLike]
+    case let .likes(topicSNs, isLike):
+      let strTopicSNs = "\(topicSNs)"
+      let strStartIndex = strTopicSNs.index(strTopicSNs.startIndex, offsetBy: 1)
+      let strEndIndex = strTopicSNs.index(strTopicSNs.endIndex, offsetBy: -1)
+      return [
+        "topicSNs": String(strTopicSNs[strStartIndex..<strEndIndex]),
+        "isLiked": isLike
+      ]
     case .categoryList,
          .read,
          .unlike,
