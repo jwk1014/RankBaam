@@ -155,6 +155,12 @@ class MainWeeklyRankCell: UICollectionViewCell {
         timer.invalidate()
     }
     
+    func mainWeeklyRankCellDatasConfigure(with topic: Topic) {
+        self.mainWeeklyRankTitleLabel.text = topic.title
+        self.mainWeeklyNicknameLabel.text = topic.writer.nickname
+        self.mainWeeklyLikeCountLabel.text = "\(topic.likeCount)"
+    }
+    
     fileprivate func viewInitConfigure() {
         self.layer.shadowOffset = CGSize(width: 5, height: 5)
         self.layer.shadowColor = UIColor.rankbaamDarkgray.cgColor

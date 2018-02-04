@@ -10,6 +10,8 @@ import UIKit
 
 class TabHomeWeeklyRankViewController: UIViewController {
 
+    var weeklyRankDatas: [Topic] = []
+    
     var tabHomeWeeklyRankCollectionView: UICollectionView = {
         let coverFlowlayout = CoverFlowLayout()
         coverFlowlayout.scrollDirection = .horizontal
@@ -25,7 +27,37 @@ class TabHomeWeeklyRankViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
+        fetchWeeklyRankDatas()
         tabHomeWeeklyRankCollectionViewConfigure()
+        
+    }
+    
+    func fetchWeeklyRankDatas() {
+        
+        TopicService.weekList(page: 1) {
+            switch $0.result {
+            case .success(let result):
+                if result.succ {
+                    guard let topicDatas = result.topics else {return}
+                    self.weeklyRankDatas = topicDatas
+                    print("This is WeeklyLike List Count : \(self.weeklyRankDatas.count)")
+                    self.tabHomeWeeklyRankCollectionView.reloadData()
+                } else if let msg = result.msg {
+                    
+                    
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        }
         
     }
     
@@ -36,7 +68,7 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionView.showsHorizontalScrollIndicator = false
         tabHomeWeeklyRankCollectionView.register(MainWeeklyRankCell.self, forCellWithReuseIdentifier: "MainWeeklyRankCell")
         tabHomeWeeklyRankCollectionView.backgroundColor = UIColor.rankbaamGray
-        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, Constants.screenHeight * (50 / 667), 0)
+        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, height667(50), 0)
 
     }
     
@@ -48,12 +80,12 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textAlignment = .right
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = tabHomeWeeklyRankCollectionViewCustomNumberPageControl
             .font
-            .withSize(Constants.screenHeight * ( 13 / 667 ))
+            .withSize(height667(13))
         
         
         tabHomeWeeklyRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+            $0.top.equalTo(height667(103))
         }
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl
             .snp.makeConstraints {
@@ -72,11 +104,13 @@ class TabHomeWeeklyRankViewController: UIViewController {
 
 extension TabHomeWeeklyRankViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return weeklyRankDatas.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let weeklyRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainWeeklyRankCell", for: indexPath)
+        let weeklyRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainWeeklyRankCell", for: indexPath) as! MainWeeklyRankCell
+        let cellData = self.weeklyRankDatas[indexPath.item]
+        weeklyRankCell.mainWeeklyRankCellDatasConfigure(with: cellData)
         return weeklyRankCell
     }
     

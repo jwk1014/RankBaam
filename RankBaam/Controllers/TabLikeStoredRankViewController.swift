@@ -13,6 +13,7 @@ class TabLikeStoredRankViewController: UIViewController {
 
     
     var isEditingLikedCell: Bool = false
+    var likeStoredRankDatas: [Topic] = [Topic]()
     
     var tabLikeStoredRankCustomNavigationBar: UIView = {
         let tabLikeStoredRankCustomNavigationBar = UIView()
@@ -45,10 +46,40 @@ class TabLikeStoredRankViewController: UIViewController {
         super.viewDidLoad()
         viewInitConfigure()
         tabLikeStoredRankCollectionViewConfigure()
+        fetchLikeStoredRankDatas()
         tabLikeStoredRankEditingButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
         tabLikeStoredRankEditingCancelButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
         self.navigationController?.isNavigationBarHidden = true
         
+    }
+    
+    func fetchLikeStoredRankDatas() {
+        
+        TopicService.likeList(page: 1, order: OrderType.new) {
+            switch $0.result {
+            case .success(let result):
+                if result.succ {
+                    guard let topicDatas = result.topics else {return}
+                    self.likeStoredRankDatas = topicDatas
+                    print("This is WeeklyLike List Count : \(self.likeStoredRankDatas.count)")
+                    self.tabLikeStoredRankCollectionView.reloadData()
+                    
+                } else if let msg = result.msg {
+                    
+                    
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        }
     }
     
     fileprivate func viewInitConfigure() {
@@ -163,12 +194,14 @@ class TabLikeStoredRankViewController: UIViewController {
 
 extension TabLikeStoredRankViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return likeStoredRankDatas.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let likedStoredCell = collectionView.dequeueReusableCell(withReuseIdentifier: "likedStoredCell", for: indexPath) as! MainAllRankCell
+        let likedCellData = self.likeStoredRankDatas[indexPath.item]
         likedStoredCell.isEditingLikedCell = isEditingLikedCell
+        likedStoredCell.cellDatasConfigure(topic: likedCellData)
         return likedStoredCell
     }
 }
