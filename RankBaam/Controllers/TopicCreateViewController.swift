@@ -538,6 +538,7 @@ extension TopicCreateViewController: UICollectionViewDataSource {
         if self.footerView != footerView {
           footerView.optionAddButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
           footerView.submitButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
+          footerView.settingView?.delegate = self
           self.footerView = footerView
         }
       }
