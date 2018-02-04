@@ -201,6 +201,24 @@ struct OptionService {
     return Alamofire .request(OptionRouter.delete(topicSN: topicSN, optionSN: optionSN))
               .responseRankBaam(completion)
   }
+    
+  @discardableResult
+  static func voteList(
+    topicSN: Int,
+    completion: @escaping (DataResponse<SResultVoteList>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(OptionRouter.voteList(topicSN: topicSN))
+        .responseRankBaam(completion)
+  }
+    
+  @discardableResult
+  static func vote(
+    topicSN: Int, optionSN: Int, isVoted: Bool,
+    completion: @escaping (DataResponse<SResultVote>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(OptionRouter.vote(topicSN: topicSN, optionSN: optionSN, isVoted: isVoted))
+        .responseRankBaam(completion)
+  }
 }
 
 struct OptionCommentService {
@@ -258,6 +276,7 @@ struct OptionCommentService {
     return Alamofire .request(OptionCommentRouter.delete(optionCommentSN: optionCommentSN))
               .responseRankBaam(completion)
   }
+    
   
 }
 

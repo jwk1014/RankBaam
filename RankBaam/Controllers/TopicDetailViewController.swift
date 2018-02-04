@@ -460,6 +460,7 @@ class TopicDetailViewController: UIViewController {
     fileprivate func rankMainButtonsConfigure() {
 
         topicDetailHeartLikeButton.addTarget(self, action: #selector(heartLikeButtonTapped), for: .touchUpInside)
+        topicDetailRankVoteButton.addTarget(self, action: #selector(topicDetailRankVoteButtonTapped(_:)), for: .touchUpInside)
     }
 
     @objc fileprivate func heartLikeButtonTapped() {
@@ -555,9 +556,58 @@ class TopicDetailViewController: UIViewController {
     }
     
     @objc fileprivate func topicDetailRankVoteButtonTapped(_ sender: UIButton) {
-        for (_, optionSN) in selectedOptionIndexPath.enumerated() {
-            
+        
+        voteListTest()
+        for (_, optionSN) in selectedOptionIndexPath {
+            OptionService.vote(topicSN: self.topicSN, optionSN: optionSN, isVoted: true, completion: {
+                switch $0.result {
+                case .success(let sResult):
+                    if sResult.succ {
+                        print("Vote Action is Success")
+                        
+                    } else if let msg = sResult.msg {
+                        switch msg {
+                        default:
+                            break
+                        }
+                    }
+                    
+                case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                        error.handle(self)
+                    } else {
+                    }
+                }
+            })
         }
+        
+        
+    }
+    
+    func voteListTest() {
+        
+        OptionService.voteList(topicSN: self.topicSN) {
+            switch $0.result {
+            case .success(let sResult):
+                if sResult.succ {
+                    
+                    
+                } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+                
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                }
+            }
+
+        }
+        
     }
 
    /* @IBAction func deleteTopicButtonTapped(_ sender: UIButton) {

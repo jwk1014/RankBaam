@@ -137,7 +137,7 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellBackgroundView.addSubview(mainAllRankLikeCountLabel)
         mainAllRankCellBackgroundView
             .addSubview(likedStoredRankCellEditingCheckBox)
-        
+    
         
         mainAllRankCellBackgroundView.backgroundColor = UIColor.white
         mainAllRankCellBackgroundView.layer.cornerRadius = 8

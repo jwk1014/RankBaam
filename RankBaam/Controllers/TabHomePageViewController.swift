@@ -91,10 +91,9 @@ class TabHomePageViewController: UIPageViewController {
         mainNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
         mainNavigationBarTitle.snp.makeConstraints {
             $0.top.equalTo(mainCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (38 / 667))
-            $0.left.equalTo(mainCustomNavigationBar.snp.left)
-                .offset(Constants.screenWidth * (136 / 375))
-            $0.height.equalTo(Constants.screenHeight * (21 / 667))
+                .offset(height667(38))
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(height667(21))
         }
         mainFilterButton.snp.makeConstraints {
            

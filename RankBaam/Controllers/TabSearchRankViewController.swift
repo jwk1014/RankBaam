@@ -121,11 +121,12 @@ class TabSearchRankViewController: UIViewController {
                 self.tabSearchCustomNavigationBarTitleLabel.textColor = UIColor.rankbaamOrange
             })
         }
-        
     }
-   
 }
 
 extension TabSearchRankViewController: UITextFieldDelegate {
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
+    }
 }
