@@ -11,22 +11,25 @@ import Alamofire
 import SnapKit
 //import Photos
 
-fileprivate enum TopicCreateButtonTag: Int {
-  case back = 1
-  case cancel = 2
-  case category = 3
-  case addImage = 4
-  case optionAdd = 5
-  case submit = 6
-}
-
 class TopicCreateViewController: UIViewController, TopicCreateViewControllerCallback {
+  enum ButtonTag: Int {
+    case back = 1
+    case cancel = 2
+    case category = 3
+    case addImage = 4
+  }
+  
   typealias OptionCellData = (image: UIImage?, imageUrl: URL?, text: String?)
-  var topicCategory: Category? = nil
-  var topicTitle: String? = nil
-  var topicDescription: String? = nil
-  //var topicIsOnlyWriterCreateOption = false
-  //var topicVotableCountPerUser = false
+  var topicSN: Int? {
+    willSet{
+      if let _ = newValue {
+        isVisible = true
+      }
+    }
+  }
+  var topicCategory: Category?
+  var topicTitle: String?
+  var topicDescription: String?
   
   weak var flowLayout: UICollectionViewFlowLayout?
   weak var collectionView: UICollectionView?
@@ -36,8 +39,7 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
   
   var isVisible = false {
     didSet{
-      headerView?.descriptionSeperatorView?.isHidden = !isVisible
-      headerView?.optionsLabel?.isHidden = !isVisible
+      headerView?.isVisibleBottomArea = isVisible
       
       if isVisible {
         if optionCount > 0 {
@@ -50,8 +52,6 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
       }
     }
   }
-  
-  var textViewDelegate: UITextViewDelegate { return self }
   var textFieldDelegate: UITextFieldDelegate { return self }
   
   var optionCellDatas = [OptionCellData?]()
@@ -59,31 +59,8 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
   
   let topicCreateOptionCellTextFieldDelegateManager = TopicCreateOptionCellTextFieldDelegateManager()
   
-  var descriptionAttributedString: NSAttributedString? {
-    if let font = UIFont(name: "NanumSquareR", size: 16.0) {
-      return .init( string: descriptionPlaceholderString,
-                    attributes: [
-                      .font: font,
-                      .foregroundColor: descriptionPlaceholderTextColor
-        ])
-    }
-    return nil
-  }
-  
-  var descriptionPlaceholderString: String {
-    return "자유롭게 작성해주세요."
-  }
-  
-  var descriptionPlaceholderTextColor: UIColor {
-    return .init(r: 154, g: 154, b: 154)
-  }
-  
-  var descriptionTextColor: UIColor {
-    return .init(r: 77, g: 77, b: 77)
-  }
-  
   @objc func handleButton(_ button: UIButton) {
-    guard let buttonTag = TopicCreateButtonTag(rawValue: button.tag) else {return}
+    guard let buttonTag = ButtonTag(rawValue: button.tag) else {return}
     switch buttonTag {
     case .back, .cancel:
       self.dismiss(animated: true, completion: nil)
@@ -95,213 +72,14 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
       }
       vc.delegate = self
       present(vc, animated: true, transitioningDelegate: presentFadeInOutManager, completion: nil)
-    case .optionAdd:
-      optionCount += 1
-      collectionView?.insertItems(at: [IndexPath(row: optionCount-1, section: 0)])
     case .addImage:
       let picker = UIImagePickerController()
       picker.delegate = self
       present(picker, animated: true, completion: nil)
-    case .submit:
-      let alertClosure = { (_ message: String,_ handler: ((UIAlertAction)->Void)? ) in
-        let alert = UIAlertController.init(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(.init(title: "확인", style: .cancel, handler: handler))
-        self.present(alert, animated: true, completion: nil)
-      }
-      
-      guard let topicCategory = topicCategory else {
-        alertClosure("카테고리를 선택해주세요.", nil)
-        return
-      }
-      
-      guard let title = (headerView != nil) ? headerView?.titleTextField?.text : self.topicTitle,
-            title.count > 0 else {
-        alertClosure("제목을 입력해주세요.") { _ in
-          self.headerView?.titleTextField?.becomeFirstResponder()
-        }
-        return
-      }
-      
-      guard title.count >= 5 else {
-        alertClosure("제목은 5자 이상이여야 합니다.") { _ in
-          self.headerView?.titleTextField?.becomeFirstResponder()
-        }
-        return
-      }
-      
-      let description = (headerView != nil) ? headerView?.descriptionTextView?.text : self.topicDescription
-      
-      let isOnlyWriterCreateOption = footerView?.settingView?.isOnlyWriterCreateOption ?? false
-      
-      let isVotableCountPerUser = footerView?.settingView?.isVotableCount ?? false
-      
-      let topicWrite = TopicWrite.init(
-        topicSN: nil,
-        category: topicCategory,
-        title: title,
-        description: description ?? "",
-        isOnlyWriterCreateOption: isOnlyWriterCreateOption,
-        votableCountPerUser: (isVotableCountPerUser) ? 3 : 1)
-      
-      TopicService.create(topicWrite: topicWrite) {
-        switch($0.result) {
-          
-        case .success(let sResult):
-          if sResult.succ {
-            guard let topicSN = sResult.topicSN else { return }
-            
-            let topicDetailClosure = {
-              let vc = TopicDetailViewController()
-              vc.topicSN = topicSN
-              (self.presentingViewController as? UINavigationController)?.pushViewController(vc, animated: false)
-              self.dismiss(animated: true, completion: nil)
-            }
-            
-            if let collectionView = self.collectionView, self.optionCount > 0 {
-              var optionCellDatas = self.optionCellDatas
-              Array(0..<self.optionCount)
-                .map({IndexPath(row: $0, section: 0)})
-                .flatMap(collectionView.cellForItem)
-                .flatMap({$0 as? TopicCreateOptionCell})
-                .filter({$0.index >= 0})
-                .forEach{ cell in
-                  if optionCellDatas.count-1 < cell.index {
-                    optionCellDatas += Array<OptionCellData?>(repeating: nil,
-                      count: cell.index+1-optionCellDatas.count)
-                  }
-                  optionCellDatas[cell.index] = OptionCellData(
-                    image: (cell.imageView?.tag != 0) ? cell.imageView?.image : nil, //TODO
-                    imageUrl: (cell.imageView?.tag != 0) ? cell.imageUrl : nil,
-                    text: cell.textField?.text)
-                }
-              
-              optionCellDatas = optionCellDatas
-                .filter({$0 != nil})
-                .map({$0!})
-                .filter({$0.text != nil && $0.text!.count > 0})
-                /*.map({ optionCellData in
-                  return OptionWrite.init(topicSN: topicSN, optionSN: nil, title: optionCellData.text!, description: nil)
-                })*/
-              
-              if optionCellDatas.count > 0 {
-                
-                var optionCreateResponseClosure: ((DataResponse<SResultOptionCreate>) -> Void)!
-                var optionPhotoCreateResponseClosure: ((DataResponse<SResult>) -> Void)!
-                
-                optionCreateResponseClosure = {
-                  switch($0.result) {
-                    
-                  case .success(let sResult):
-                    if sResult.succ {
-                      guard let optionCellData = optionCellDatas.remove(at: 0) else {
-                        topicDetailClosure()
-                        return
-                      }
-                      /*if  let imageUrl = optionCellData.imageUrl,
-                          let optionSN = sResult.optionSN {
-                        OptionService.photoCreate(
-                          topicSN: topicSN,
-                          optionSN: optionSN,
-                          photoUrl: imageUrl,
-                          completion: optionPhotoCreateResponseClosure)
-                      } else */if optionCellDatas.count > 0,
-                                let title = optionCellDatas[0]?.text {
-                        OptionService.create(
-                          optionWrite: OptionWrite(
-                            topicSN: topicSN,
-                            optionSN: nil,
-                            title: title,
-                            description: nil),
-                            completion: optionCreateResponseClosure)
-                      } else {
-                        topicDetailClosure()
-                      }
-                    } else if let msg = sResult.msg {
-                      switch msg {
-                      default:
-                        break
-                      }
-                      topicDetailClosure()
-                    }
-                    break
-                  case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                      error.handle(self)
-                    }
-                    topicDetailClosure()
-                  }
-                }
-                
-                optionPhotoCreateResponseClosure = {
-                  switch($0.result) {
-                    
-                  case .success(let sResult):
-                    if sResult.succ {
-                      if let optionCellData = optionCellDatas[0] {
-                        OptionService.create(
-                          optionWrite: OptionWrite(
-                            topicSN: topicSN,
-                            optionSN: nil,
-                            title: optionCellData.text!,
-                            description: nil),
-                            completion: optionCreateResponseClosure)
-                      } else {
-                        topicDetailClosure()
-                      }
-                    } else if let msg = sResult.msg {
-                      switch msg {
-                      default:
-                        break
-                      }
-                      topicDetailClosure()
-                    }
-                    break
-                  case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                      error.handle(self)
-                    }
-                    topicDetailClosure()
-                  }
-                }
-                
-                if let title = optionCellDatas[0]?.text {
-                  OptionService.create(
-                    optionWrite: OptionWrite(
-                      topicSN: topicSN,
-                      optionSN: nil,
-                      title: title,
-                      description: nil),
-                      completion: optionCreateResponseClosure)
-                }
-                
-                return
-              }
-              
-            }
-            
-            topicDetailClosure()
-            
-          } else if let msg = sResult.msg {
-            switch msg {
-            case "TitleExists":
-              alertClosure("같은 제목을 가진 랭킹 주제가 존재합니다.") { _ in
-                self.headerView?.titleTextField?.becomeFirstResponder()
-              }
-            default:
-              break
-            }
-          }
-          
-        case .failure(let error):
-          if let error = error as? SolutionProcessableProtocol {
-            error.handle(self)
-          }
-        }
-      }
     }
   }
   
-  func resignSubViewsFirstResponder() {
+  @objc func resignSubViewsFirstResponder() {
     if let titleTextField = headerView?.titleTextField, titleTextField.isFirstResponder {
       titleTextField.resignFirstResponder()
     } else if let descriptionTextView = headerView?.descriptionTextView, descriptionTextView.isFirstResponder {
@@ -309,10 +87,6 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     } else if let textField = topicCreateOptionCellTextFieldDelegateManager.textField, textField.isFirstResponder {
       textField.resignFirstResponder()
     }
-  }
-  
-  @objc func handleView(_ sender: UIGestureRecognizer) {
-    resignSubViewsFirstResponder()
   }
   
   lazy var presentFadeInOutManager: PresentFadeInOutManager = PresentFadeInOutManager()
@@ -326,7 +100,8 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     //MARK: For iPhone X
     let topSpaceLayer = CALayer()
     topSpaceLayer.backgroundColor = UIColor.white.cgColor
-    topSpaceLayer.frame = .init(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height * 76.0/667.0)
+    topSpaceLayer.frame = .init(x: 0, y: 0,
+      width: view.bounds.width, height: height667(76.0))
     view.layer.addSublayer(topSpaceLayer)
     
     //MARK: CustomNaviBarView
@@ -336,21 +111,24 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     customNaviBarView.isUserInteractionEnabled = true
     customNaviBarView.snp.makeConstraints {
       $0.top.leading.trailing.equalTo(self.view)
-      $0.height.equalTo(self.view.bounds.height * 76.0/667.0)
+      $0.height.equalTo(height667(76.0))
     }
     
     let backButton = UIButton()
     let padding = self.view.bounds.width * 10.0/375.0
-    let backButtonImage = UIImage(named: "ic_keyboard_backspace")?.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplate: true)
+    let backButtonImage = UIImage(named: "ic_keyboard_backspace")?
+      .copy(
+        with: .init(top: padding, left: padding, bottom: padding, right: padding),
+        isTemplate: true)
     backButton.setImage(backButtonImage, for: .normal)
     backButton.imageView?.tintColor = UIColor(r: 255, g: 195, b: 75)
     customNaviBarView.addSubview(backButton)
-    backButton.tag = TopicCreateButtonTag.back.rawValue
+    backButton.tag = ButtonTag.back.rawValue
     backButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
     backButton.snp.makeConstraints {
-      $0.leading.equalTo(customNaviBarView).offset(self.view.bounds.width * 6.0/375.0)
+      $0.leading.equalTo(customNaviBarView).offset(width375(6.0))
       $0.bottom.equalTo(customNaviBarView)
-      $0.width.equalTo(self.view.bounds.width * 44.0/375.0)
+      $0.width.equalTo(width375(44.0))
       $0.height.equalTo(backButton.snp.width)
     }
     
@@ -360,8 +138,8 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     titleLabel.text = "글쓰기"
     customNaviBarView.addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
-      $0.leading.equalTo(backButton.snp.trailing).offset(self.view.bounds.width * 6.0/375.0)
-      $0.bottom.equalTo(customNaviBarView).offset(-(self.view.bounds.height * 13.0/667.0))
+      $0.leading.equalTo(backButton.snp.trailing).offset(width375(6.0))
+      $0.bottom.equalTo(customNaviBarView).offset(-height667(13.0))
     }
     
     let cancelButton = UIButton()
@@ -375,20 +153,20 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
       cancelButton.setAttributedTitle(attributedText, for: .normal)
     }
     customNaviBarView.addSubview(cancelButton)
-    cancelButton.tag = TopicCreateButtonTag.cancel.rawValue
+    cancelButton.tag = ButtonTag.cancel.rawValue
     cancelButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
     cancelButton.snp.makeConstraints {
-      $0.trailing.equalTo(customNaviBarView).offset(-(self.view.bounds.width * 3.0/375.0))
+      $0.trailing.equalTo(customNaviBarView).offset(-width375(3.0))
       $0.bottom.equalTo(customNaviBarView)
-      $0.width.equalTo(self.view.bounds.width * 56.0/375.0)
-      $0.height.equalTo(self.view.bounds.height * 44.0/667.0)
+      $0.width.equalTo(width375(56.0))
+      $0.height.equalTo(height667(44.0))
     }
     
     //MARK: View & CollectionView
     view.backgroundColor = .init(r: 246, g: 248, b: 250)
     
     view.addGestureRecognizer(UITapGestureRecognizer(
-      target: self, action: #selector(handleView)))
+      target: self, action: #selector(resignSubViewsFirstResponder)))
     
     let flowLayout = UICollectionViewFlowLayout()
     self.flowLayout = flowLayout
@@ -408,23 +186,25 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     }
     
     collectionView.register(TopicCreateOptionCell.self, forCellWithReuseIdentifier: "cell")
-    collectionView.register(TopicCreateHeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "header")
-    collectionView.register(TopicCreateFooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer")
+    collectionView.register(TopicCreateHeaderView.self,
+      forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+      withReuseIdentifier: "header")
+    collectionView.register(TopicCreateFooterView.self,
+      forSupplementaryViewOfKind: UICollectionElementKindSectionFooter,
+      withReuseIdentifier: "footer")
+  }
+  
+  func invalidateLayoutCollectionView() {
+    flowLayout?.invalidateLayout()
   }
   
   func checkHeader(title: String?, description: String?){
     let title = title ?? headerView?.titleTextField?.text
-    /*let description = description ??
-      ((headerView?.descriptionTextView?.textColor?.hashValue != descriptionPlaceholderTextColor.hashValue) ?headerView?.descriptionTextView?.text : nil)*/
-    let isVisible = (topicCategory != nil && title != nil && /*description != nil &&*/
-      title!.trimmingCharacters(in: .init(charactersIn: " \n")).count > 0) /*&&
-      description!.trimmingCharacters(in: .init(charactersIn: " \n")).count > 0*/
-    if self.isVisible != isVisible {
-      self.isVisible = isVisible
-      //if description != nil {
-        flowLayout?.invalidateLayout()
-      //}
-    }
+    let isVisible = (topicCategory != nil && title != nil &&
+      title!.trimmingCharacters(in: .init(charactersIn: " \n")).count > 0)
+    guard self.isVisible != isVisible else { return }
+    self.isVisible = isVisible
+    flowLayout?.invalidateLayout()
   }
   
 }
@@ -432,31 +212,12 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
 extension TopicCreateViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      if let imageAreaStackView = headerView?.imageAreaStackView {
-        let imageView = UIImageView()
-        imageView.image = image
-        imageAreaStackView.addArrangedSubview(imageView)
-        imageView.snp.makeConstraints{
-          $0.width.equalTo(image.size.width * (view.bounds.height * 121.0 / 667.0) / image.size.height)
-          $0.height.equalTo(imageAreaStackView)
-        }
-        if imageAreaStackView.arrangedSubviews.count == 1 {
-          headerView?.constraintImagesAreaScrollView?.constraint.layoutConstraints.first?.constant =
-            imageAreaStackView.bounds.height
-          flowLayout?.invalidateLayout()
-        }
-      }
+      headerView?.addImageInImageArea(image: image)
+      flowLayout?.invalidateLayout()
     }
     picker.dismiss(animated: true, completion: nil)
   }
 }
-
-/*extension TopicCreateViewController: PresentFadeInOutDelegate {
-  func prepareFade(vc: UIViewController, fade: PresentationFade) {
-    if fade == .out, let vc = vc as? CategorySelectViewController {
-    }
-  }
-}*/
 
 extension TopicCreateViewController: UIScrollViewDelegate {
   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -502,28 +263,14 @@ extension TopicCreateViewController: UICollectionViewDataSource {
         if self.headerView != headerView {
           headerView.categoryButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
           headerView.addImageButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
-          headerView.descriptionTextView?.attributedText = descriptionAttributedString
+          headerView.descriptionTextView?.attributedText = headerView.descriptionAttributedString
           headerView.titleTextField?.delegate = self
-          headerView.descriptionTextView?.delegate = self
-          headerView.descriptionSeperatorView?.isHidden = !isVisible
-          headerView.optionsLabel?.isHidden = !isVisible
+          headerView.isVisibleBottomArea = isVisible
           headerView.callback = self
           
           if let oldHeaderView = self.headerView {
             print("replace header")
-            if let image = oldHeaderView.categoryButton?.backgroundImage(for: .normal) {
-              headerView.categoryButton?.setBackgroundImage(image, for: .normal)
-              if let attributedTitle = oldHeaderView.categoryButton?.attributedTitle(for: .normal) {
-                headerView.categoryButton?.setAttributedTitle(attributedTitle, for: .normal)
-              }
-            }
-            if let title = oldHeaderView.titleTextField?.text {
-              headerView.titleTextField?.text = title
-            }
-            if let description = oldHeaderView.descriptionTextView?.text {
-              headerView.descriptionTextView?.textColor = descriptionTextColor
-              headerView.descriptionTextView?.text = description
-            }
+            headerView.copyValue(headerView: oldHeaderView)
             headerView.isHidden = false
             oldHeaderView.isHidden = true
           }
@@ -536,9 +283,7 @@ extension TopicCreateViewController: UICollectionViewDataSource {
       let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
       if let footerView = footerView as? TopicCreateFooterView {
         if self.footerView != footerView {
-          footerView.optionAddButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
-          footerView.submitButton?.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
-          footerView.settingView?.delegate = self
+          footerView.delegate = self
           self.footerView = footerView
         }
       }
@@ -552,18 +297,297 @@ extension TopicCreateViewController: UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    let header = headerView ?? /*collectionView.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader).first ??*/
-      collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath(row: 0, section: section)) ??
-    collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "header", for: IndexPath(row: 0, section: section))
-    let height = header.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+    let height = heightCollectionViewSupplementaryView(
+      defaultView: headerView,
+      type: TopicCreateHeaderView.self
+    )
     return .init(width: UIScreen.main.bounds.width, height: height)
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-    let footer = footerView ?? /*collectionView.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionFooter).first ??*/
-      collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "footer", for: IndexPath(row: 0, section: section))
-    let height = isVisible ? footer.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height : 0
+    let height = isVisible ? heightCollectionViewSupplementaryView(
+      defaultView: footerView,
+      type: TopicCreateFooterView.self
+    ) : 0
     return .init(width: UIScreen.main.bounds.width, height: height)
+  }
+  
+  func heightCollectionViewSupplementaryView<T: UICollectionReusableView>(defaultView: UICollectionReusableView?, type: T.Type) -> CGFloat {
+    guard [TopicCreateHeaderView.self, TopicCreateFooterView.self].contains(where: {$0 == type}),
+          let collectionView = collectionView else {return 0}
+    let view = defaultView ?? /*collectionView.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionFooter).first ??*/
+      collectionView.dequeueReusableSupplementaryView(
+        ofKind: (type == TopicCreateHeaderView.self) ?
+          UICollectionElementKindSectionHeader : UICollectionElementKindSectionFooter,
+        withReuseIdentifier: (type == TopicCreateHeaderView.self) ?
+          "header" : "footer",
+        for: IndexPath(row: 0, section: 0))
+    return view.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+  }
+}
+
+extension TopicCreateViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                      minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return height667(10.0)
+  }
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                      minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    return 0
+  }
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize( width: width375(343.0), height: height667(72.0))
+  }
+}
+
+extension TopicCreateViewController: CategorySelectDelegate {
+  func selectedCategory(category: Category?) {
+    guard let category = category else {return}
+    self.topicCategory = category
+    checkHeader(title: nil, description: nil)
+    if  let image = UIImage(named: "category_resizable_btn"),
+        let font = UIFont(name: "NanumSquareB", size: 14.0) {
+      headerView?.categoryButton?.setAttributedTitle(NSAttributedString(
+        string: category.name,
+        attributes: [
+          .font: font,
+          .foregroundColor: UIColor(r: 250, g: 84, b: 76)
+        ]), for: .normal)
+      headerView?.categoryButton?.setBackgroundImage(
+        image.resizableImage(withCapInsets: .init(
+          top: image.size.height/2,
+          left: image.size.width/2,
+          bottom: image.size.height/2,
+          right: image.size.width/2), resizingMode: .tile),
+        for: .normal)
+    }
+  }
+}
+
+extension TopicCreateViewController: UITextFieldDelegate {
+  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    if let text = textField.text {
+      var text2 = text
+      if let range2 = Range<String.Index>(range, in: text2) {
+        text2.replaceSubrange(range2, with: string)
+        checkHeader(title: text2, description: nil)
+      }
+    }
+    return true
+  }
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    if textField.text?.trimmingCharacters(in: CharacterSet(charactersIn: " \n")).count == 0 {
+      textField.text = ""
+    }
+  }
+}
+
+extension TopicCreateViewController: TopicCreateFooterViewDelegate {
+  private func simpleAlert(_ message: String,_ handler: ((UIAlertAction)->Void)? ) {
+    let alert = UIAlertController.init(title: nil, message: message, preferredStyle: .alert)
+    alert.addAction(.init(title: "확인", style: .cancel, handler: handler))
+    self.present(alert, animated: true, completion: nil)
+  }
+  @objc func footerView(optionAddButton: UIButton) {
+    optionCount += 1
+    collectionView?.insertItems(at: [IndexPath(row: optionCount-1, section: 0)])
+  }
+  @objc func footerView(submitButton: UIButton) {
+    guard let topicCategory = topicCategory else {
+      simpleAlert("카테고리를 선택해주세요.", nil); return
+    }
+    
+    guard let title = (headerView != nil) ? headerView?.titleTextField?.text : self.topicTitle,
+          title.count > 0 else {
+        simpleAlert("제목을 입력해주세요.") { _ in
+          self.headerView?.titleTextField?.becomeFirstResponder()
+        }; return
+    }
+    
+    guard title.count >= 5 else {
+      simpleAlert("제목은 5자 이상이여야 합니다.") { _ in
+        self.headerView?.titleTextField?.becomeFirstResponder()
+      }; return
+    }
+    
+    let description = (headerView != nil) ? headerView?.descriptionTextView?.text : self.topicDescription
+    
+    let isOnlyWriterCreateOption = footerView?.isOnlyWriterCreateOption ?? false
+    
+    let isVotableCountPerUser = footerView?.isVotableCount ?? false
+    
+    let topicWrite = TopicWrite.init(
+      topicSN: nil,
+      category: topicCategory,
+      title: title,
+      description: description ?? "",
+      isOnlyWriterCreateOption: isOnlyWriterCreateOption,
+      votableCountPerUser: (isVotableCountPerUser) ? 3 : 1)
+    
+    TopicService.create(topicWrite: topicWrite) {
+      switch($0.result) {
+        
+      case .success(let sResult):
+        if sResult.succ {
+          guard let topicSN = sResult.topicSN else { return }
+          
+          let topicDetailClosure = {
+            let vc = TopicDetailViewController()
+            vc.topicSN = topicSN
+            (self.presentingViewController as? UINavigationController)?.pushViewController(vc, animated: false)
+            self.dismiss(animated: true, completion: nil)
+          }
+          
+          if let collectionView = self.collectionView, self.optionCount > 0 {
+            var optionCellDatas = self.optionCellDatas
+            Array(0..<self.optionCount)
+              .map({IndexPath(row: $0, section: 0)})
+              .flatMap(collectionView.cellForItem)
+              .flatMap({$0 as? TopicCreateOptionCell})
+              .filter({$0.index >= 0})
+              .forEach{ cell in
+                if optionCellDatas.count-1 < cell.index {
+                  optionCellDatas += Array<OptionCellData?>(repeating: nil,
+                                                            count: cell.index+1-optionCellDatas.count)
+                }
+                optionCellDatas[cell.index] = OptionCellData(
+                  image: (cell.imageView?.tag != 0) ? cell.imageView?.image : nil, //TODO
+                  imageUrl: (cell.imageView?.tag != 0) ? cell.imageUrl : nil,
+                  text: cell.textField?.text)
+            }
+            
+            optionCellDatas = optionCellDatas
+              .filter({$0 != nil})
+              .map({$0!})
+              .filter({$0.text != nil && $0.text!.count > 0})
+            
+            if optionCellDatas.count > 0 {
+              
+              var optionCreateResponseClosure: ((DataResponse<SResultOptionCreate>) -> Void)!
+              var optionPhotoCreateResponseClosure: ((DataResponse<SResult>) -> Void)!
+              
+              optionCreateResponseClosure = {
+                switch($0.result) {
+                  
+                case .success(let sResult):
+                  if sResult.succ {
+                    guard let optionCellData = optionCellDatas.remove(at: 0) else {
+                      topicDetailClosure()
+                      return
+                    }
+                    /*if  let imageUrl = optionCellData.imageUrl,
+                     let optionSN = sResult.optionSN {
+                     OptionService.photoCreate(
+                     topicSN: topicSN,
+                     optionSN: optionSN,
+                     photoUrl: imageUrl,
+                     completion: optionPhotoCreateResponseClosure)
+                     } else */if optionCellDatas.count > 0,
+                      let title = optionCellDatas[0]?.text {
+                      OptionService.create(
+                        optionWrite: OptionWrite(
+                          topicSN: topicSN,
+                          optionSN: nil,
+                          title: title,
+                          description: nil),
+                        completion: optionCreateResponseClosure)
+                     } else {
+                      topicDetailClosure()
+                    }
+                  } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                      break
+                    }
+                    topicDetailClosure()
+                  }
+                  break
+                case .failure(let error):
+                  if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                  }
+                  topicDetailClosure()
+                }
+              }
+              
+              optionPhotoCreateResponseClosure = {
+                switch($0.result) {
+                  
+                case .success(let sResult):
+                  if sResult.succ {
+                    if let optionCellData = optionCellDatas[0] {
+                      OptionService.create(
+                        optionWrite: OptionWrite(
+                          topicSN: topicSN,
+                          optionSN: nil,
+                          title: optionCellData.text!,
+                          description: nil),
+                        completion: optionCreateResponseClosure)
+                    } else {
+                      topicDetailClosure()
+                    }
+                  } else if let msg = sResult.msg {
+                    switch msg {
+                    default:
+                      break
+                    }
+                    topicDetailClosure()
+                  }
+                  break
+                case .failure(let error):
+                  if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                  }
+                  topicDetailClosure()
+                }
+              }
+              
+              if let title = optionCellDatas[0]?.text {
+                OptionService.create(
+                  optionWrite: OptionWrite(
+                    topicSN: topicSN,
+                    optionSN: nil,
+                    title: title,
+                    description: nil),
+                  completion: optionCreateResponseClosure)
+              }
+              
+              return
+            }
+            
+          }
+          
+          topicDetailClosure()
+          
+        } else if let msg = sResult.msg {
+          switch msg {
+          case "TitleExists":
+            self.simpleAlert("같은 제목을 가진 랭킹 주제가 존재합니다.") { _ in
+              self.headerView?.titleTextField?.becomeFirstResponder()
+            }
+          default:
+            break
+          }
+        }
+        
+      case .failure(let error):
+        if let error = error as? SolutionProcessableProtocol {
+          error.handle(self)
+        }
+      }
+    }
+  }
+  func footerView(infoButtonTag: Int) {
+    guard let buttonTag = TopicCreateFooterView.ButtonTag(rawValue: infoButtonTag) else {return}
+    var message: String
+    switch buttonTag {
+    case .votableCount:
+      message = "투표하는 유저가 3개까지\n복수 선택을 할 수 있도록 합니다."
+    case .onlyWriterCreateOption:
+      message = "다른 유저가 랭킹 항목을\n추가하도록 허용합니다."
+    }
+    simpleAlert(message, nil)
   }
 }
 
@@ -580,93 +604,6 @@ extension TopicCreateViewController: TopicCreateOptionCellDelegate {
   }
 }
 
-extension TopicCreateViewController: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return self.view.bounds.height * 10.0 / 667.0
-  }
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-    return 0
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(
-      width: self.view.bounds.width * 343.0 / 375.0,
-      height: self.view.bounds.height * 72.0 / 667.0)
-  }
-}
-
-extension TopicCreateViewController: UITextFieldDelegate {
-  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    var text = textField.text
-    if let text2 = text {
-      if let range2 = Range<String.Index>(range, in: text2) {
-        text?.replaceSubrange(range2, with: string)
-        checkHeader(title: text!, description: nil)
-      }
-    }
-    return true
-  }
-  func textFieldDidEndEditing(_ textField: UITextField) {
-    if textField.text?.trimmingCharacters(in: CharacterSet(charactersIn: " \n")).count == 0 {
-      textField.text = ""
-    }
-  }
-}
-
-extension TopicCreateViewController: UITextViewDelegate {
-  func textViewDidBeginEditing(_ textView: UITextView) {
-    if textView.textColor?.hashValue == descriptionPlaceholderTextColor.hashValue {
-      textView.text = ""
-      textView.textColor = descriptionTextColor
-    }
-  }
-  func textViewDidEndEditing(_ textView: UITextView) {
-    if textView.text.trimmingCharacters(in: CharacterSet(charactersIn: " \n")).count == 0 {
-      textView.text = descriptionPlaceholderString
-      textView.textColor = descriptionPlaceholderTextColor
-    }
-  }
-  func textViewDidChange(_ textView: UITextView) {
-    //checkHeader(title: nil, description: textView.text)
-    flowLayout?.invalidateLayout()
-  }
-}
-
-extension TopicCreateViewController: TopicCreateSettingViewDelegate {
-  func topicCreateSettingViewDelegate(infoMesssage: String) {
-    let alert = UIAlertController.init(title: nil, message: infoMesssage, preferredStyle: .alert)
-    alert.addAction(.init(title: "확인", style: .cancel, handler: nil))
-    present(alert, animated: true, completion: nil)
-  }
-  func topicCreateSettingViewDelegate(buttonTag: TopicCreateSettingView.ButtonTag) {
-    
-  }
-}
-
-extension TopicCreateViewController: CategorySelectDelegate {
-  func selectedCategory(category: Category?) {
-    guard let category = category else {return}
-    self.topicCategory = category
-    checkHeader(title: nil, description: nil)
-    if  let image = UIImage(named: "category_resizable_btn"),
-      let font = UIFont(name: "NanumSquareB", size: 14.0) {
-      headerView?.categoryButton?.setAttributedTitle(NSAttributedString(
-        string: category.name,
-        attributes: [
-          .font: font,
-          .foregroundColor: UIColor(r: 250, g: 84, b: 76)
-        ]), for: .normal)
-      headerView?.categoryButton?.setBackgroundImage(
-        image.resizableImage(withCapInsets: .init(
-          top: image.size.height/2,
-          left: image.size.width/2,
-          bottom: image.size.height/2,
-          right: image.size.width/2), resizingMode: UIImageResizingMode.tile),
-        for: .normal)
-    }
-  }
-}
-
 class TopicCreateOptionCellTextFieldDelegateManager: NSObject, UITextFieldDelegate {
   private(set) weak var textField: UITextField?
   func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -679,26 +616,25 @@ protocol TopicCreateOptionCellDelegate {
   func present(vc: UIViewController)
 }
 
+//MARK: Cell
 class TopicCreateOptionCell: UICollectionViewCell {
-  
   var delegate: TopicCreateOptionCellDelegate?
   
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    initView()
-  }
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    initView()
-  }
-  
-  var index: Int = 0
+  var index: Int = -1
   var imageUrl: URL?
   private(set) weak var imageView: UIImageView?
   private(set) weak var textField: UITextField?
   
   override func prepareForReuse() {
-    delegate?.cellDelegate(index: index, image: (imageView?.tag != 0) ? imageView?.image : nil, imageUrl: (imageView?.tag != 0) ? imageUrl : nil, text: textField?.text)
+    delegate?.cellDelegate(
+      index: index,
+      image: (imageView?.tag != 0) ? imageView?.image : nil,
+      imageUrl: (imageView?.tag != 0) ? imageUrl : nil,
+      text: textField?.text)
+    initData()
+  }
+  
+  func initData() {
     index = -1
     imageView?.tag = 0
     imageView?.image = UIImage(named: "image_icn")
@@ -706,21 +642,18 @@ class TopicCreateOptionCell: UICollectionViewCell {
   }
   
   func initView(){
-    
     layer.backgroundColor = UIColor.white.cgColor
     layer.borderColor = UIColor(r: 192, g: 192, b: 192).cgColor
     layer.borderWidth = 1.0
     layer.cornerRadius = 3.0
     
     let imageView = UIImageView()
-    imageView.tag = 0
-    imageView.image = UIImage(named: "image_icn")
     self.imageView = imageView
-    self.addSubview(imageView)
+    addSubview(imageView)
     imageView.snp.makeConstraints {
-      $0.leading.equalTo(self).offset(self.bounds.width * 5.0 / 343.0)
+      $0.leading.equalTo(self).offset(width375(5.0))
       $0.centerY.equalTo(self)
-      $0.width.equalTo(self.bounds.width * 76.0 / 343.0)
+      $0.width.equalTo(width375(76.0))
       $0.height.equalTo(imageView.snp.width).multipliedBy(62.0/76.0)
     }
     
@@ -733,13 +666,18 @@ class TopicCreateOptionCell: UICollectionViewCell {
     titleTextField.placeholder = "항목을 입력해주세요"
     titleTextField.clearButtonMode = .whileEditing
     self.textField = titleTextField
-    self.addSubview(titleTextField)
+    addSubview(titleTextField)
     titleTextField.snp.makeConstraints {
-      $0.leading.equalTo(imageView.snp.trailing).offset(self.bounds.width * 14.0 / 343.0)
+      $0.leading.equalTo(imageView.snp.trailing).offset(width375(14.0))
       $0.centerY.equalTo(self)
-      $0.trailing.equalTo(self).offset(-(self.bounds.width * 14.0 / 343.0))///
+      $0.trailing.equalTo(self).offset(-width375(14.0))///
     }
+    
+    initData()
   }
+  
+  required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder); initView() }
+  override init(frame: CGRect) { super.init(frame: frame); initView() }
 }
 
 extension TopicCreateOptionCell: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -762,94 +700,142 @@ extension TopicCreateOptionCell: UIImagePickerControllerDelegate, UINavigationCo
 protocol TopicCreateViewControllerCallback {
   var topicTitle: String? { get set }
   var topicDescription: String? { get set }
+  func invalidateLayoutCollectionView()
 }
 
+//MARK: HeaderView
 class TopicCreateHeaderView: UICollectionReusableView {
   var callback: TopicCreateViewControllerCallback?
   
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    initView()
-  }
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    initView()
-  }
-  
   private(set) weak var categoryButton: UIButton?
   private(set) weak var addImageButton: UIButton?
-  private(set) weak var imagesAreaScrollView: UIScrollView?
-  private(set) weak var imageAreaStackView: UIStackView?
+  private weak var imagesAreaScrollView: UIScrollView?
+  private weak var imageAreaStackView: UIStackView?
   private(set) weak var titleTextField: UITextField?
   private(set) weak var descriptionTextView: UITextView?
-  private(set) weak var descriptionSeperatorView: UIView?
-  private(set) weak var optionsLabel: UILabel?
-  var constraintImagesAreaScrollView: ConstraintMakerEditable?
-  //var imageAreaStackViewKVO: NSKeyValueObservation?
+  private weak var descriptionSeperatorView: UIView?
+  private weak var optionsLabel: UILabel?
+  private var constraintImagesAreaScrollView: ConstraintMakerEditable?
   
   deinit {
       callback?.topicTitle = titleTextField?.text
       callback?.topicDescription = descriptionTextView?.text
   }
   
+  var isVisibleBottomArea: Bool = false {
+    willSet{
+      descriptionSeperatorView?.isHidden = !newValue
+      optionsLabel?.isHidden = !newValue
+    }
+  }
+  
+  //min max
+  func addImageInImageArea(image: UIImage){
+    guard let imageAreaStackView = imageAreaStackView else {return}
+    let imageView = UIImageView()
+    imageView.image = image
+    imageAreaStackView.addArrangedSubview(imageView)
+    imageView.snp.makeConstraints{
+      $0.width.equalTo(image.size.width * height667(121.0) / image.size.height)
+      $0.height.equalTo(imageAreaStackView)
+    }
+    if imageAreaStackView.arrangedSubviews.count == 1 {
+      constraintImagesAreaScrollView?.constraint.layoutConstraints.first?.constant =
+        imageAreaStackView.bounds.height
+    }
+  }
+  
+  //save image url array & deinit
+  //func removeImageInImageArea(image: UIImage){}
+  
+  var descriptionAttributedString: NSAttributedString? {
+    if let font = UIFont(name: "NanumSquareR", size: 16.0) {
+      return .init( string: descriptionPlaceholderString,
+                    attributes: [
+                      .font: font,
+                      .foregroundColor: descriptionPlaceholderTextColor
+        ])
+    }
+    return nil
+  }
+  
+  private var descriptionPlaceholderString: String {
+    return "자유롭게 작성해주세요."
+  }
+  
+  private var descriptionPlaceholderTextColor: UIColor {
+    return .init(r: 154, g: 154, b: 154)
+  }
+  
+  var descriptionTextColor: UIColor {
+    return .init(r: 77, g: 77, b: 77)
+  }
+  
+  func copyValue(headerView: TopicCreateHeaderView) {
+    if let image = headerView.categoryButton?.backgroundImage(for: .normal) {
+      categoryButton?.setBackgroundImage(image, for: .normal)
+      if let attributedTitle = headerView.categoryButton?.attributedTitle(for: .normal) {
+        categoryButton?.setAttributedTitle(attributedTitle, for: .normal)
+      }
+    }
+    if let title = headerView.titleTextField?.text {
+      titleTextField?.text = title
+    }
+    if let description = headerView.descriptionTextView?.text {
+      descriptionTextView?.textColor = descriptionTextColor
+      descriptionTextView?.text = description
+    }
+  }
+  
   func initView(){
-    //let isVisible = callback?.isVisible ?? false
-    
-    let rootBounds = UIScreen.main.bounds
-
-    //MARK: CategoryButton
     let categoryButton = UIButton()
     categoryButton.setBackgroundImage(UIImage(named: "category_btn"), for: .normal)
     self.categoryButton = categoryButton
     self.addSubview(categoryButton)
-    categoryButton.tag = TopicCreateButtonTag.category.rawValue
+    categoryButton.tag = TopicCreateViewController.ButtonTag.category.rawValue
     categoryButton.snp.makeConstraints {
-      $0.top.equalTo(self).offset(rootBounds.height * 24.0/667.0)
-      $0.leading.equalTo(self).offset(rootBounds.width * 26.0/375.0)
-      $0.width.equalTo(rootBounds.width * 126.0/375.0)
-      $0.height.equalTo(rootBounds.height * 34.0/667.0)
+      $0.top.equalTo(self).offset(height667(24.0))
+      $0.leading.equalTo(self).offset(width375(26.0))
+      $0.width.equalTo(width375(126.0))
+      $0.height.equalTo(height667(34.0))
     }
     
     let addImageButton = UIButton()
     addImageButton.setImage(UIImage(named: "image_plus_btn"), for: .normal)
     self.addImageButton = addImageButton
     self.addSubview(addImageButton)
-    addImageButton.tag = TopicCreateButtonTag.addImage.rawValue
+    addImageButton.tag = TopicCreateViewController.ButtonTag.addImage.rawValue
     addImageButton.snp.makeConstraints {
       $0.top.equalTo(categoryButton.snp.bottom)
-        .offset(rootBounds.height * 16.0/667.0)
+        .offset(height667(16.0))
       $0.leading.equalTo(categoryButton)
-      $0.width.equalTo(rootBounds.width * 102.0/375.0)
-      $0.height.equalTo(rootBounds.height * 34.0/667.0)
+      $0.width.equalTo(width375(102.0))
+      $0.height.equalTo(height667(34.0))
     }
     
     let addImageLabel = UILabel()
     addImageLabel.text = "사진은 0~5장까지 추가 가능합니다."
     addImageLabel.font = UIFont(name: "NanumSquareR", size: 12.0)
     addImageLabel.textColor = UIColor(r: 154, g: 154, b: 154)
-    //self.addImageLabel = addImageLabel
     self.addSubview(addImageLabel)
     addImageLabel.snp.makeConstraints {
       $0.leading.equalTo(addImageButton.snp.trailing)
-        .offset(rootBounds.width * 10.0/375.0)
+        .offset(width375(10.0))
       $0.centerY.equalTo(addImageButton)
     }
     
-    //MARK: ImagesAreaView
     let imagesAreaScrollView = UIScrollView()
     imagesAreaScrollView.showsHorizontalScrollIndicator = false
     imagesAreaScrollView.showsVerticalScrollIndicator = false
     imagesAreaScrollView.contentInset = .init(
-      top: 0,
-      left: rootBounds.width * 22.0/375.0,
-      bottom: 0,
-      right: rootBounds.width * 22.0/375.0)
+      top: 0, left: width375(22.0),
+      bottom: 0, right: width375(22.0))
     self.imagesAreaScrollView = imagesAreaScrollView
-    self.addSubview(imagesAreaScrollView)
+    addSubview(imagesAreaScrollView)
     imagesAreaScrollView.snp.makeConstraints {
       $0.leading.trailing.equalTo(self)
       $0.top.equalTo(addImageLabel.snp.bottom)
-        .offset(rootBounds.height * 23.0/667.0)
+        .offset(height667(23.0))
       constraintImagesAreaScrollView = $0.height.equalTo(0)
     }
 
@@ -857,20 +843,14 @@ class TopicCreateHeaderView: UICollectionReusableView {
     imageAreaStackView.axis = .horizontal
     imageAreaStackView.alignment = .fill
     imageAreaStackView.distribution = .fillProportionally
-    imageAreaStackView.spacing = rootBounds.width * 8.0/375.0
+    imageAreaStackView.spacing = width375(8.0)
     self.imageAreaStackView = imageAreaStackView
     imagesAreaScrollView.addSubview(imageAreaStackView)
     imageAreaStackView.snp.makeConstraints {
       $0.top.leading.trailing.bottom.equalTo(imagesAreaScrollView)
-      $0.height.equalTo(rootBounds.height * 121.0/667.0)
+      $0.height.equalTo(height667(121.0))
     }
     
-    /*imageAreaStackViewKVO = imageAreaStackView.observe(\UIStackView.subviews, changeHandler: {
-      (stackView, _) -> Void in
-      self.imagesAreaScrollView?.isHidden = stackView.subviews.count > 0
-    })*/
-    
-    //MARK: Title & Description
     let titleTextField = UITextField()
     if let font = UIFont(name: "NanumSquareR", size: 16.0) {
       titleTextField.attributedPlaceholder = NSAttributedString(
@@ -892,9 +872,9 @@ class TopicCreateHeaderView: UICollectionReusableView {
     self.addSubview(titleTextField)
     titleTextField.snp.makeConstraints {
       $0.top.equalTo(imagesAreaScrollView.snp.bottom)
-        .offset(rootBounds.height * 23.0/667.0)
+        .offset(height667(23.0))
       $0.leading.equalTo(categoryButton)
-      $0.width.equalTo(rootBounds.width * 323.0/375.0)
+      $0.width.equalTo(width375(323.0))
     }
     
     let titleSeperatorView = UIView()
@@ -902,36 +882,35 @@ class TopicCreateHeaderView: UICollectionReusableView {
     self.addSubview(titleSeperatorView)
     titleSeperatorView.snp.makeConstraints {
       $0.top.equalTo(titleTextField.snp.bottom)
-        .offset(rootBounds.height * 6.0/667.0)
+        .offset(height667(6.0))
       $0.leading.equalTo(titleTextField)
       $0.trailing.equalTo(titleTextField)
-      $0.height.equalTo(rootBounds.height * 2.0/667.0)
+      $0.height.equalTo(height667(2.0))
     }
     
     let descriptionTextView = UITextView()
     descriptionTextView.backgroundColor = .clear
     descriptionTextView.textContainer.lineFragmentPadding = 0
-    /*descriptionTextView.textContainerInset = .init(
-     top: 0, left: view.bounds.width * 26.0/375.0, bottom: 0, right: view.bounds.width * 26.0/375.0)*/
     descriptionTextView.allowsEditingTextAttributes = false
+    descriptionTextView.isScrollEnabled = false
+    descriptionTextView.delegate = self
     self.descriptionTextView = descriptionTextView
     self.addSubview(descriptionTextView)
-    descriptionTextView.isScrollEnabled = false
     descriptionTextView.snp.makeConstraints {
       $0.top.equalTo(titleSeperatorView.snp.bottom)
-        .offset(rootBounds.height * 26.0/667.0)
+        .offset(height667(26.0))
       $0.leading.trailing.equalTo(titleTextField)
     }
     
     let descriptionSeperatorView = UIView()
     descriptionSeperatorView.backgroundColor = .init(r: 233, g: 233, b: 233)
     self.descriptionSeperatorView = descriptionSeperatorView
-    self.addSubview(descriptionSeperatorView)
+    addSubview(descriptionSeperatorView)
     descriptionSeperatorView.snp.makeConstraints {
       $0.top.equalTo(descriptionTextView.snp.bottom)
-        .offset(rootBounds.height * 46.0/667.0)
+        .offset(height667(46.0))
       $0.leading.trailing.equalTo(self)
-      $0.height.equalTo(rootBounds.height * 2.0/667.0)
+      $0.height.equalTo(height667(2.0))
     }
     
     let optionsLabel = UILabel()
@@ -939,77 +918,122 @@ class TopicCreateHeaderView: UICollectionReusableView {
     optionsLabel.font = UIFont(name: "NanumSquareB", size: 14.0)
     optionsLabel.textColor = UIColor(r: 112, g: 112, b: 112)
     self.optionsLabel = optionsLabel
-    self.addSubview(optionsLabel)
+    addSubview(optionsLabel)
     optionsLabel.snp.makeConstraints {
       $0.top.equalTo(descriptionSeperatorView.snp.bottom)
-        .offset(rootBounds.height * 24.0/667.0)
+        .offset(height667(24.0))
       $0.leading.equalTo(titleTextField)
-      $0.height.equalTo(rootBounds.height * 16.0/667.0)
-      $0.bottom.equalTo(self).offset(-(rootBounds.height * 10.0/667.0))
+      $0.height.equalTo(height667(16.0))
+      $0.bottom.equalTo(self).offset(-height667(10.0))
     }
-  
   }
   
-  /*@objc func observeValue(_ notification: Notification){
-    guard let isVisible = notification.object as? Bool else {return}
-    descriptionSeperatorView?.isHidden = !isVisible
-    optionsLabel?.isHidden = !isVisible
-  }*/
+  required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder); initView() }
+  override init(frame: CGRect) { super.init(frame: frame); initView() }
 }
 
+extension TopicCreateHeaderView: UITextViewDelegate {
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    if textView.textColor?.hashValue == descriptionPlaceholderTextColor.hashValue {
+      textView.text = ""
+      textView.textColor = descriptionTextColor
+    }
+  }
+  func textViewDidEndEditing(_ textView: UITextView) {
+    if textView.text.trimmingCharacters(in: CharacterSet(charactersIn: " \n")).count == 0 {
+      textView.text = descriptionPlaceholderString
+      textView.textColor = descriptionPlaceholderTextColor
+    }
+  }
+  func textViewDidChange(_ textView: UITextView) {
+    callback?.invalidateLayoutCollectionView()
+  }
+}
+
+@objc protocol TopicCreateFooterViewDelegate {
+  func footerView(optionAddButton: UIButton)
+  func footerView(submitButton: UIButton)
+  func footerView(infoButtonTag: Int)
+}
+
+//MARK: FooterView
 class TopicCreateFooterView: UICollectionReusableView {
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    initView()
+  var delegate: TopicCreateFooterViewDelegate? {
+    willSet{
+      if let btn1 = optionAddButton, let btn2 = submitButton {
+        for (btn, selector) in [(btn1, #selector(TopicCreateFooterViewDelegate.footerView(optionAddButton:))),
+                                (btn2, #selector(TopicCreateFooterViewDelegate.footerView(submitButton:)))] {
+          for (f, target) in [(btn.removeTarget, delegate), (btn.addTarget, newValue)] where target != nil {
+            f(target, selector, .touchUpInside)
+          }
+        }
+      }
+    }
   }
   
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    initView()
+  private(set) var isVotableCount: Bool = false {
+    didSet { if oldValue != isVotableCount {
+      votableCountCheckButton?.setImage(
+        imageCheckButton(isCheck: isVotableCount), for: .normal)
+    }}
+  }
+  private(set) var isOnlyWriterCreateOption: Bool = false {
+    didSet { if oldValue != isOnlyWriterCreateOption {
+      onlyWriterCreateOptionCheckButton?.setImage(
+        imageCheckButton(isCheck: isOnlyWriterCreateOption), for: .normal)
+    }}
   }
   
-  private(set) weak var optionAddButton: UIButton?
-  private(set) weak var settingView: TopicCreateSettingView?
-  private(set) weak var submitButton: UIButton?
+  public enum ButtonTag: Int {
+    case votableCount
+    case onlyWriterCreateOption
+  }
   
-  func initView(){
-    let rootBounds = UIScreen.main.bounds
-    
-    let optionAddButton = UIButton()//(type: .custom)
-    //optionAddButton.contentHorizontalAlignment = .left
-    //if let font = UIFont(name: "NanumSquareR", size: 14.0) {
-    //  optionAddButton.setAttributedTitle( NSAttributedString(string: "항목추가", attributes: [.font: font, .foregroundColor: UIColor(r: 112, g: 112, b: 112)]), for: .normal)
-    //}
-    //optionAddButton.titleEdgeInsets = .init(top: 0.0, left: rootBounds.width * 39.0 / 375.0, bottom: 0.0, right: 0.0)
+  private weak var optionAddButton: UIButton?
+  private weak var votableCountCheckButton: UIButton?
+  private weak var onlyWriterCreateOptionCheckButton: UIButton?
+  private weak var submitButton: UIButton?
+  
+  private func imageCheckButton(isCheck: Bool) -> UIImage? {
+    guard let image = UIImage(named: ((isCheck) ? "Wcheck_btn_F" : "Wcheck_btn_N") ) else { return nil }
+    let padding = width375(20.0)
+    return image.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplate: false)
+  }
+  
+  @objc private func handleInfoButton(_ button: UIButton) {
+    delegate?.footerView(infoButtonTag: button.tag)
+  }
+  
+  @objc private func handleButton(_ button: UIButton) {
+    guard let buttonTag = ButtonTag(rawValue: button.tag) else {return}
+    switch buttonTag {
+    case .votableCount: isVotableCount = !isVotableCount
+    case .onlyWriterCreateOption: isOnlyWriterCreateOption = !isOnlyWriterCreateOption
+    }
+  }
+  
+  private func initView(){
+    let optionAddButton = UIButton()
     optionAddButton.backgroundColor = UIColor(r: 209, g: 209, b: 209)
-    //optionAddButton.setBackgroundImage(UIColor(r: 209, g: 209, b: 209).image1x1, for: .normal)
-    //optionAddButton.setBackgroundImage(UIColor(r: 219, g: 219, b: 219).image1x1, for: .selected)
     optionAddButton.layer.cornerRadius = 3.0
-    
-    
     
     let plusLayer = CAShapeLayer()
     let bezierPath = UIBezierPath()
-    bezierPath.move(to: .init(x: rootBounds.width * 7.0 / 375.0, y: 0.0))
-    bezierPath.addLine(to: .init(x: rootBounds.width * 7.0 / 375.0, y: rootBounds.height * 14.0 / 667.0))
-    bezierPath.move(to: .init(x: 0.0, y: rootBounds.height * 7.0 / 667.0))
-    bezierPath.addLine(to: .init(x: rootBounds.width * 14.0 / 375.0, y: rootBounds.height * 7.0 / 667.0))
+    bezierPath.move(to: .init(x: width375(7.0), y: 0.0))
+    bezierPath.addLine(to: .init(x: width375(7.0), y: height667(14.0)))
+    bezierPath.move(to: .init(x: 0.0, y: height667(7.0)))
+    bezierPath.addLine(to: .init(x: width375(14.0), y: height667(7.0)))
     plusLayer.path = bezierPath.cgPath
     plusLayer.strokeColor = UIColor(r: 112, g: 112, b: 112).cgColor
     plusLayer.lineWidth = 2.0
-    plusLayer.frame = .init(
-      x: rootBounds.width * 16.0 / 375.0,
-      y: rootBounds.height * 19.0 / 667.0,
-      width: rootBounds.width * 14.0 / 375.0, height: rootBounds.height * 14.0 / 667.0)
+    plusLayer.frame = .init( x: width375(16.0), y: height667(19.0),
+      width: width375(14.0), height: height667(14.0))
     plusLayer.backgroundColor = UIColor.clear.cgColor
     optionAddButton.layer.addSublayer(plusLayer)
     
     let textLayer = CATextLayer()
-    textLayer.frame = .init(
-      x: rootBounds.width * 39.0 / 375.0,
-      y: rootBounds.height * 18.0 / 667.0,
-      width: rootBounds.width / 2.0,
-      height: rootBounds.height * 16.0 / 667.0)
+    textLayer.frame = .init( x: width375(39.0), y: height667(18.0),
+      width: width375(170.0), height: height667(16.0))
     textLayer.alignmentMode = kCAAlignmentLeft
     textLayer.string = "항목추가"
     textLayer.font = "NanumSquareR" as CFTypeRef
@@ -1018,97 +1042,14 @@ class TopicCreateFooterView: UICollectionReusableView {
     textLayer.backgroundColor = UIColor.clear.cgColor
     optionAddButton.layer.addSublayer(textLayer)
     
-    optionAddButton.tag = TopicCreateButtonTag.optionAdd.rawValue
     self.optionAddButton = optionAddButton
-    self.addSubview(optionAddButton)
+    addSubview(optionAddButton)
     optionAddButton.snp.makeConstraints {
-      $0.top.equalTo(self).offset(rootBounds.height * 14.0 / 667.0)
+      $0.top.equalTo(self).offset(height667(14.0))
       $0.centerX.equalTo(self)
-      $0.width.equalTo(rootBounds.width * 317.0 / 375.0)
-      $0.height.equalTo(rootBounds.height * 52.0 / 667.0)
+      $0.width.equalTo(width375(317.0))
+      $0.height.equalTo(height667(52.0))
     }
-    
-    let settingView = TopicCreateSettingView()
-    self.settingView = settingView
-    self.addSubview(settingView)
-    settingView.snp.makeConstraints {
-      $0.top.equalTo(optionAddButton.snp.bottom)
-      $0.leading.trailing.equalTo(self)
-    }
-    
-    let submitButton = UIButton()
-    submitButton.setBackgroundImage(UIImage(named: "Wupload_bg_btn"), for: .normal)
-    if let font = UIFont(name: "NanumSquareB", size: 18.0) {
-      submitButton.setAttributedTitle(NSAttributedString(
-        string: "완료", attributes: [.font: font, .foregroundColor: UIColor.white]), for: .normal)
-    }
-    self.submitButton = submitButton
-    addSubview(submitButton)
-    submitButton.tag = TopicCreateButtonTag.submit.rawValue
-    //submitButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
-    submitButton.snp.makeConstraints {
-      $0.top.equalTo(settingView.snp.bottom).offset(rootBounds.height * 26.0/667.0)
-      $0.bottom.equalTo(self).offset(-(rootBounds.height * 51.0/667.0))
-      $0.width.equalTo(rootBounds.width * 146.0/375.0)
-      $0.height.equalTo(rootBounds.height * 42.0/667.0)
-      $0.centerX.equalTo(self)
-    }
-  }
-}
-
-protocol TopicCreateSettingViewDelegate {
-  func topicCreateSettingViewDelegate(infoMesssage: String)
-  func topicCreateSettingViewDelegate(buttonTag: TopicCreateSettingView.ButtonTag)
-}
-
-
-class TopicCreateSettingView: UIView {
-  var delegate: TopicCreateSettingViewDelegate?
-  private weak var votableCountCheckButton: UIButton?
-  private weak var onlyWriterCreateOptionCheckButton: UIButton?
-  
-  private(set) var isVotableCount: Bool = false {
-    didSet { if oldValue != isVotableCount {
-        changeImageCheckButton(button: votableCountCheckButton)
-    }}
-  }
-  
-  private(set) var isOnlyWriterCreateOption: Bool = false {
-    didSet { if oldValue != isOnlyWriterCreateOption {
-        changeImageCheckButton(button: onlyWriterCreateOptionCheckButton)
-    }}
-  }
-  
-  private func changeImageCheckButton(button: UIButton?) {
-    if button == votableCountCheckButton {
-      button?.setImage(imageCheckButton(isCheck: isVotableCount), for: .normal)
-    }
-    if button == onlyWriterCreateOptionCheckButton {
-      button?.setImage(imageCheckButton(isCheck: isOnlyWriterCreateOption), for: .normal)
-    }
-  }
-  
-  private func imageCheckButton(isCheck: Bool) -> UIImage? {
-    let padding = UIScreen.main.bounds.width * 20.0/375.0
-    if let image = UIImage(named: ((isCheck) ? "Wcheck_btn_F" : "Wcheck_btn_N") ) {
-      return image.copy(with: .init(top: padding, left: padding, bottom: padding, right: padding), isTemplate: false)
-    }
-    return nil
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    initView()
-  }
-  
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    initView()
-  }
-  
-  private func initView(){
-    isUserInteractionEnabled = true
-    let rootViewBounds = UIScreen.main.bounds
     
     let titleLabel = UILabel()
     titleLabel.font = UIFont.init(name: "NanumSquareB", size: 14.0)
@@ -1116,15 +1057,16 @@ class TopicCreateSettingView: UIView {
     titleLabel.text = "랭킹 설정"
     addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
-      $0.top.equalTo(self).offset(rootViewBounds.height * 46.0/667.0)
-      $0.leading.equalTo(self).offset(rootViewBounds.width * 24.0/375.0)
+      $0.top.equalTo(optionAddButton.snp.bottom).offset(height667(46.0))
+      $0.leading.equalTo(self).offset(width375(24.0))
     }
     
     let seperatorView1 = UIView()
     addSubview(seperatorView1)
     seperatorView1.snp.makeConstraints {
-      $0.top.equalTo(titleLabel.snp.bottom).offset(rootViewBounds.height * 10.0/667.0)
+      $0.top.equalTo(titleLabel.snp.bottom).offset(height667(10.0))
     }
+    
     let votableCountLabel = UILabel()
     votableCountLabel.font = UIFont(name: "NanumSquareR", size: 14.0)
     votableCountLabel.textColor = UIColor.init(r: 112, g: 112, b: 112)
@@ -1134,13 +1076,15 @@ class TopicCreateSettingView: UIView {
     let votableCountCheckButton = UIButton()
     votableCountCheckButton.tag = ButtonTag.votableCount.rawValue
     self.votableCountCheckButton = votableCountCheckButton
-    changeImageCheckButton(button: votableCountCheckButton)
-    initSubView(rootViewBounds: rootViewBounds, seperatorView: seperatorView1, label: votableCountLabel, infoButton: votableCountInfoButton, chekcButton: votableCountCheckButton)
+    votableCountCheckButton.setImage(
+      imageCheckButton(isCheck: isVotableCount), for: .normal)
+    initSubView( seperatorView: seperatorView1, label: votableCountLabel,
+      infoButton: votableCountInfoButton, chekcButton: votableCountCheckButton)
     
     let seperatorView2 = UIView()
     addSubview(seperatorView2)
     seperatorView2.snp.makeConstraints {
-      $0.top.equalTo(votableCountLabel.snp.bottom).offset(rootViewBounds.height * 24.0/667.0)
+      $0.top.equalTo(votableCountLabel.snp.bottom).offset(height667(24.0))
     }
     let onlyWriterCreateOptionLabel = UILabel()
     onlyWriterCreateOptionLabel.font = UIFont(name: "NanumSquareR", size: 14.0)
@@ -1151,72 +1095,74 @@ class TopicCreateSettingView: UIView {
     let onlyWriterCreateOptionCheckButton = UIButton()
     onlyWriterCreateOptionCheckButton.tag = ButtonTag.onlyWriterCreateOption.rawValue
     self.onlyWriterCreateOptionCheckButton = onlyWriterCreateOptionCheckButton
-    changeImageCheckButton(button: onlyWriterCreateOptionCheckButton)
-    initSubView(rootViewBounds: rootViewBounds, seperatorView: seperatorView2, label: onlyWriterCreateOptionLabel, infoButton: onlyWriterCreateOptionInfoButton, chekcButton: onlyWriterCreateOptionCheckButton)
+    onlyWriterCreateOptionCheckButton.setImage(
+      imageCheckButton(isCheck: isOnlyWriterCreateOption), for: .normal)
+    initSubView( seperatorView: seperatorView2, label: onlyWriterCreateOptionLabel,
+      infoButton: onlyWriterCreateOptionInfoButton, chekcButton: onlyWriterCreateOptionCheckButton)
     
-    onlyWriterCreateOptionLabel.snp.makeConstraints {
-      $0.bottom.equalTo(self).offset(-(rootViewBounds.height * 24.0/667.0))
+    let submitButton = UIButton()
+    submitButton.setBackgroundImage(UIImage(named: "Wupload_bg_btn"), for: .normal)
+    if let font = UIFont(name: "NanumSquareB", size: 18.0) {
+      submitButton.setAttributedTitle(NSAttributedString(
+        string: "완료", attributes: [.font: font, .foregroundColor: UIColor.white]), for: .normal)
+    }
+    self.submitButton = submitButton
+    addSubview(submitButton)
+    submitButton.snp.makeConstraints {
+      $0.top.equalTo(onlyWriterCreateOptionLabel.snp.bottom).offset(height667(50.0))
+      $0.bottom.equalTo(self).offset(-height667(51.0))
+      $0.width.equalTo(width375(146.0))
+      $0.height.equalTo(height667(42.0))
+      $0.centerX.equalTo(self)
     }
   }
   
-  private func initSubView(rootViewBounds: CGRect, seperatorView: UIView, label: UILabel, infoButton: UIButton, chekcButton:UIButton) {
+  private func initSubView(seperatorView: UIView, label: UILabel, infoButton: UIButton, chekcButton:UIButton) {
     seperatorView.backgroundColor = .init(r: 194, g: 194, b: 194)
     seperatorView.snp.makeConstraints {
       $0.leading.trailing.equalTo(self)
       $0.height.equalTo(1.0)
     }
+    
     addSubview(label)
     label.snp.makeConstraints {
-      $0.top.equalTo(seperatorView.snp.bottom).offset(rootViewBounds.height * 24.0/667.0)
-      $0.leading.equalTo(self).offset(rootViewBounds.width * 24.0/375.0)
+      $0.top.equalTo(seperatorView.snp.bottom).offset(height667(24.0))
+      $0.leading.equalTo(self).offset(width375(24.0))
     }
-    var infoImage = UIImage(named: "help_icn")
-    infoImage = infoImage?.copy(with: .init(top: 10, left: 10, bottom: 10, right: 10), isTemplate: false)
-    infoButton.setImage(infoImage, for: .normal)
+    
+    if let infoImage = UIImage(named: "help_icn") {
+      infoButton.setImage(
+        infoImage.copy(
+          with: .init(top: 10, left: 10, bottom: 10, right: 10),
+          isTemplate: false),
+        for: .normal)
+    }
     addSubview(infoButton)
     infoButton.snp.makeConstraints {
       $0.leading.equalTo(label.snp.trailing)
-      $0.width.equalTo((rootViewBounds.width * 36.0/375.0))
-      $0.height.equalTo((rootViewBounds.width * 36.0/375.0))
+      $0.width.equalTo(width375(36.0/375.0))
+      $0.height.equalTo(width375(36.0/375.0))
       $0.centerY.equalTo(label)
     }
-    infoButton.addTarget(self, action: #selector(handleButtonInfo), for: .touchUpInside)
+    infoButton.addTarget(self, action: #selector(handleInfoButton), for: .touchUpInside)
+    
     addSubview(chekcButton)
     chekcButton.snp.makeConstraints {
       $0.centerY.equalTo(infoButton)
-      $0.width.equalTo((rootViewBounds.width * 56.0/375.0))
-      $0.height.equalTo((rootViewBounds.width * 56.0/375.0))
-      $0.trailing.equalTo(self).offset(-(rootViewBounds.width * 4.0/375.0))
+      $0.width.equalTo(width375(56.0/375.0))
+      $0.height.equalTo(width375(56.0/375.0))
+      $0.trailing.equalTo(self).offset(-width375(4.0/375.0))
     }
     chekcButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
   }
   
-  @objc private func handleButtonInfo(_ button: UIButton) {
-    guard let buttonTag = ButtonTag(rawValue: button.tag) else {return}
-    var message: String
-    switch buttonTag {
-    case .votableCount:
-      message = "투표하는 유저가 3개까지\n복수 선택을 할 수 있도록 합니다."
-    case .onlyWriterCreateOption:
-      message = "다른 유저가 랭킹 항목을\n추가하도록 허용합니다."
-    }
-    delegate?.topicCreateSettingViewDelegate(infoMesssage: message)
+  required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder); initView() }
+  override init(frame: CGRect) { super.init(frame: frame); initView() }
+}
+
+extension UIView {
+  func addSubViewSnp(_ view: UIView, closure: (ConstraintMaker) -> Void) {
+    self.addSubview(view)
+    view.snp.makeConstraints(closure)
   }
-  
-  @objc func handleButton(_ button: UIButton) {
-    guard let buttonTag = ButtonTag(rawValue: button.tag) else {return}
-    switch buttonTag {
-    case .votableCount:
-      isVotableCount = !isVotableCount
-    case .onlyWriterCreateOption:
-      isOnlyWriterCreateOption = !isOnlyWriterCreateOption
-    }
-    delegate?.topicCreateSettingViewDelegate(buttonTag: buttonTag)
-  }
-  
-  public enum ButtonTag: Int {
-    case votableCount = 1
-    case onlyWriterCreateOption = 2
-  }
-  
 }
