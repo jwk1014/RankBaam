@@ -44,6 +44,12 @@ struct SResultTopicList: Decodable{
     var topics: [Topic]?
 }
 
+struct SResultTopicRankList: Decodable{
+  var succ: Bool
+  var msg: String?
+  var topics: [Topic]?
+}
+
 struct SResultTopicDetail: Decodable{
     var succ: Bool
     var msg: String?
