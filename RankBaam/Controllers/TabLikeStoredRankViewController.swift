@@ -42,6 +42,8 @@ class TabLikeStoredRankViewController: UIViewController {
         return tabLikeStoredRankEditingCancelButton
     }()
     
+    var selectedLikedCellIndexPath: [(indexPath: Int, optionSN: Int)] = [(indexPath: Int, optionSN: Int)]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
@@ -53,6 +55,10 @@ class TabLikeStoredRankViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        fetchLikeStoredRankDatas()
+    }
+    
     func fetchLikeStoredRankDatas() {
         
         TopicService.likeList(page: 1, order: OrderType.new) {
@@ -62,10 +68,12 @@ class TabLikeStoredRankViewController: UIViewController {
                     guard let topicDatas = result.topics else {return}
                     self.likeStoredRankDatas = topicDatas
                     print("This is WeeklyLike List Count : \(self.likeStoredRankDatas.count)")
-                    self.tabLikeStoredRankCollectionView.reloadData()
+                   
+                    DispatchQueue.main.async {
+                        self.tabLikeStoredRankCollectionView.reloadData()
+                    }
                     
                 } else if let msg = result.msg {
-                    
                     
                     switch msg {
                     default:
@@ -160,6 +168,7 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCollectionView.delegate = self
         tabLikeStoredRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: "likedStoredCell")
         tabLikeStoredRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
+       
     }
     
     @objc fileprivate func tabLikeStoredRankButtonsHandler(_ sender: UIButton) {
@@ -175,6 +184,41 @@ class TabLikeStoredRankViewController: UIViewController {
                 .invalidateLayout()
         case "삭제":
             //TODO : FIXME
+            print("\(selectedLikedCellIndexPath.count)")
+            let selectedTopicSN = selectedLikedCellIndexPath.reduce([], { (result, item) -> [Int] in
+                return result + [item.optionSN]
+            })
+            
+            let seletedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
+                return result + [ IndexPath(item: item.indexPath, section: 0) ]
+            })
+            TopicService.likes(topicSNs: selectedTopicSN, isLiked: false, completion: {
+                switch $0.result {
+                case .success(let result):
+                    if result.succ {
+                        print("삭제 성공")
+                        
+                        self.tabLikeStoredRankCollectionView.performBatchUpdates({
+                            self.tabLikeStoredRankCollectionView.deleteItems(at: seletedIndexPath)
+                        }, completion: nil)
+                        self.fetchLikeStoredRankDatas()
+                    } else if let msg = result.msg {
+                        
+                        switch msg {
+                        default:
+                            break
+                        }
+                    }
+                case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                        error.handle(self)
+                    } else {
+                        
+                    }
+                }
+            })
+            
+            
             break
         case "취소":
             sender.isHidden = true
@@ -202,15 +246,50 @@ extension TabLikeStoredRankViewController: UICollectionViewDataSource {
         let likedCellData = self.likeStoredRankDatas[indexPath.item]
         likedStoredCell.isEditingLikedCell = isEditingLikedCell
         likedStoredCell.cellDatasConfigure(topic: likedCellData)
+        if selectedLikedCellIndexPath.contains(where: { (index, _) -> Bool in
+            return index == indexPath.item
+        }){
+            likedStoredCell.isSelectedLikedCell = true
+        }
         return likedStoredCell
     }
 }
 
 extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return Constants.screenHeight == 812 ?
-            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :
-            CGSize(width: Constants.screenWidth * (343 / 375), height: Constants.screenHeight * (122 / 667))
+        return CGSize(width: width375(343), height: height667(122))
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if self.isEditingLikedCell {
+            guard let seletedCell = collectionView.cellForItem(at: indexPath) as? MainAllRankCell else { return }
+            seletedCell.isSelectedLikedCell = !seletedCell.isSelectedLikedCell
+            if seletedCell.isSelectedLikedCell {
+                let topicSN = likeStoredRankDatas[indexPath.item].topicSN
+                self.selectedLikedCellIndexPath.append((indexPath.item, topicSN))
+            } else {
+                if let removeIndexPath = selectedLikedCellIndexPath.index(where: { (index, _) -> Bool in
+                    return index == indexPath.item
+                }){
+                    self.selectedLikedCellIndexPath.remove(at: removeIndexPath)
+                }
+            }
+            
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if selectedLikedCellIndexPath.contains(where: { (index, _) -> Bool in
+            return index == indexPath.item
+        }){
+            if let selectedCell = collectionView.cellForItem(at: indexPath)
+                as? MainAllRankCell {
+                selectedCell.isSelectedLikedCell = true
+            }
+        }
+    }
+    
 }
 

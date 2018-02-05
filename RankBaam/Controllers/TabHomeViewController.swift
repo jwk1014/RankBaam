@@ -79,7 +79,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         mainAllRankCollectionView.dataSource = self
         mainAllRankCollectionView.delegate = self
         let footerNib = UINib(nibName: "MainAllRankLoadingFooterView", bundle: nil)
-        mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL)
+        mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabHomeViewControllerNames.MAINALLRANKCELL)
         mainAllRankCollectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "loadingFooterView")
         mainRankRefreshControl.tintColor = UIColor.rankbaamOrange
         mainAllRankCollectionView.refreshControl = mainRankRefreshControl
@@ -102,7 +102,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         
         if !isOnGoingLoading {
         isOnGoingLoading = true
-        TopicService.list(page: page, count: 15, categorySN: 12, order: .new) {
+        TopicService.list(page: page, count: 15, order: .new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
@@ -168,7 +168,7 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let mainAllRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL, for: indexPath) as! MainAllRankCell
+        let mainAllRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabHomeViewControllerNames.MAINALLRANKCELL, for: indexPath) as! MainAllRankCell
         
         mainAllRankCell.cellDatasConfigure(topic: cellDatas[indexPath.item])
         return mainAllRankCell
@@ -193,7 +193,7 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
         let topicDetailViewController = TopicDetailViewController()
         let topicSN = cellDatas[indexPath.item].topicSN
         
-        if let parentViewCon = self.parent as? TabMyViewPageViewController {
+        if let _ = self.parent as? TabMyViewPageViewController {
             topicDetailViewController.bottomButtonTitleConverter =
                 .isForRevisingTopic
             topicDetailViewController.navigationTitleConverter =

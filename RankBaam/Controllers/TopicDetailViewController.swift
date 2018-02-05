@@ -557,7 +557,6 @@ class TopicDetailViewController: UIViewController {
     
     @objc fileprivate func topicDetailRankVoteButtonTapped(_ sender: UIButton) {
         
-        voteListTest()
         for (_, optionSN) in selectedOptionIndexPath {
             OptionService.vote(topicSN: self.topicSN, optionSN: optionSN, isVoted: true, completion: {
                 switch $0.result {
@@ -584,31 +583,7 @@ class TopicDetailViewController: UIViewController {
         
     }
     
-    func voteListTest() {
-        
-        OptionService.voteList(topicSN: self.topicSN) {
-            switch $0.result {
-            case .success(let sResult):
-                if sResult.succ {
-                    
-                    
-                } else if let msg = sResult.msg {
-                    switch msg {
-                    default:
-                        break
-                    }
-                }
-                
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                }
-            }
-
-        }
-        
-    }
+    
 
    /* @IBAction func deleteTopicButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController.init(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)

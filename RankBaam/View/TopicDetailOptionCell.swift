@@ -30,7 +30,7 @@ class TopicDetailOptionCell: UICollectionViewCell {
                 newPercentageConstraint.identifier = "percentageWidth"
                 newPercentageConstraint.isActive = true
             }
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.4) {
                 self.layoutIfNeeded()
             }
         }
@@ -271,6 +271,7 @@ class TopicDetailOptionCell: UICollectionViewCell {
         let randomPercentage = Float(arc4random()) / Float(UInt32.max)
         self.votePercentage = CGFloat(randomPercentage)
     }
+    
     override func prepareForReuse() {
         if isSelectedForVote {
             isSelectedForVote = false

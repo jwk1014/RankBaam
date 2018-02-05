@@ -138,6 +138,10 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectio
         return UIEdgeInsets(top: 0, left:sideInset , bottom: 0, right: sideInset)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
+    
 }
 
 extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
@@ -147,4 +151,6 @@ extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
         self.tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text =
                 "\(pageNumber + 1) / 10"
     }
+    
+    
 }

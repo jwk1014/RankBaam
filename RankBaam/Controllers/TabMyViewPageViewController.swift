@@ -36,10 +36,9 @@ class TabMyViewPageViewController: UIPageViewController {
     
     var tabMyViewRankingsCommentsViewControllers: [UIViewController] = {
         let tabMyViewRankingsViewController = TabMyViewRankingsViewController()
-        let tabHomeViewController = TabHomeViewController()
+        let tabMyViewCommentsViewController = TabMyViewCommentsViewController()
         
-        
-        return [tabHomeViewController, tabMyViewRankingsViewController]
+        return [tabMyViewRankingsViewController, tabMyViewCommentsViewController]
     }()
     
     override init(transitionStyle style: UIPageViewControllerTransitionStyle, navigationOrientation: UIPageViewControllerNavigationOrientation, options: [String : Any]? = nil) {

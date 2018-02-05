@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 import SnapKit
+import AssetsLibrary
 
 class MainAllRankCell: UICollectionViewCell {
     
@@ -90,6 +91,16 @@ class MainAllRankCell: UICollectionViewCell {
             
         }
     }
+    
+    var isSelectedLikedCell: Bool = false {
+        didSet {
+                if isSelectedLikedCell {
+                    self.mainAllRankCellBackgroundView.layer.borderWidth = 3
+                }else {
+                    self.mainAllRankCellBackgroundView.layer.borderWidth = 0
+                }
+        }
+    }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -142,6 +153,7 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellBackgroundView.backgroundColor = UIColor.white
         mainAllRankCellBackgroundView.layer.cornerRadius = 8
         mainAllRankCellBackgroundView.layer.masksToBounds = true
+        mainAllRankCellBackgroundView.layer.borderColor = UIColor.rankbaamOrange.cgColor
         mainAllRankCellImageViewShadowView.backgroundColor = UIColor.white
         mainAllRankCellImageViewShadowView.layer.cornerRadius = 8
         mainAllRankCellImageViewShadowView.layer.shadowOpacity = 0.7
@@ -269,6 +281,7 @@ class MainAllRankCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         mainAllRankCellImageView.image = UIImage(named: "noimage")
+        isSelectedLikedCell = false
     }
     
 }
