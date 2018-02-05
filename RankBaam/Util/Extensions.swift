@@ -15,7 +15,8 @@ func width375(_ width: CGFloat) -> CGFloat {
 
 func height667(_ height: CGFloat, forX: CGFloat? = nil) -> CGFloat {
   let screenHeight = UIScreen.main.bounds.height
-  if screenHeight == 812.0, let forX = forX { //if X
+  if screenHeight == 812.0 { //if X
+    guard let forX = forX else { return height }
     return forX
   }
   return screenHeight * height / 667.0
