@@ -115,7 +115,7 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     }
     
     let backButton = UIButton()
-    let padding = self.view.bounds.width * 10.0/375.0
+    let padding = width375(10.0)
     let backButtonImage = UIImage(named: "ic_keyboard_backspace")?
       .copy(
         with: .init(top: padding, left: padding, bottom: padding, right: padding),
@@ -735,6 +735,8 @@ class TopicCreateHeaderView: UICollectionReusableView {
     let imageView = UIImageView()
     imageView.image = image
     imageAreaStackView.addArrangedSubview(imageView)
+    imageView.layer.cornerRadius = 10.0
+    imageView.clipsToBounds = true
     imageView.snp.makeConstraints{
       $0.width.equalTo(image.size.width * height667(121.0) / image.size.height)
       $0.height.equalTo(imageAreaStackView)
@@ -742,6 +744,21 @@ class TopicCreateHeaderView: UICollectionReusableView {
     if imageAreaStackView.arrangedSubviews.count == 1 {
       constraintImagesAreaScrollView?.constraint.layoutConstraints.first?.constant =
         imageAreaStackView.bounds.height
+    }
+    
+    let button = UIButton(type: .custom)
+    if let image = UIImage(named: "x_icn") {
+      button.setImage(
+        image.copy(
+          with: .init(top: 6, left: 6, bottom: 6, right: 6),
+          isTemplate: false),
+        for: .normal)
+    }
+    imageView.addSubview(button)
+    button.snp.makeConstraints {
+      $0.top.trailing.equalTo(imageView)
+      $0.width.equalTo(width375(16.0))
+      $0.height.equalTo(button.snp.width)
     }
   }
   
@@ -960,14 +977,30 @@ extension TopicCreateHeaderView: UITextViewDelegate {
 class TopicCreateFooterView: UICollectionReusableView {
   var delegate: TopicCreateFooterViewDelegate? {
     willSet{
-      if let btn1 = optionAddButton, let btn2 = submitButton {
-        for (btn, selector) in [(btn1, #selector(TopicCreateFooterViewDelegate.footerView(optionAddButton:))),
-                                (btn2, #selector(TopicCreateFooterViewDelegate.footerView(submitButton:)))] {
+      if let delegate = delegate {
+        optionAddButton?.removeTarget(delegate,
+          action: #selector(delegate.footerView(optionAddButton:)),
+          for: .touchUpInside)
+        submitButton?.removeTarget(delegate,
+          action: #selector(delegate.footerView(submitButton:)),
+          for: .touchUpInside)
+      }
+      if let newValue = newValue {
+        optionAddButton?.addTarget(newValue,
+          action: #selector(newValue.footerView(optionAddButton:)),
+          for: .touchUpInside)
+        submitButton?.addTarget(newValue,
+          action: #selector(newValue.footerView(submitButton:)),
+          for: .touchUpInside)
+      }
+      /*if let btn1 = optionAddButton, let btn2 = submitButton, let newValue = newValue {
+        for (btn, selector) in [(btn1, #selector(newValue.footerView(optionAddButton:))),
+                                (btn2, #selector(newValue.footerView(submitButton:)))] {
           for (f, target) in [(btn.removeTarget, delegate), (btn.addTarget, newValue)] where target != nil {
             f(target, selector, .touchUpInside)
           }
         }
-      }
+      }*/
     }
   }
   
@@ -1079,7 +1112,7 @@ class TopicCreateFooterView: UICollectionReusableView {
     votableCountCheckButton.setImage(
       imageCheckButton(isCheck: isVotableCount), for: .normal)
     initSubView( seperatorView: seperatorView1, label: votableCountLabel,
-      infoButton: votableCountInfoButton, chekcButton: votableCountCheckButton)
+      infoButton: votableCountInfoButton, checkButton: votableCountCheckButton)
     
     let seperatorView2 = UIView()
     addSubview(seperatorView2)
@@ -1098,7 +1131,7 @@ class TopicCreateFooterView: UICollectionReusableView {
     onlyWriterCreateOptionCheckButton.setImage(
       imageCheckButton(isCheck: isOnlyWriterCreateOption), for: .normal)
     initSubView( seperatorView: seperatorView2, label: onlyWriterCreateOptionLabel,
-      infoButton: onlyWriterCreateOptionInfoButton, chekcButton: onlyWriterCreateOptionCheckButton)
+      infoButton: onlyWriterCreateOptionInfoButton, checkButton: onlyWriterCreateOptionCheckButton)
     
     let submitButton = UIButton()
     submitButton.setBackgroundImage(UIImage(named: "Wupload_bg_btn"), for: .normal)
@@ -1117,7 +1150,7 @@ class TopicCreateFooterView: UICollectionReusableView {
     }
   }
   
-  private func initSubView(seperatorView: UIView, label: UILabel, infoButton: UIButton, chekcButton:UIButton) {
+  private func initSubView(seperatorView: UIView, label: UILabel, infoButton: UIButton, checkButton:UIButton) {
     seperatorView.backgroundColor = .init(r: 194, g: 194, b: 194)
     seperatorView.snp.makeConstraints {
       $0.leading.trailing.equalTo(self)
@@ -1140,20 +1173,20 @@ class TopicCreateFooterView: UICollectionReusableView {
     addSubview(infoButton)
     infoButton.snp.makeConstraints {
       $0.leading.equalTo(label.snp.trailing)
-      $0.width.equalTo(width375(36.0/375.0))
-      $0.height.equalTo(width375(36.0/375.0))
+      $0.width.equalTo(width375(36.0))
+      $0.height.equalTo(infoButton.snp.width)
       $0.centerY.equalTo(label)
     }
     infoButton.addTarget(self, action: #selector(handleInfoButton), for: .touchUpInside)
     
-    addSubview(chekcButton)
-    chekcButton.snp.makeConstraints {
+    addSubview(checkButton)
+    checkButton.snp.makeConstraints {
       $0.centerY.equalTo(infoButton)
-      $0.width.equalTo(width375(56.0/375.0))
-      $0.height.equalTo(width375(56.0/375.0))
-      $0.trailing.equalTo(self).offset(-width375(4.0/375.0))
+      $0.width.equalTo(width375(56.0))
+      $0.height.equalTo(checkButton.snp.width)
+      $0.trailing.equalTo(self).offset(-width375(4.0))
     }
-    chekcButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
+    checkButton.addTarget(self, action: #selector(handleButton), for: .touchUpInside)
   }
   
   required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder); initView() }
