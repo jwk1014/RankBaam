@@ -139,7 +139,10 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let topicDetailViewController = TopicDetailViewController()
+        let topicSN = weeklyRankDatas[indexPath.item].topicSN
+        topicDetailViewController.topicSN = topicSN
+        navigationController?.pushViewController(topicDetailViewController, animated: true)
     }
     
 }

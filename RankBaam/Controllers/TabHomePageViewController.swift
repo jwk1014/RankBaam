@@ -84,14 +84,14 @@ class TabHomePageViewController: UIPageViewController {
         
         mainCustomNavigationBar.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview()
-            make.height.equalTo(Constants.screenHeight * (68/667))
+            make.height.equalTo(height667(68, forX: 68))
         }
         
         mainNavigationBarTitle.text = "RANK BAAM"
         mainNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
         mainNavigationBarTitle.snp.makeConstraints {
             $0.top.equalTo(mainCustomNavigationBar.snp.top)
-                .offset(height667(38))
+                .offset(height667(38, forX: 38))
             $0.centerX.equalToSuperview()
             $0.height.equalTo(height667(21))
         }

@@ -189,17 +189,22 @@ class TabLikeStoredRankViewController: UIViewController {
                 return result + [item.optionSN]
             })
             
-            let seletedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
+            var selectedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
                 return result + [ IndexPath(item: item.indexPath, section: 0) ]
-            })
+            }).sorted(by: { $0 > $1 })
             TopicService.likes(topicSNs: selectedTopicSN, isLiked: false, completion: {
                 switch $0.result {
                 case .success(let result):
                     if result.succ {
                         print("삭제 성공")
-                        
+                       
+                        for index in selectedIndexPath {
+                            print("This is Indices that will be removed : \(index)")
+                            self.likeStoredRankDatas.remove(at: index.item)
+                        }
+                        self.selectedLikedCellIndexPath.removeAll()
                         self.tabLikeStoredRankCollectionView.performBatchUpdates({
-                            self.tabLikeStoredRankCollectionView.deleteItems(at: seletedIndexPath)
+                            self.tabLikeStoredRankCollectionView.deleteItems(at: selectedIndexPath)
                         }, completion: nil)
                         self.fetchLikeStoredRankDatas()
                     } else if let msg = result.msg {

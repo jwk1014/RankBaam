@@ -370,7 +370,7 @@ class TopicDetailViewController: UIViewController {
                     guard let topic = sResult.topic else {return}
                     DispatchQueue.main.async {
                         self.topic = topic
-                        self.topicDetailHeartLikeButtonImageView.image = topic.isLike ? self.heartButtonImgForLiked : self.heartButtonImgForUnliked
+                        self.isLikedForHeartButton = topic.isLike
                         self.topicDetailRankOptionCollectionView.reloadData()
                     }
                 } else if let msg = sResult.msg {
@@ -630,6 +630,9 @@ extension TopicDetailViewController: UICollectionViewDataSource {
         let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicDetailOptionCell", for: indexPath) as! TopicDetailOptionCell
         let optionData = optionDatas[indexPath.item]
         optionCell.topicDetailOptionCellDataConfigure(optionData)
+        if let topic = self.topic, topic.voteCount > 0 {
+            optionCell.votePercentage = CGFloat(optionData.voteCount / topic.voteCount)
+        }
         if selectedOptionIndexPath.contains(where: { (index, _) -> Bool in
             return index == indexPath.item
         }){

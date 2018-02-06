@@ -159,6 +159,7 @@ class MainWeeklyRankCell: UICollectionViewCell {
         self.mainWeeklyRankTitleLabel.text = topic.title
         self.mainWeeklyNicknameLabel.text = topic.writer.nickname
         self.mainWeeklyLikeCountLabel.text = "\(topic.likeCount)"
+        self.mainWeeklyVoteCountLabel.text = "\(topic.voteCount)"
     }
     
     fileprivate func viewInitConfigure() {
@@ -206,34 +207,31 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyRankBackgroundView
             .addSubview(mainWeeklyBottomRankRightScrollingButton)
         mainWeeklyRankImageView.image = UIImage(named: "winter1")
-        mainWeeklyRankTitleLabel.text = "2017년을 대표하는 한국영화는?"
         mainWeeklyRankTitleLabel.textColor = UIColor(red: 77/255,
                                                      green: 77/255,
                                                      blue: 77/255,
                                                      alpha: 1)
         mainWeeklyRankTitleLabel.font = mainWeeklyRankTitleLabel
             .font
-            .withSize(self.frame.height * ( 14 / 406 ))
+            .withSize(14)
         mainWeeklyRankTitleLabel.sizeToFit()
         mainWeeklyNicknameStarImageView.image = UIImage(named: "starImg")
-        mainWeeklyNicknameLabel.text = " iphoneuser1234"
         mainWeeklyNicknameLabel.font = mainWeeklyNicknameLabel
             .font
             .withSize(self.frame.height * ( 12 / 406 ))
         mainWeeklyNicknameLabel.textColor = UIColor.rankbaamDarkgray
         mainWeeklyVoteBoxImageView.image = UIImage(named: "voteImg")
         mainWeeklyVoteBoxImageView.contentMode = .scaleAspectFit
-        mainWeeklyVoteCountLabel.text = "9999+"
         mainWeeklyVoteCountLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyVoteCountLabel.font = mainWeeklyVoteCountLabel
             .font
             .withSize(self.frame.height * ( 11 / 406 ))
         mainWeeklyLikeThumbImageView.image = UIImage(named: "likeImg")
-        mainWeeklyLikeCountLabel.text = "9999+"
         mainWeeklyLikeCountLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyLikeCountLabel.font = mainWeeklyLikeCountLabel
             .font
             .withSize(self.frame.height * ( 11 / 406 ))
+        mainWeeklyBottomScrollView.isUserInteractionEnabled = false
         mainWeeklySeperatorLineView.backgroundColor = UIColor.rankbaamSeperatorColor
         mainWeeklyBottomRankFirstImageView.image = UIImage(named: "1GradeImg")
         mainWeeklyBottomRankFirstImageView.contentMode = .scaleAspectFit
@@ -287,15 +285,15 @@ class MainWeeklyRankCell: UICollectionViewCell {
         }
         mainWeeklyRankImageView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(self.frame.height * ( 177 / 406))
+            $0.height.equalTo(height667(177))
         }
         mainWeeklyRankTitleLabel.sizeToFit()
         mainWeeklyRankTitleLabel.snp.makeConstraints {
             $0.top.equalTo(mainWeeklyRankImageView.snp.bottom)
-                .offset(self.frame.height * ( 17 / 406 ))
-            $0.left.equalTo(self.frame.width * ( 20 / 258 ))
-            $0.right.equalTo(-(self.frame.width * ( 20 / 258 )))
-            $0.height.equalTo(self.frame.height * (40 / 406))
+                .offset(height667(17))
+            $0.left.equalTo(width375(20))
+            $0.right.equalTo(-width375(20))
+            $0.height.equalTo(height667(40))
         }
         mainWeeklyNicknameStarImageView.snp.makeConstraints {
             $0.left.equalTo(mainWeeklyRankBackgroundView.snp.left)

@@ -67,12 +67,11 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
     
     fileprivate func viewInitConfigure() {
         self.view.addSubview(mainAllRankCollectionView)
+        
         mainAllRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+            $0.top.equalTo(height667(103, forX: 103))
         }
-      
-        
     }
     
     func mainRankCollectionViewConfigure() {
@@ -215,24 +214,12 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.screenHeight * (12 / 667)
+        return height667(12)
     }
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//    }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return /*Constants.screenHeight == 812 ?
-            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :*/
-            CGSize(width: Constants.screenWidth * (343 / 375), height: Constants.screenHeight * (122 / 667))
+        return CGSize(width: width375(343), height: height667(122))
     }
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//         print("\(scrollView.contentOffset.x)")
-//    }
+
 }
-//
-//extension TabHomeViewController: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//    }
-//}
+
 

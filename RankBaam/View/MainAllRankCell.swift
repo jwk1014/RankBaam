@@ -96,8 +96,10 @@ class MainAllRankCell: UICollectionViewCell {
         didSet {
                 if isSelectedLikedCell {
                     self.mainAllRankCellBackgroundView.layer.borderWidth = 3
-                }else {
+                    self.likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBtn")
+                } else {
                     self.mainAllRankCellBackgroundView.layer.borderWidth = 0
+                    self.likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBoxIcn")
                 }
         }
     }
@@ -126,7 +128,6 @@ class MainAllRankCell: UICollectionViewCell {
                 let imgURL = URL(string: topic.photos[0].realUrl)
                 mainAllRankCellImageView.sd_setImage(with: imgURL, completed: nil)
             }
-            
         }
     }
     
@@ -167,15 +168,15 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellImageView.layer.masksToBounds = true
         mainAllRankCellTitleLabel.text = "겨울에 가기 좋은 해외 여행지는?"
         mainAllRankCellTitleLabel.font = mainAllRankCellTitleLabel
-            .font
-            .withSize( self.frame.height * (14 / 122))
+                                                .font
+                                                .withSize( self.frame.height * (14 / 122))
         mainAllRankCellNicknameStarImageView.image = UIImage(named: "starImg")
         mainAllRankCellNicknameStarImageView.contentMode = .scaleAspectFit
         mainAllRankCellWriterNicknameLabel.text = "iphoneuser1234"
         mainAllRankCellWriterNicknameLabel.textColor = UIColor.rankbaamDarkgray
         mainAllRankCellWriterNicknameLabel.font = mainAllRankCellWriterNicknameLabel
-            .font
-            .withSize(self.frame.height * (12 / 122))
+                                                .font
+                                                .withSize(self.frame.height * (12 / 122))
         mainAllRankVoteBoxImageView.image = UIImage(named: "voteImg")
         mainAllRankVoteBoxImageView.contentMode = .scaleAspectFit
         mainAllRankVoteCountLabel.text = "9999+"

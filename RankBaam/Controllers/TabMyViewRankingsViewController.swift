@@ -68,6 +68,7 @@ class TabMyViewRankingsViewController: UIViewController {
         tabMyViewRankingsCollectionView.delegate = self
         tabMyViewRankingsCollectionView.register(MainAllRankCell.self,
                                                  forCellWithReuseIdentifier: ConstantsNames.TabMyViewRankingControllerNames.MYVIEWRANKCELL)
+        tabMyViewRankingsCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
         
     }
 }
@@ -78,9 +79,11 @@ extension TabMyViewRankingsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let MyViewRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabMyViewRankingControllerNames.MYVIEWRANKCELL,
-                                                                for: indexPath)
-        return MyViewRankCell
+        let myViewRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabMyViewRankingControllerNames.MYVIEWRANKCELL,
+                                                                for: indexPath) as! MainAllRankCell
+        let myViewRankData = self.myViewRankingDatas[indexPath.item]
+        myViewRankCell.cellDatasConfigure(topic: myViewRankData)
+        return myViewRankCell
     }
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
