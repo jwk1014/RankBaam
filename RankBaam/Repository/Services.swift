@@ -137,13 +137,22 @@ struct TopicService {
   }
   
   @discardableResult
-  static func unLike(
+  static func unlike(
     topicSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) -> DataRequest {
     
     return Alamofire .request(TopicRouter.unlike(topicSN: topicSN))
               .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func unlikes(
+    topicSNs: [Int],
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(TopicRouter.unlikes(topicSNs: topicSNs))
+      .responseRankBaam(completion)
   }
   
   @discardableResult
