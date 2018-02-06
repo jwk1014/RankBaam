@@ -117,19 +117,6 @@ struct TopicService {
         }
     })
   }
- 
-  /*
-  @discardableResult
-  static func photoDelete(
-    topicSN: Int,
-    order: Int,
-    completion: @escaping (DataResponse<SResultTopicCreate>) -> Void
-    ) -> DataRequest {
-    return Alamofire .request(TopicRouter.photoDelete(topicSN: topicSN, order: order))
-      .responseRankBaam(completion)
-  }*/
-  
-  
   
   @discardableResult
   static func like(
@@ -150,13 +137,22 @@ struct TopicService {
   }
   
   @discardableResult
-  static func unLike(
+  static func unlike(
     topicSN: Int,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) -> DataRequest {
     
     return Alamofire .request(TopicRouter.unlike(topicSN: topicSN))
               .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func unlikes(
+    topicSNs: [Int],
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(TopicRouter.unlikes(topicSNs: topicSNs))
+      .responseRankBaam(completion)
   }
   
   @discardableResult
@@ -241,18 +237,6 @@ struct OptionService {
   }
   
   @discardableResult
-  static func photoDelete(
-    topicSN: Int,
-    optionSN: Int,
-    order: Int,
-    completion: @escaping (DataResponse<SResult>) -> Void
-    ) -> DataRequest {
-    return Alamofire .request(
-      OptionRouter.photoDelete(topicSN: topicSN, optionSN: optionSN, order: order))
-      .responseRankBaam(completion)
-  }
-  
-  @discardableResult
   // TODO completion
   static func updatePre(
     topicSN: Int, optionSN: Int,
@@ -286,6 +270,15 @@ struct OptionService {
     completion: @escaping (DataResponse<SResultVote>) -> Void
     ) -> DataRequest {
     return Alamofire .request(OptionRouter.vote(topicSN: topicSN, optionSN: optionSN, isVoted: isVoted))
+      .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func vote(
+    topicSN: Int, optionSNs: [Int],
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(OptionRouter.votes(topicSN: topicSN, optionSNs: optionSNs))
       .responseRankBaam(completion)
   }
 }

@@ -12,7 +12,9 @@ protocol TargetType: URLRequestConvertible {
 extension TargetType {
   
   var url: URLConvertible {
-    return baseURL.appendingPathComponent(path)
+    var baseURL = self.baseURL
+    baseURL.appendPathComponent(path)
+    return baseURL
   }
   
   var baseURL: URL {

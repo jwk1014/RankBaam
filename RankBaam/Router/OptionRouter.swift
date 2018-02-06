@@ -6,11 +6,11 @@ enum OptionRouter {
   case read(topicSN: Int, optionSN: Int)
   case create(option: OptionWrite)
   case photoCreate(topicSN: Int, optionSN: Int)
-  case photoDelete(topicSN: Int, optionSN: Int, order: Int)
   case updatePre(topicSN: Int, optionSN: Int)
   case update(option: OptionWrite)
   case delete(topicSN: Int, optionSN: Int)
   case vote(topicSN: Int, optionSN: Int, isVoted: Bool)
+  case votes(topicSN: Int, optionSNs: [Int]) //override
 }
 
 // MARK: TargetType
@@ -27,8 +27,6 @@ extension OptionRouter: TargetType {
       return "/topic/\(option.topicSN)/option/create"
     case let .photoCreate(topicSN, optionSN):
       return "/topic/\(topicSN)/option/\(optionSN)/photo/create"
-    case let .photoDelete(topicSN, optionSN, order):
-      return "/topic/\(topicSN)/option/\(optionSN)/photo/\(order)/delete"
     case let .updatePre(topicSN, optionSN):
       return "/topic/\(topicSN)/option/\(optionSN)/update/pre"
     case let .update(option):
@@ -38,6 +36,8 @@ extension OptionRouter: TargetType {
       return "/topic/\(topicSN)/option/\(optionSN)/delete"
     case let .vote(topicSN, optionSN, _):
       return "/topic/\(topicSN)/option/\(optionSN)/vote"
+    case let .votes(topicSN, _):
+      return "/topic/\(topicSN)/votes"
     }
   }
   
@@ -49,10 +49,10 @@ extension OptionRouter: TargetType {
       return .get
     case .create,
          .photoCreate,
-         .photoDelete,
          .update,
          .delete,
-         .vote:
+         .vote,
+         .votes:
       return .post
     }
   }
@@ -71,8 +71,14 @@ extension OptionRouter: TargetType {
       ])
     case let .vote(_, _, isVoted):
       return ["isVoted": isVoted]
+    case let.votes(_, optionSNs):
+      let strOptionSNs = "\(optionSNs)"
+      let strStartIndex = strOptionSNs.index(strOptionSNs.startIndex, offsetBy: 1)
+      let strEndIndex = strOptionSNs.index(strOptionSNs.endIndex, offsetBy: -1)
+      return [
+        "optionSNs": String(strOptionSNs[strStartIndex..<strEndIndex])
+      ]
     case .photoCreate,
-         .photoDelete,
          .read,
          .updatePre,
          .delete:
