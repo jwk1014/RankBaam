@@ -97,6 +97,27 @@ struct TopicService {
               .responseRankBaam(completion)
   }
   
+  static func photoCreate(
+    topicSN: Int,
+    photoUrl: URL,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    Alamofire.upload(
+      multipartFormData: { $0.append(photoUrl, withName: "photo") },
+      to: TopicRouter.photoCreate(topicSN: topicSN).url,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          completion(error)
+        }
+    })
+  }
+  
   @discardableResult
   static func like(
     topicSN: Int, isLiked: Bool,
@@ -184,6 +205,28 @@ struct OptionService {
               .responseRankBaam(completion)
   }
   
+  static func photoCreate(
+    topicSN: Int,
+    optionSN: Int,
+    photoUrl: URL,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    Alamofire.upload(
+      multipartFormData: { $0.append(photoUrl, withName: "photo") },
+      to: OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          completion(error)
+        }
+    })
+  }
+  
   @discardableResult
   // TODO completion
   static func updatePre(
@@ -218,6 +261,15 @@ struct OptionService {
     completion: @escaping (DataResponse<SResultVote>) -> Void
     ) -> DataRequest {
     return Alamofire .request(OptionRouter.vote(topicSN: topicSN, optionSN: optionSN, isVoted: isVoted))
+      .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func vote(
+    topicSN: Int, optionSNs: [Int],
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire .request(OptionRouter.votes(topicSN: topicSN, optionSNs: optionSNs))
       .responseRankBaam(completion)
   }
 }

@@ -8,10 +8,12 @@ enum TopicRouter {
   case likeList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case myList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case create(topic: TopicWrite)
+  case photoCreate(topicSN: Int)
   case read(topicSN: Int)
   case like(topicSN: Int, isLiked: Bool)
   case likes(topicSNs: [Int], isLiked: Bool)
   case unlike(topicSN: Int)
+  case unlikes(topicSNs: [Int])
   case updatePre(topicSN: Int)
   case update(topic: TopicWrite)
   case delete(topicSN: Int)
@@ -35,14 +37,18 @@ extension TopicRouter: TargetType {
       return "/topic/my/list/\(page)"
     case .create:
       return "/topic/create"
+    case let .photoCreate(topicSN):
+      return "/topic/\(topicSN)/photo/create"
     case let .read(topicSN):
       return "/topic/\(topicSN)"
     case let .like(topicSN, _):
       return "/topic/\(topicSN)/like"
-    case let .likes(_, _):
+    case .likes:
       return "/topic/likes"
     case let .unlike(topicSN):
       return "/topic/\(topicSN)/unlike"
+    case .unlikes:
+      return "/topic/unlikes"
     case let .updatePre(topicSN):
       return "/topic/\(topicSN)/update/pre"
     case let .update(topic):
@@ -65,9 +71,11 @@ extension TopicRouter: TargetType {
          .updatePre:
       return .get
     case .create,
+         .photoCreate,
          .like,
          .likes,
          .unlike,
+         .unlikes,
          .update,
          .delete:
       return .post
@@ -108,7 +116,15 @@ extension TopicRouter: TargetType {
         "topicSNs": String(strTopicSNs[strStartIndex..<strEndIndex]),
         "isLiked": isLike
       ]
+    case let .unlikes(topicSNs):
+      let strTopicSNs = "\(topicSNs)"
+      let strStartIndex = strTopicSNs.index(strTopicSNs.startIndex, offsetBy: 1)
+      let strEndIndex = strTopicSNs.index(strTopicSNs.endIndex, offsetBy: -1)
+      return [
+        "topicSNs": String(strTopicSNs[strStartIndex..<strEndIndex])
+      ]
     case .categoryList,
+         .photoCreate,
          .read,
          .unlike,
          .updatePre,
