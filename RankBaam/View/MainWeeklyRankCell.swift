@@ -17,6 +17,7 @@ enum mainWeeklyBottomScrollDirection {
 class MainWeeklyRankCell: UICollectionViewCell {
     
     var timer = Timer()
+    let placeHolderImage = UIImage(named: "noimage")
     var scrollDirection: mainWeeklyBottomScrollDirection = .forward
     let widthForScrolling = Constants.screenWidth * 0.7 * ( 258 / 375 )
     
@@ -160,6 +161,37 @@ class MainWeeklyRankCell: UICollectionViewCell {
         self.mainWeeklyNicknameLabel.text = topic.writer.nickname
         self.mainWeeklyLikeCountLabel.text = "\(topic.likeCount)"
         self.mainWeeklyVoteCountLabel.text = "\(topic.voteCount)"
+        if !topic.photos.isEmpty {
+            if topic.photos.count > 1 {
+                guard let mainPhoto = topic.photos.first(where: { photo -> Bool in
+                    return photo.order == topic.photoMain
+                }) else { return }
+                let imgURL = URL(string: mainPhoto.realUrl)
+                mainWeeklyRankImageView.sd_setImage(with: imgURL,
+                                                    placeholderImage: placeHolderImage)
+            } else {
+                let imgURL = URL(string: topic.photos[0].realUrl)
+                mainWeeklyRankImageView.sd_setImage(with: imgURL,
+                                                    placeholderImage: placeHolderImage)
+            }
+        }
+        if let top3optionDatas = topic.rankOptions, !top3optionDatas.isEmpty {
+            for index in 0..<top3optionDatas.count {
+                switch index {
+                case 0:
+                    self.mainWeeklyBottomRankFirstOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                case 1:
+                    self.mainWeeklyBottomRankSecondOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                case 2:
+                    self.mainWeeklyBottomRankThirdOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                default:
+                    fatalError()
+                }
+            }
+        }
     }
     
     fileprivate func viewInitConfigure() {
@@ -206,7 +238,7 @@ class MainWeeklyRankCell: UICollectionViewCell {
             .addSubview(mainWeeklyBottomRankLeftScrollingButton)
         mainWeeklyRankBackgroundView
             .addSubview(mainWeeklyBottomRankRightScrollingButton)
-        mainWeeklyRankImageView.image = UIImage(named: "winter1")
+        mainWeeklyRankImageView.image = UIImage(named: "noimage")
         mainWeeklyRankTitleLabel.textColor = UIColor(red: 77/255,
                                                      green: 77/255,
                                                      blue: 77/255,
@@ -240,7 +272,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankFirstLabel.font = mainWeeklyBottomRankFirstLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankFirstOptionLabel.text = "신과 함께"
         mainWeeklyBottomRankFirstOptionLabel.textAlignment = .center
         mainWeeklyBottomRankFirstOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankFirstOptionLabel.font = mainWeeklyBottomRankFirstOptionLabel
@@ -253,7 +284,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankSecondLabel.font = mainWeeklyBottomRankSecondLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankSecondOptionLabel.text = "1987"
         mainWeeklyBottomRankSecondOptionLabel.textAlignment = .center
         mainWeeklyBottomRankSecondOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankSecondOptionLabel.font = mainWeeklyBottomRankSecondOptionLabel
@@ -266,7 +296,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankThirdLabel.font = mainWeeklyBottomRankThirdLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankThirdOptionLabel.text = "범죄도시"
         mainWeeklyBottomRankThirdOptionLabel.textAlignment = .center
         mainWeeklyBottomRankThirdOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankThirdOptionLabel.font = mainWeeklyBottomRankThirdOptionLabel
@@ -285,15 +314,15 @@ class MainWeeklyRankCell: UICollectionViewCell {
         }
         mainWeeklyRankImageView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(height667(177))
+            $0.height.equalTo(self.frame.height * (177 / 406))
         }
         mainWeeklyRankTitleLabel.sizeToFit()
         mainWeeklyRankTitleLabel.snp.makeConstraints {
             $0.top.equalTo(mainWeeklyRankImageView.snp.bottom)
-                .offset(height667(17))
-            $0.left.equalTo(width375(20))
-            $0.right.equalTo(-width375(20))
-            $0.height.equalTo(height667(40))
+                .offset(self.frame.height * (17 / 406))
+            $0.left.equalTo(self.frame.width * (20 / 258))
+            $0.right.equalTo(-(self.frame.width * (20 / 258)))
+            $0.height.equalTo(self.frame.height * (40 / 406))
         }
         mainWeeklyNicknameStarImageView.snp.makeConstraints {
             $0.left.equalTo(mainWeeklyRankBackgroundView.snp.left)

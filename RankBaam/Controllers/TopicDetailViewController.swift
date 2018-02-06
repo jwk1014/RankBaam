@@ -745,8 +745,8 @@ extension TopicDetailViewController: TopicDetailHeaderViewDelegate {
 
 extension TopicDetailViewController: TopicDetailFooterViewDelegate {
     func optionCreateButtonTapped(_ optionTitle: String) {
-        if (optionTitle.count <= 5) {
-            let alertCon = UIAlertController(title: "최소 글자수 미달", message: "최소 5자 이상 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
+        if (optionTitle.count > 100) {
+            let alertCon = UIAlertController(title: "글자수 제한", message: "랭킹 선택지는 100자 이하로 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
             let alertAction = UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil)
             alertCon.addAction(alertAction)
             present(alertCon, animated: true, completion: nil)

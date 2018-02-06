@@ -180,6 +180,8 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellBackgroundView.addSubview(optionCellVoteCountLabel)
         optionCellBackgroundView.addSubview(optionCellCommentDetailSeperatorView)
         optionCellStackViewForTitle.addArrangedSubview(optionCellCheckMarkImageView)
+//        optionCellCheckMarkImageView
+//            .setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: UILayoutConstraintAxis.horizontal)
         optionCellStackViewForTitle.addArrangedSubview(optionCellTitleLabel)
         optionCellStackViewForTitle
             .addArrangedSubview(optionCellNewOptionMarkImageView)
@@ -281,13 +283,18 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellStackViewForTitle.snp.makeConstraints {
             $0.left.equalTo(optionCellImageView.snp.right)
                 .offset(self.frame.width * (14 / 342))
-            $0.right.equalTo(optionCellCommentDetailSeperatorView.snp.left)
-                .offset(-(self.frame.width * (14 / 342)))
+            
+            // TODO : FIXME
+//            $0.right.equalTo(optionCellCommentDetailSeperatorView.snp.left)
+//                .offset(-(self.frame.width * (14 / 342)))
             $0.top.equalTo(optionCellBackgroundView.snp.top)
                 .offset(self.frame.height * (11 / 72))
             $0.bottom.equalTo(optionCellBackgroundView.snp.bottom)
                 .offset(-(self.frame.height * (40 / 72)))
             
+        }
+        optionCellTitleLabel.snp.makeConstraints {
+            $0.width.lessThanOrEqualTo(140)
         }
         optionCellVoteCountLabel.snp.makeConstraints {
             $0.left.equalTo(optionCellImageView.snp.right)

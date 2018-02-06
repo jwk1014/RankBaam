@@ -119,7 +119,7 @@ class TopicDetailFooterView: UICollectionReusableView {
         if !(Constants.screenWidth < 375) {
             topicDetailFooterWriteCellTextField.placeholder = "항목을 입력해주세요"
         } else {
-             let placeHolder = NSAttributedString(string: "항목을 입력해주세요", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: Constants.screenWidth * (16 / 375))])
+             let placeHolder = NSAttributedString(string: "항목을 입력해주세요", attributes: [NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 16)])
              topicDetailFooterWriteCellTextField.attributedPlaceholder = placeHolder
         }
         topicDetailFooterOptionAddButton.backgroundColor = UIColor(r: 228, g: 228, b: 228)
@@ -130,9 +130,8 @@ class TopicDetailFooterView: UICollectionReusableView {
         topicDetailFooterOptionAddButtonImageView.contentMode = .scaleAspectFit
         topicDetailFooterOptionAddButtonTextLabel.text = "항목 추가"
         topicDetailFooterOptionAddButtonTextLabel.textColor = UIColor.black
-        topicDetailFooterOptionAddButtonTextLabel.font = topicDetailFooterOptionAddButtonTextLabel
-            .font
-            .withSize(Constants.screenWidth * (14 / 375))
+        topicDetailFooterOptionAddButtonTextLabel.font =
+            UIFont(name: "NanumSquareB", size: 14)
         
         
         
@@ -141,61 +140,61 @@ class TopicDetailFooterView: UICollectionReusableView {
         }
         topicDetailFooterOptionWriteCell.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(Constants.screenWidth * (343 / 375))
-            $0.height.equalTo(Constants.screenHeight * (75 / 667))
+            $0.width.equalTo(width375(343))
+            $0.height.equalTo(height667(75))
         }
         topicDetailFooterOptionWriteCell.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(Constants.screenWidth * (343 / 375))
-            $0.height.equalTo(Constants.screenHeight * (75 / 667))
+            $0.width.equalTo(width375(343))
+            $0.height.equalTo(height667(75))
         }
         topicDetailFooterOptionWriteImageView.snp.makeConstraints {
             $0.top.equalTo(topicDetailFooterOptionWriteCell.snp.top)
-                .offset(Constants.screenHeight * (5 / 667))
+                .offset(height667(5))
             $0.left.equalTo(topicDetailFooterOptionWriteCell.snp.left)
-                .offset(Constants.screenWidth * (5 / 375))
+                .offset(width375(5))
             $0.bottom.equalTo(topicDetailFooterOptionWriteCell.snp.bottom)
-                .offset(-(Constants.screenHeight * (5 / 667)))
-            $0.width.equalTo(Constants.screenWidth * (76 / 375))
+                .offset(-(height667(5)))
+            $0.width.equalTo(width375(76))
         }
         topicDetailFooterCreateOrCancelButton.snp.makeConstraints {
             $0.right.top.bottom.equalToSuperview()
-            $0.width.equalTo(Constants.screenWidth * (66 / 375))
+            $0.width.equalTo(width375(66))
         }
         topicDetailFooterInnerSeperatorView.snp.makeConstraints {
             $0.top.equalTo(topicDetailFooterOptionWriteCell.snp.top)
-                .offset(Constants.screenHeight * (4 / 667))
+                .offset(height667(4))
             $0.right.equalTo(topicDetailFooterCreateOrCancelButton.snp.left)
             $0.bottom.equalTo(topicDetailFooterOptionWriteCell.snp.bottom)
-                .offset(-(Constants.screenHeight * (4 / 667)))
-            $0.width.equalTo(Constants.screenWidth * (2 / 375))
+                .offset(-(height667(4)))
+            $0.width.equalTo(width375(2))
         }
         topicDetailFooterWriteCellTextField.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(topicDetailFooterOptionWriteImageView.snp.right)
-                .offset(Constants.screenWidth * (14 / 375))
-            $0.width.equalTo(Constants.screenWidth * (180 / 375))
-            $0.height.equalTo(Constants.screenHeight * (17 / 667))
+                .offset(width375(14))
+            $0.width.equalTo(width375(180))
+            $0.height.equalTo(height667(17))
         }
         topicDetailFooterOptionAddButton.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(Constants.screenWidth * (343 / 375))
-            $0.height.equalTo(Constants.screenHeight * (46 / 667))
+            $0.width.equalTo(width375(343))
+            $0.height.equalTo(height667(46))
         }
         topicDetailFooterOptionAddButtonImageView.snp.makeConstraints {
             $0.top.equalTo(topicDetailFooterOptionAddButton.snp.top)
-                .offset(Constants.screenHeight * (14 / 667))
+                .offset(height667(14))
             $0.left.equalTo(topicDetailFooterOptionAddButton.snp.left)
-                .offset(Constants.screenWidth * (16 / 375))
-            $0.height.equalTo(Constants.screenHeight * (15 / 667))
-            $0.width.equalTo(Constants.screenWidth * (15 / 375))
+                .offset(width375(16))
+            $0.height.equalTo(height667(15))
+            $0.width.equalTo(width375(15))
         }
         topicDetailFooterOptionAddButtonTextLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(topicDetailFooterOptionAddButtonImageView.snp.right)
-                .offset(Constants.screenWidth * (9 / 375))
-            $0.width.equalTo(Constants.screenWidth * (70 / 375))
-            $0.height.equalTo(Constants.screenHeight * (18 / 667))
+                .offset(width375(9))
+            $0.width.equalTo(width375(70))
+            $0.height.equalTo(height667(18))
         }
     }
     

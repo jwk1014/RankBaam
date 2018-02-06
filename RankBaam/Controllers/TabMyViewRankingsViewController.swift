@@ -88,11 +88,27 @@ extension TabMyViewRankingsViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
+    
+    
 }
 
 extension TabMyViewRankingsViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: width375(343), height: height667(122))
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let topicDetailViewController = TopicDetailViewController()
+        let topicSN = myViewRankingDatas[indexPath.item].topicSN
+        
+        if let _ = self.parent as? TabMyViewPageViewController {
+            topicDetailViewController.bottomButtonTitleConverter =
+                .isForRevisingTopic
+            topicDetailViewController.navigationTitleConverter =
+                .isSettingMyView
+        }
+        topicDetailViewController.topicSN = topicSN
+        navigationController?.pushViewController(topicDetailViewController, animated: true)
     }
 }
 

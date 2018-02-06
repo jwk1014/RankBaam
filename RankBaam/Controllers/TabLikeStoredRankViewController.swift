@@ -192,6 +192,7 @@ class TabLikeStoredRankViewController: UIViewController {
             var selectedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
                 return result + [ IndexPath(item: item.indexPath, section: 0) ]
             }).sorted(by: { $0 > $1 })
+            
             TopicService.likes(topicSNs: selectedTopicSN, isLiked: false, completion: {
                 switch $0.result {
                 case .success(let result):
