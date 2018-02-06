@@ -97,16 +97,28 @@ struct TopicService {
               .responseRankBaam(completion)
   }
   
-  /*
-  @discardableResult
   static func photoCreate(
     topicSN: Int,
-    completion: @escaping (DataResponse<SResultTopicCreate>) -> Void
-    ) -> DataRequest {
-    return Alamofire .request(TopicRouter.photoCreate(topic: topicWrite))
-      .responseRankBaam(completion)
+    photoUrl: URL,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    Alamofire.upload(
+      multipartFormData: { $0.append(photoUrl, withName: "photo") },
+      to: TopicRouter.photoCreate(topicSN: topicSN).url,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          completion(error)
+        }
+    })
   }
-  
+ 
+  /*
   @discardableResult
   static func photoDelete(
     topicSN: Int,
@@ -206,16 +218,26 @@ struct OptionService {
               .responseRankBaam(completion)
   }
   
-  @discardableResult
   static func photoCreate(
     topicSN: Int,
     optionSN: Int,
     photoUrl: URL,
     completion: @escaping (DataResponse<SResult>) -> Void
-    ) -> DataRequest {
-    return Alamofire.upload(photoUrl,
-             to: OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url)
-           .responseRankBaam(completion)
+    ) {
+    Alamofire.upload(
+      multipartFormData: { $0.append(photoUrl, withName: "photo") },
+      to: OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          completion(error)
+        }
+    })
   }
   
   @discardableResult

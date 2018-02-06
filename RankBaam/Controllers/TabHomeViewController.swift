@@ -102,7 +102,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         
         if !isOnGoingLoading {
         isOnGoingLoading = true
-        TopicService.list(page: page, count: 15, categorySN: 12, order: .new) {
+        TopicService.list(page: page, count: 15, categorySN: nil, order: .new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {

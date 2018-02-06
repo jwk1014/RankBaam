@@ -8,7 +8,7 @@ enum TopicRouter {
   case likeList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case myList(page: Int, count: Int?, categorySN: Int?, order: OrderType?)
   case create(topic: TopicWrite)
-  //case photoCreate(topicSN: Int)
+  case photoCreate(topicSN: Int)
   //case photoDelete(topicSN: Int, order: Int)
   case read(topicSN: Int)
   case like(topicSN: Int, isLiked: Bool)
@@ -37,11 +37,13 @@ extension TopicRouter: TargetType {
       return "/topic/my/list/\(page)"
     case .create:
       return "/topic/create"
+    case let .photoCreate(topicSN):
+      return "/topic/\(topicSN)/photo/create"
     case let .read(topicSN):
       return "/topic/\(topicSN)"
     case let .like(topicSN, _):
       return "/topic/\(topicSN)/like"
-    case let .likes(_, _):
+    case .likes:
       return "/topic/likes"
     case let .unlike(topicSN):
       return "/topic/\(topicSN)/unlike"
@@ -67,6 +69,7 @@ extension TopicRouter: TargetType {
          .updatePre:
       return .get
     case .create,
+         .photoCreate,
          .like,
          .likes,
          .unlike,
@@ -111,6 +114,7 @@ extension TopicRouter: TargetType {
         "isLiked": isLike
       ]
     case .categoryList,
+         .photoCreate,
          .read,
          .unlike,
          .updatePre,
