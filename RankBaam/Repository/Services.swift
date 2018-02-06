@@ -31,6 +31,18 @@ struct UserService {
     return Alamofire .request(UserRouter.signup(email: email, identification: identification))
               .responseRankBaam(completion)
   }
+  
+  @discardableResult
+  static func signout(
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire.request(UserRouter.signout).responseRankBaam(completion)
+  }
+  
+  static func signout() {
+    Alamofire.request(UserRouter.signout).response{ _ in }
+  }
+  
 }
 
 struct TopicService {

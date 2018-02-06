@@ -5,6 +5,7 @@ import Alamofire
 enum UserRouter {
   case signin(type: SignType, email: String?, identification: String, fcmToken: String?)
   case signup(email: String, identification: String)
+  case signout
   case getNickname
   case setNickname(nickname: String)
   case preNickname
@@ -19,6 +20,8 @@ extension UserRouter: TargetType {
       return "/sign/in"
     case .signup:
       return "/sign/up"
+    case .signout:
+      return "/sign/out"
     case .getNickname, .setNickname:
       return "/user/me/nickname"
     case .preNickname:
@@ -33,6 +36,7 @@ extension UserRouter: TargetType {
       return .get
     case .signin,
          .signup,
+         .signout,
          .setNickname:
       return .post
     }
@@ -54,7 +58,8 @@ extension UserRouter: TargetType {
       ])
     case let .setNickname(nickname):
       return ["nickname": nickname]
-    case .getNickname,
+    case .signout,
+         .getNickname,
          .preNickname:
       return nil
     }
