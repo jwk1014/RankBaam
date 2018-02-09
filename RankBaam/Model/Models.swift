@@ -8,9 +8,12 @@
 
 import Foundation
 
-struct Category: Codable {
+struct Category: Equatable, Codable {
     var categorySN: Int
     var name: String
+    static func ==(lhs: Category, rhs: Category) -> Bool {
+        return lhs.categorySN == rhs.categorySN
+    }
 }
 
 struct Photo: Codable {

@@ -71,16 +71,48 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
       self.dismiss(animated: true, completion: nil)
     case .category:
       let vc = CategorySelectViewController()
-      if  let topicCategory = topicCategory,
-          let index = categories.index(where: {topicCategory.categorySN == $0.categorySN}) {
-        vc.selectedIndex = index
-      }
+      vc.category = topicCategory
       vc.delegate = self
       present(vc, animated: true, transitioningDelegate: presentFadeInOutManager, completion: nil)
     case .addImage:
-      let picker = UIImagePickerController()
-      picker.delegate = self
-      present(picker, animated: true, completion: nil)
+      requestPhotoLibraryAuthorization {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
+      }
+    }
+  }
+  
+  func requestPhotoLibraryAuthorization( status: PHAuthorizationStatus? = nil, requestAuth: Bool = true, closure: @escaping ()->Void ) {
+    
+    switch status ?? PHPhotoLibrary.authorizationStatus() {
+      
+    case .notDetermined:
+      if requestAuth {
+        PHPhotoLibrary.requestAuthorization{
+          self.requestPhotoLibraryAuthorization(status: $0, requestAuth: false, closure: closure)
+        }
+      }
+      assertionFailure("requestPhotoLibraryAuthorization requestAuth")
+      
+    case .authorized:
+      closure()
+      
+    case .denied:
+      let alert = UIAlertController(title: nil, message: "사진 앨범에 접근하기 위해서 권한을 허용해주세요.", preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "설정", style: .default){ _ in
+        if let settingUrl = URL(string: UIApplicationOpenSettingsURLString) {
+          UIApplication.shared.open(settingUrl)
+        }
+      })
+      alert.addAction(UIAlertAction(title: "닫기", style: .cancel, handler: nil))
+      self.present(alert, animated: true, completion: nil)
+      
+    case .restricted:
+      let alert = UIAlertController(title: nil, message: "사진 앨범에 접근할 수 없습니다.", preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "확인", style: .cancel, handler: nil))
+      self.present(alert, animated: true, completion: nil)
+      
     }
   }
   
@@ -98,18 +130,11 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    let photoLibStatus = PHPhotoLibrary.authorizationStatus()
-    if photoLibStatus == .notDetermined {
-      PHPhotoLibrary.requestAuthorization{ status in
-        print(status)
-      }
-    }
     
     initView()
   }
   
   func initView(){
-    
     
     //MARK: For iPhone X
     /*let topSpaceLayer = CALayer()
@@ -349,7 +374,28 @@ extension TopicCreateViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension TopicCreateViewController: CategorySelectDelegate {
-  func selectedCategory(category: Category?) {
+  func selected(category: Category?) {
+    guard let category = category else {return}
+    self.topicCategory = category
+    checkHeader(title: nil, description: nil)
+    if  let image = UIImage(named: "category_resizable_btn"),
+      let font = UIFont(name: "NanumSquareB", size: 14.0) {
+      headerView?.categoryButton?.setAttributedTitle(NSAttributedString(
+        string: category.name,
+        attributes: [
+          .font: font,
+          .foregroundColor: UIColor(r: 250, g: 84, b: 76)
+        ]), for: .normal)
+      headerView?.categoryButton?.setBackgroundImage(
+        image.resizableImage(withCapInsets: .init(
+          top: image.size.height/2,
+          left: image.size.width/2,
+          bottom: image.size.height/2,
+          right: image.size.width/2), resizingMode: .tile),
+        for: .normal)
+    }
+  }
+  /*func selectedCategory(category: Category?) {
     guard let category = category else {return}
     self.topicCategory = category
     checkHeader(title: nil, description: nil)
@@ -369,7 +415,7 @@ extension TopicCreateViewController: CategorySelectDelegate {
           right: image.size.width/2), resizingMode: .tile),
         for: .normal)
     }
-  }
+  }*/
 }
 
 extension TopicCreateViewController: UITextFieldDelegate {
@@ -418,7 +464,7 @@ extension TopicCreateViewController: TopicCreateFooterViewDelegate {
       }; return
     }
     
-    let description = (headerView != nil) ? headerView?.descriptionTextView?.text : self.topicDescription
+    let description = headerView?.descriptionString ?? self.topicDescription
     
     let isOnlyWriterCreateOption = footerView?.isOnlyWriterCreateOption ?? false
     
@@ -503,7 +549,13 @@ extension TopicCreateViewController: TopicCreateOptionCellDelegate {
   }
   
   func present(vc: UIViewController) {
-    present(vc, animated: true, completion: nil)
+    if vc is UIImagePickerController {
+      requestPhotoLibraryAuthorization {
+        self.present(vc, animated: true, completion: nil)
+      }
+    } else {
+      present(vc, animated: true, completion: nil)
+    }
   }
 }
 
@@ -586,10 +638,11 @@ class TopicCreateOptionCell: UICollectionViewCell {
 }
 
 extension TopicCreateOptionCell: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  
   @objc func handleImageView(_ sender: UITapGestureRecognizer) {
     let picker = UIImagePickerController()
     picker.delegate = self
-    delegate?.present(vc: picker)
+    self.delegate?.present(vc: picker)
   }
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
@@ -709,6 +762,14 @@ class TopicCreateHeaderView: UICollectionReusableView {
     return nil
   }
   
+  var descriptionString: String {
+    if let descriptionTextView = descriptionTextView,
+       descriptionTextView.textColor == descriptionPlaceholderTextColor{
+      return descriptionTextView.text
+    }
+    return ""
+  }
+  
   private var descriptionPlaceholderString: String {
     return "자유롭게 작성해주세요."
   }
@@ -741,10 +802,10 @@ class TopicCreateHeaderView: UICollectionReusableView {
     if let title = headerView.titleTextField?.text {
       titleTextField?.text = title
     }
-    if let description = headerView.descriptionTextView?.text {
-      descriptionTextView?.textColor = descriptionTextColor
-      descriptionTextView?.text = description
-    }
+    let description = headerView.descriptionString
+    descriptionTextView?.textColor = (description.count == 0) ?
+      descriptionPlaceholderTextColor : descriptionTextColor
+    descriptionTextView?.text = description
   }
   
   func initView(){
@@ -1239,7 +1300,10 @@ class TopicCreateNetworkModel {
     dismissClosure: @escaping (()->Void)) -> Bool {
     
     loadingSemaphore.wait()
-    guard !isLoading else { return false }
+    guard !isLoading else {
+      loadingSemaphore.signal()
+      return false
+    }
     isLoading = true
     loadingSemaphore.signal()
     
