@@ -79,7 +79,6 @@ class MainAllRankTopTabbar: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 12)
         self.layer.masksToBounds = false
         setupStackView(leftTabTitle, rightTabTitle)
-        print("\(selectedUnderBarLeadingConstraint)")
     }
     
     

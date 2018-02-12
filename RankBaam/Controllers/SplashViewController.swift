@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class SplashViewController: UIViewController {
 
@@ -26,6 +27,8 @@ class SplashViewController: UIViewController {
                             
                         case .success(let sResult):
                             if sResult.succ {
+                                
+                                
                                 let vc = MainTabViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
 

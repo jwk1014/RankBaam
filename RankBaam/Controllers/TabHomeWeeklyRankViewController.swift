@@ -10,6 +10,9 @@ import UIKit
 
 class TabHomeWeeklyRankViewController: UIViewController {
 
+    
+    
+    
     var weeklyRankDatas: [Topic] = []
     
     var tabHomeWeeklyRankCollectionView: UICollectionView = {
@@ -32,9 +35,20 @@ class TabHomeWeeklyRankViewController: UIViewController {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        let firstIndex = IndexPath(item: 0, section: 0)
+        if tabHomeWeeklyRankCollectionView.indexPathsForVisibleItems.contains(firstIndex) {
+            let firstRank = tabHomeWeeklyRankCollectionView
+                .cellForItem(at: firstIndex) as! MainWeeklyRankCell
+            firstRank.isTimerValid = true
+        }
+    }
+    
+    
     func fetchWeeklyRankDatas() {
         
-        TopicService.weekList(page: 1) {
+        TopicService.weekList(page: 1, count: 10) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
@@ -68,7 +82,7 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionView.showsHorizontalScrollIndicator = false
         tabHomeWeeklyRankCollectionView.register(MainWeeklyRankCell.self, forCellWithReuseIdentifier: "MainWeeklyRankCell")
         tabHomeWeeklyRankCollectionView.backgroundColor = UIColor.rankbaamGray
-        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, height667(50), 0)
+        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0)
 
     }
     
@@ -78,14 +92,12 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text = "1 / 10"
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textColor =  UIColor.rankbaamDarkgray
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textAlignment = .right
-        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = tabHomeWeeklyRankCollectionViewCustomNumberPageControl
-            .font
-            .withSize(height667(13))
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = UIFont(name: "NanumSquareB", size: 13)
         
         
         tabHomeWeeklyRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(height667(103))
+            $0.top.equalTo(height667(103, forX: 125))
         }
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl
             .snp.makeConstraints {
@@ -148,12 +160,26 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectio
 }
 
 extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageNumber: Int = Int(scrollView.contentOffset.x / (self.view.frame.width / 2))
         print("\(pageNumber)")
         self.tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text =
                 "\(pageNumber + 1) / 10"
+        /*if pageNumber == 0 {
+            timerControl(isOn: true, scrollView: scrollView)
+        }*/
     }
-    
-    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        timerControl(isOn: false, scrollView: scrollView)
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        timerControl(isOn: true, scrollView: scrollView)
+    }
+    func timerControl(isOn state: Bool, scrollView: UIScrollView) {
+        let pageNumber: Int = Int(scrollView.contentOffset.x / (self.view.frame.width / 2))
+        let indexPath = IndexPath(item: pageNumber, section: 0)
+        let recentCell = tabHomeWeeklyRankCollectionView.cellForItem(at: indexPath) as! MainWeeklyRankCell
+        recentCell.isTimerValid = state
+    }
 }

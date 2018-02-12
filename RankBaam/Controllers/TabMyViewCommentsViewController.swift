@@ -26,7 +26,7 @@ class TabMyViewCommentsViewController: UIViewController {
         tabMyViewCommentsCollectionView.backgroundColor = UIColor.rankbaamGray
         tabMyViewCommentsCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+            $0.top.equalTo(height667(103, forX: 125))
         }
     }
 }

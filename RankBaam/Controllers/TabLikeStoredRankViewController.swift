@@ -9,11 +9,17 @@
 import UIKit
 import SnapKit
 
-class TabLikeStoredRankViewController: UIViewController {
-
-    
+class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
+    var page: Int = 1
+    var loadThreshold: Int = 3
+    var isMoreDataExist: Bool = true
+    var isOnGoingLoading: Bool = false
+    var refreshAllDataNeeded: Bool = false
+    typealias dataType = Topic
     var isEditingLikedCell: Bool = false
-    var likeStoredRankDatas: [Topic] = [Topic]()
+    var tabLikeStoredRankFooterView: MainAllRankLoadingFooterView?
+    var cellDatas: [Topic] = [Topic]()
+    let likeStoredRankRefreshControl = UIRefreshControl()
     
     var tabLikeStoredRankCustomNavigationBar: UIView = {
         let tabLikeStoredRankCustomNavigationBar = UIView()
@@ -55,26 +61,29 @@ class TabLikeStoredRankViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    /*override func viewWillAppear(_ animated: Bool) {
         fetchLikeStoredRankDatas()
-    }
+    }*/
     
     func fetchLikeStoredRankDatas() {
-        
-        TopicService.likeList(page: 1, order: OrderType.new) {
+        if !isOnGoingLoading {
+            isOnGoingLoading = true
+        TopicService.likeList(page: self.page, order: OrderType.new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
                     guard let topicDatas = result.topics else {return}
-                    self.likeStoredRankDatas = topicDatas
+                    print("This is LikedCellDatas Count : \(topicDatas.count)")
+                    /*self.likeStoredRankDatas = topicDatas
                     print("This is WeeklyLike List Count : \(self.likeStoredRankDatas.count)")
                    
                     DispatchQueue.main.async {
                         self.tabLikeStoredRankCollectionView.reloadData()
-                    }
+                    }*/
+                    self.loadedDataHandle(topicDatas)
                     
                 } else if let msg = result.msg {
-                    
+                    self.tabLikeStoredRankFooterView?.endLoad()
                     switch msg {
                     default:
                         break
@@ -86,8 +95,10 @@ class TabLikeStoredRankViewController: UIViewController {
                 } else {
                     
                 }
-            }
-        }
+             }
+             self.isOnGoingLoading = false
+          }
+       }
     }
     
     fileprivate func viewInitConfigure() {
@@ -109,56 +120,53 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCustomNavigationBar.layer.shadowOffset = CGSize(width: 0, height: 12)
         tabLikeStoredRankCustomNavigationBar.layer.masksToBounds = false
         tabLikeStoredRankCustomNavigationBarTitleLabel.text = "저장 랭킹"
-        tabLikeStoredRankCustomNavigationBarTitleLabel.font = UIFont.boldSystemFont(ofSize: Constants.screenWidth * (18 / 375))
+        tabLikeStoredRankCustomNavigationBarTitleLabel.font = UIFont(name: "NanumSquareB", size: 18)
         tabLikeStoredRankCustomNavigationBarTitleLabel.textAlignment = .center
         tabLikeStoredRankEditingButton
             .setTitle("편집", for: .normal)
         tabLikeStoredRankEditingButton
             .setTitleColor(UIColor.rankbaamDarkgray, for: .normal)
-        tabLikeStoredRankEditingButton.titleLabel?.font =
-        tabLikeStoredRankEditingButton
-                .titleLabel?.font.withSize(Constants.screenWidth * (16 / 375))
+        tabLikeStoredRankEditingButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 16)
         
         tabLikeStoredRankEditingCancelButton.setTitle("취소", for: .normal)
         tabLikeStoredRankEditingCancelButton
             .setTitleColor(UIColor.init(r: 250, g: 84, b: 76), for: .normal)
         tabLikeStoredRankEditingCancelButton.titleLabel?.font =
-            tabLikeStoredRankEditingCancelButton
-                .titleLabel?.font.withSize(Constants.screenWidth * (16 / 375))
+            UIFont(name: "NanumSquareB", size: 16)
         tabLikeStoredRankEditingCancelButton.isHidden = true
         
         
         
         tabLikeStoredRankCustomNavigationBar.snp.makeConstraints {
             $0.left.right.top.equalToSuperview()
-            $0.height.equalTo(Constants.screenHeight * (76 / 667))
+            $0.height.equalTo(height667(76, forX: 98))
         }
         tabLikeStoredRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (76 / 667))
+            $0.top.equalTo(height667(76, forX: 98))
         }
         tabLikeStoredRankCustomNavigationBarTitleLabel.snp.makeConstraints {
             $0.top.equalTo(tabLikeStoredRankCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (38 / 667))
+                .offset(height667(38, forX: 60))
             $0.centerX.equalTo(tabLikeStoredRankCustomNavigationBar.snp.centerX)
-            $0.height.equalTo(Constants.screenHeight * (21 / 667))
-            $0.width.equalTo(Constants.screenWidth * (80 / 375))
+            $0.height.equalTo(height667(21))
+            $0.width.equalTo(width375(80))
         }
         tabLikeStoredRankEditingButton.snp.makeConstraints {
             $0.top.equalTo(tabLikeStoredRankCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (40 / 667))
+                .offset(height667(40))
             $0.left.equalTo(tabLikeStoredRankCustomNavigationBar.snp.left)
-                .offset(Constants.screenWidth * (329 / 375))
-            $0.height.equalTo(Constants.screenHeight * (18 / 667))
-            $0.width.equalTo(Constants.screenWidth * (40 / 375))
+                .offset(width375(329))
+            $0.height.equalTo(height667(18))
+            $0.width.equalTo(width375(40))
         }
         tabLikeStoredRankEditingCancelButton.snp.makeConstraints {
             $0.top.equalTo(tabLikeStoredRankCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (40 / 667))
+                .offset(height667(40))
             $0.right.equalTo(tabLikeStoredRankCustomNavigationBar.snp.right)
-                .offset(-(Constants.screenWidth * (329 / 375)))
-            $0.height.equalTo(Constants.screenHeight * (18 / 667))
-            $0.width.equalTo(Constants.screenWidth * (40 / 375))
+                .offset(-(width375(329)))
+            $0.height.equalTo(height667(18))
+            $0.width.equalTo(width375(40))
         }
     }
     
@@ -167,8 +175,19 @@ class TabLikeStoredRankViewController: UIViewController {
         tabLikeStoredRankCollectionView.dataSource = self
         tabLikeStoredRankCollectionView.delegate = self
         tabLikeStoredRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: "likedStoredCell")
+        tabLikeStoredRankCollectionView.register(MainAllRankLoadingFooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "LikedRankFooterView")
         tabLikeStoredRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
-       
+        tabLikeStoredRankCollectionView.refreshControl = likeStoredRankRefreshControl
+        likeStoredRankRefreshControl.tintColor = UIColor.rankbaamOrange
+        likeStoredRankRefreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
+    }
+    
+    @objc fileprivate func pullToRefresh() {
+        self.page = 1
+        isMoreDataExist = true
+        setRefreshAllDataNeeded()
+        fetchLikeStoredRankDatas()
+        //self.mainAllRankLoadingFooterView?.backToInit()
     }
     
     @objc fileprivate func tabLikeStoredRankButtonsHandler(_ sender: UIButton) {
@@ -189,7 +208,7 @@ class TabLikeStoredRankViewController: UIViewController {
                 return result + [item.optionSN]
             })
             
-            var selectedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
+            let selectedIndexPath = selectedLikedCellIndexPath.reduce([], { (result, item) -> [IndexPath] in
                 return result + [ IndexPath(item: item.indexPath, section: 0) ]
             }).sorted(by: { $0 > $1 })
             
@@ -201,7 +220,7 @@ class TabLikeStoredRankViewController: UIViewController {
                        
                         for index in selectedIndexPath {
                             print("This is Indices that will be removed : \(index)")
-                            self.likeStoredRankDatas.remove(at: index.item)
+                            self.cellDatas.remove(at: index.item)
                         }
                         self.selectedLikedCellIndexPath.removeAll()
                         self.tabLikeStoredRankCollectionView.performBatchUpdates({
@@ -224,7 +243,6 @@ class TabLikeStoredRankViewController: UIViewController {
                 }
             })
             
-            
             break
         case "취소":
             sender.isHidden = true
@@ -240,16 +258,50 @@ class TabLikeStoredRankViewController: UIViewController {
             fatalError()
         }
     }
+    
+    func loadedDataHandle(_ loadedData: [Topic]) {
+        
+        refreshCellDataIfNeeded()
+        
+        let loadedData = loadedData.reduce([Topic]()) { (tmp, item) -> [Topic] in
+            var item = item
+            if !cellDatas.contains{ $0.topicSN == item.topicSN } {
+                item.sortPhotos()
+                return tmp + [item]
+            }
+            return tmp
+        }
+        
+        page += 1
+        
+        if loadedData.isEmpty {
+            isMoreDataExist = false
+            tabLikeStoredRankFooterView?.endLoad()
+        } else {
+            print("This is Processd Data Count : \(loadedData.count)")
+            self.cellDatas += loadedData
+            self.tabLikeStoredRankCollectionView.reloadData()
+        }
+        self.likeStoredRankRefreshControl.endRefreshing()
+    }
+    
+    func footerViewLoadDataHandler(_ indexPath: IndexPath){
+        if indexPath.item >= cellDatas.count - loadThreshold,
+            isMoreDataExist, !isOnGoingLoading {
+            tabLikeStoredRankFooterView?.startLoad()
+            fetchLikeStoredRankDatas()
+        }
+    }
 }
 
 extension TabLikeStoredRankViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return likeStoredRankDatas.count
+        return cellDatas.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let likedStoredCell = collectionView.dequeueReusableCell(withReuseIdentifier: "likedStoredCell", for: indexPath) as! MainAllRankCell
-        let likedCellData = self.likeStoredRankDatas[indexPath.item]
+        let likedCellData = self.cellDatas[indexPath.item]
         likedStoredCell.isEditingLikedCell = isEditingLikedCell
         likedStoredCell.cellDatasConfigure(topic: likedCellData)
         if selectedLikedCellIndexPath.contains(where: { (index, _) -> Bool in
@@ -259,6 +311,23 @@ extension TabLikeStoredRankViewController: UICollectionViewDataSource {
         }
         return likedStoredCell
     }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            return UICollectionReusableView()
+        case UICollectionElementKindSectionFooter:
+            let loadingFooterView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                    withReuseIdentifier: "LikedRankFooterView",
+                                                                                    for: indexPath) as! MainAllRankLoadingFooterView
+            self.tabLikeStoredRankFooterView = loadingFooterView
+            return loadingFooterView
+        default:
+            return UICollectionReusableView()
+        }
+    }
+    /*func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: self.view.frame.width, height: 100)
+    }*/
 }
 
 extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -272,7 +341,7 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
             guard let seletedCell = collectionView.cellForItem(at: indexPath) as? MainAllRankCell else { return }
             seletedCell.isSelectedLikedCell = !seletedCell.isSelectedLikedCell
             if seletedCell.isSelectedLikedCell {
-                let topicSN = likeStoredRankDatas[indexPath.item].topicSN
+                let topicSN = cellDatas[indexPath.item].topicSN
                 self.selectedLikedCellIndexPath.append((indexPath.item, topicSN))
             } else {
                 if let removeIndexPath = selectedLikedCellIndexPath.index(where: { (index, _) -> Bool in
@@ -283,6 +352,8 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
             }
             
         }
+        
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -295,7 +366,7 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
                 selectedCell.isSelectedLikedCell = true
             }
         }
+        footerViewLoadDataHandler(indexPath)
     }
-    
 }
 

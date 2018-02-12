@@ -16,7 +16,7 @@ enum mainWeeklyBottomScrollDirection {
 
 class MainWeeklyRankCell: UICollectionViewCell {
     
-    var timer = Timer()
+    var timer: Timer?
     let placeHolderImage = UIImage(named: "noimage")
     var scrollDirection: mainWeeklyBottomScrollDirection = .forward
     let widthForScrolling = Constants.screenWidth * 0.7 * ( 258 / 375 )
@@ -136,24 +136,32 @@ class MainWeeklyRankCell: UICollectionViewCell {
         return mainWeeklyBottomRankRightScrollingButton
     }()
     
+    var isTimerValid: Bool = false {
+        didSet {
+            if isTimerValid, self.timer == nil {
+                timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)
+                timer?.fire()
+            } else  {
+                timer?.invalidate()
+                timer = nil
+                
+            }
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)
-//        timer = Timer(timeInterval: 0.6, target: self, selector: , userInfo: nil, repeats: true)
         viewInitConfigure()
-        timer.fire()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-         timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)        
         viewInitConfigure()
-        timer.fire()
     }
     
     deinit {
-        
-        timer.invalidate()
+        timer?.invalidate()
+        timer = nil
     }
     
     func mainWeeklyRankCellDatasConfigure(with topic: Topic) {

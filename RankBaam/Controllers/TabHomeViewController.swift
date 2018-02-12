@@ -7,10 +7,6 @@
 //
 
 import UIKit
-import Kingfisher
-
-
-
 
 protocol CellDataRefreshable: class {
     
@@ -58,19 +54,24 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         super.viewDidLoad()
         
         viewInitConfigure()
-        loadMainRankCellDatas()
+        fetchMainRankCellDatas()
         mainRankCollectionViewConfigure()
         
         navigationController?.navigationBar.isHidden = true
         
     }
+    /*override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        loadMainRankCellDatas(1)
+        mainAllRankCollectionView.reloadData()
+    }*/
     
     fileprivate func viewInitConfigure() {
         self.view.addSubview(mainAllRankCollectionView)
         
         mainAllRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(height667(103, forX: 103))
+            $0.top.equalTo(height667(103, forX: 125))
         }
     }
     
@@ -86,26 +87,27 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         mainAllRankCollectionView.backgroundColor = UIColor.rankbaamGray
        
         mainAllRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
-        
+        mainAllRankCollectionView.showsVerticalScrollIndicator = false
     }
     
     @objc func pullToRefresh() {
         self.page = 1
         isMoreDataExist = true
         setRefreshAllDataNeeded()
-        loadMainRankCellDatas()
+        fetchMainRankCellDatas()
         self.mainAllRankLoadingFooterView?.backToInit()
     }
     
-    func loadMainRankCellDatas() {
+    func fetchMainRankCellDatas(_ pageInput: Int? = nil) {
         
         if !isOnGoingLoading {
         isOnGoingLoading = true
-        TopicService.list(page: page, count: 15, order: .new) {
+        TopicService.list(page: pageInput ?? self.page, count: 15, order: .new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
                     guard let topicDatas = result.topics else {return}
+                    print("This is topicDatas Count : \(topicDatas.count)")
                     self.loadedDataHandle(topicDatas)
                 } else if let msg = result.msg {
                     self.mainAllRankLoadingFooterView?.endLoad()
@@ -123,7 +125,6 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
              }
             self.isOnGoingLoading = false
           }
-        
        }
     }
     
@@ -141,6 +142,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         }
         
         page += 1
+        
         if loadedData.isEmpty {
             isMoreDataExist = false
             mainAllRankLoadingFooterView?.endLoad()
@@ -155,7 +157,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         if indexPath.item >= cellDatas.count - loadThreshold,
             isMoreDataExist, !isOnGoingLoading {
             mainAllRankLoadingFooterView?.startLoad()
-            loadMainRankCellDatas()
+            fetchMainRankCellDatas()
         }
     }
 }
@@ -188,6 +190,7 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionReusableView()
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let topicDetailViewController = TopicDetailViewController()
         let topicSN = cellDatas[indexPath.item].topicSN
@@ -213,13 +216,14 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return height667(12)
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: width375(343), height: height667(122))
     }
-
 }
 
 

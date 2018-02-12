@@ -99,7 +99,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     
                 }
-                
             }
         }
     }

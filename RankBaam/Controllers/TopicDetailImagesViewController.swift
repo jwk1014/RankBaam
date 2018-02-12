@@ -153,22 +153,21 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
         topicImagesDismissButton.snp.makeConstraints {
             $0.right.equalTo(self.view.snp.right)
             $0.top.equalTo(self.view.snp.top)
-            $0.width.equalTo(Constants.screenWidth * (70 / 375))
-            $0.height.equalTo(Constants.screenHeight * ( 70 / 667))
+            $0.width.equalTo(width375(70))
+            $0.height.equalTo(height667(70))
         }
         imagesPageCounterLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(self.view.snp.top)
-                .offset(Constants.screenHeight * ( 30 / 667))
-            $0.width.equalTo(Constants.screenWidth * (100 / 375))
-            $0.height.equalTo(Constants.screenHeight * ( 17 / 667))
+                .offset(height667(30))
+            $0.width.equalTo(width375(100))
+            $0.height.equalTo(height667(17))
         }
     }
     
     @objc fileprivate func dismissButtonTapped(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }
-    
 }
 
 extension TopicDetailImagesViewController: UIScrollViewDelegate {

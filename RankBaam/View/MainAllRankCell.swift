@@ -13,7 +13,6 @@ import AssetsLibrary
 
 class MainAllRankCell: UICollectionViewCell {
     
-    
     let placeHolderImage = UIImage(named: "noimage")
     var mainAllRankCellBackgroundView: UIView = {
         let mainAllRankCellBackgroundView = UIView()

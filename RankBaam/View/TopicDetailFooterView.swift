@@ -12,6 +12,7 @@ import SnapKit
 
 protocol TopicDetailFooterViewDelegate {
     func optionCreateButtonTapped(_ optionTitle: String)
+    func addOptionPhotoButtonTapped()
 }
 
 
@@ -108,7 +109,7 @@ class TopicDetailFooterView: UICollectionReusableView {
         topicDetailFooterOptionWriteCell.layer.shadowOpacity = 0.7
         
         topicDetailFooterOptionWriteImageView.image = UIImage(named: "ImageIcn")
-        topicDetailFooterOptionWriteImageView.contentMode = .center
+        topicDetailFooterOptionWriteImageView.contentMode = .scaleAspectFit
         topicDetailFooterCreateOrCancelButton.setTitle("취소", for: .normal)
         topicDetailFooterCreateOrCancelButton
             .setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
@@ -119,7 +120,8 @@ class TopicDetailFooterView: UICollectionReusableView {
         if !(Constants.screenWidth < 375) {
             topicDetailFooterWriteCellTextField.placeholder = "항목을 입력해주세요"
         } else {
-             let placeHolder = NSAttributedString(string: "항목을 입력해주세요", attributes: [NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 16)])
+        guard let nanumFont = UIFont(name: "NanumSquareB", size: 16) else { return }
+        let placeHolder = NSAttributedString(string: "항목을 입력해주세요", attributes: [NSAttributedStringKey.font : nanumFont])
              topicDetailFooterWriteCellTextField.attributedPlaceholder = placeHolder
         }
         topicDetailFooterOptionAddButton.backgroundColor = UIColor(r: 228, g: 228, b: 228)
@@ -203,6 +205,13 @@ class TopicDetailFooterView: UICollectionReusableView {
         topicDetailFooterWriteCellTextField.delegate = self
         topicDetailFooterWriteCellTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         topicDetailFooterCreateOrCancelButton.addTarget(self, action: #selector(topicDetailFooterCreateOrCancelButtonTapped(_:)), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(topicOptionPhotoAddButtonTapped))
+        topicDetailFooterOptionWriteImageView.isUserInteractionEnabled = true
+        topicDetailFooterOptionWriteImageView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func topicOptionPhotoAddButtonTapped() {
+        delegate?.addOptionPhotoButtonTapped()
     }
     
     @objc func topicOptionAddButtonTapped() {

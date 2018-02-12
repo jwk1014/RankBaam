@@ -20,6 +20,8 @@
 		6C5B83A12021BD3F00E430B0 /* TabMyViewCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A02021BD3F00E430B0 /* TabMyViewCommentsViewController.swift */; };
 		6C5B83A32021DB8200E430B0 /* TabLikeStoredRankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */; };
 		6C5B83A52022FB2F00E430B0 /* TabSearchRankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */; };
+		6C5B83C9202DABE900E430B0 /* TopicCreatePhotoPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83C8202DABE900E430B0 /* TopicCreatePhotoPickerController.swift */; };
+		6C5B83CB202DAC8100E430B0 /* TopicCreatePhotosCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83CA202DAC8100E430B0 /* TopicCreatePhotosCell.swift */; };
 		6CFD5442200A0A3200289BDB /* loadIndicatorFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD5440200A0A3200289BDB /* loadIndicatorFooter.swift */; };
 		6CFD5443200A0A3200289BDB /* loadIndicatorFooter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CFD5441200A0A3200289BDB /* loadIndicatorFooter.xib */; };
 		6CFD549520104CE400289BDB /* TabHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFD549320104CE400289BDB /* TabHomeViewController.swift */; };
@@ -81,6 +83,8 @@
 		6C5B83A02021BD3F00E430B0 /* TabMyViewCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewCommentsViewController.swift; sourceTree = "<group>"; };
 		6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabLikeStoredRankViewController.swift; sourceTree = "<group>"; };
 		6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSearchRankViewController.swift; sourceTree = "<group>"; };
+		6C5B83C8202DABE900E430B0 /* TopicCreatePhotoPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCreatePhotoPickerController.swift; sourceTree = "<group>"; };
+		6C5B83CA202DAC8100E430B0 /* TopicCreatePhotosCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCreatePhotosCell.swift; sourceTree = "<group>"; };
 		6CFD5440200A0A3200289BDB /* loadIndicatorFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loadIndicatorFooter.swift; sourceTree = "<group>"; };
 		6CFD5441200A0A3200289BDB /* loadIndicatorFooter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = loadIndicatorFooter.xib; sourceTree = "<group>"; };
 		6CFD549320104CE400289BDB /* TabHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabHomeViewController.swift; sourceTree = "<group>"; };
@@ -166,6 +170,7 @@
 				6CFD550C2013711E00289BDB /* TabHomeWeeklyRankViewController.swift */,
 				6C0A98702017990B00D9D704 /* TopicDetailImagesViewController.swift */,
 				E3D95DB3202446BA00B0A3CA /* CategorySelectViewController.swift */,
+				6C5B83C8202DABE900E430B0 /* TopicCreatePhotoPickerController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 				6CFD55102013737B00289BDB /* MainWeeklyRankCell.swift */,
 				6C5B839A201F88EC00E430B0 /* TopicDetailImagesCell.swift */,
 				6C0A986A2017183200D9D704 /* TopicDetailFooterView.swift */,
+				6C5B83CA202DAC8100E430B0 /* TopicCreatePhotosCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -345,6 +351,11 @@
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -469,6 +480,7 @@
 				6CFD55152013818300289BDB /* TabHomePageViewController.swift in Sources */,
 				6CFD549E2010501000289BDB /* MainAllRankTopTabbar.swift in Sources */,
 				6C5B83A32021DB8200E430B0 /* TabLikeStoredRankViewController.swift in Sources */,
+				6C5B83C9202DABE900E430B0 /* TopicCreatePhotoPickerController.swift in Sources */,
 				E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */,
 				6C5B83A52022FB2F00E430B0 /* TabSearchRankViewController.swift in Sources */,
 				6C5B839B201F88EC00E430B0 /* TopicDetailImagesCell.swift in Sources */,
@@ -487,6 +499,7 @@
 				E3FEB4571FF6149C0074D778 /* TopicCreateViewController.swift in Sources */,
 				6C09B73D201B3B0E002CE625 /* Constants.swift in Sources */,
 				E3DE12DC1FEBD17D00738EE1 /* NetworkModels.swift in Sources */,
+				6C5B83CB202DAC8100E430B0 /* TopicCreatePhotosCell.swift in Sources */,
 				E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */,
 				E3DE12DA1FEBD14B00738EE1 /* Models.swift in Sources */,
 				E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */,

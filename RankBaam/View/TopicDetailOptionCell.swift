@@ -209,21 +209,14 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellImageView.image = UIImage(named: "ImageIcn")
         optionCellCommentDetailLabel.text = "댓글"
         optionCellCommentDetailLabel.textColor = UIColor.rankbaamBlue
-        optionCellCommentDetailLabel.font = optionCellCommentDetailLabel
-            .font
-            .withSize(Constants.screenWidth * (14 / 375))
-        optionCellTitleLabel.text = "인도네시아"
-        optionCellTitleLabel.font = optionCellTitleLabel
-            .font
-            .withSize(Constants.screenHeight * (15 / 667))
+        optionCellCommentDetailLabel.font = UIFont(name: "NanumSquareB", size: 13)
+        optionCellTitleLabel.font = UIFont(name: "NanumSquareB", size: 15)
         optionCellCommentDetailRightShapeImageView.image =
             UIImage(named: "rightIcn")?.withRenderingMode(.alwaysTemplate)
         optionCellCommentDetailRightShapeImageView.tintColor = UIColor.rankbaamBlue
         optionCellCommentDetailSeperatorView.backgroundColor = UIColor.rankbaamSeperatorColor
         optionCellVoteCountLabel.text = "???표"
-        optionCellVoteCountLabel.font = optionCellVoteCountLabel
-            .font
-            .withSize(Constants.screenHeight * (14 / 667))
+        optionCellVoteCountLabel.font = UIFont(name: "NanumSquareB", size: 14)
         
         
         
@@ -274,9 +267,9 @@ class TopicDetailOptionCell: UICollectionViewCell {
         let bottomCons = optionCellImageView.bottomAnchor.constraint(equalTo: optionCellBackgroundView.bottomAnchor)
         let leadingCons = optionCellImageView.leadingAnchor.constraint(equalTo: optionCellBackgroundView.leadingAnchor)
         let widthCons = optionCellImageView.widthAnchor.constraint(equalToConstant: width375(76))
-        topCons.constant = height667(5)
-        bottomCons.constant = height667(-5)
-        leadingCons.constant = width375(5)
+        topCons.constant = self.frame.height * (5 / 72)
+        bottomCons.constant = self.frame.height * (-5 / 72)
+        leadingCons.constant = self.frame.width * (5 / 342)
         widthCons.identifier = "isOptionImageExist"
         NSLayoutConstraint.activate([topCons, bottomCons, leadingCons, widthCons])
         
@@ -309,8 +302,8 @@ class TopicDetailOptionCell: UICollectionViewCell {
     
     func topicDetailOptionCellDataConfigure(_ option: Option) {
         self.optionCellTitleLabel.text = option.title
-//        let randomPercentage = Float(arc4random()) / Float(UInt32.max)
-//        self.votePercentage = CGFloat(randomPercentage)
+        /*let randomPercentage = Float(arc4random()) / Float(UInt32.max)
+        self.votePercentage = CGFloat(randomPercentage)*/
         if !option.photos.isEmpty {
             let imgURL = URL(string: option.photos[0].realUrl)
             self.optionCellImageView.sd_setImage(with: imgURL, placeholderImage: placeHolderImage,  completed: nil)
