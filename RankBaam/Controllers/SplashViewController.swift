@@ -29,7 +29,7 @@ class SplashViewController: UIViewController {
                             if sResult.succ {
                                 
                                 
-                                let vc = MainTabViewController()
+                                let vc = TopicCreatePhotoPickerViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
 
                                 self.present(naviVC, animated: true, completion: nil)
