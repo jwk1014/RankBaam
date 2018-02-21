@@ -37,12 +37,23 @@ class TopicCreatePhotoPickerViewController: UIViewController {
     var photosCellPHAssetDatas: PHFetchResult<PHAsset>?
     var photosCellPHAssetCollections = [PHAssetCollection]()
     var phImageCachingManager = PHCachingImageManager()
+    var phImageManager = PHImageManager()
     var selectedPhotoDatas = [(Int, PHAsset?)]()
     var selectedPHAssetDataFromVC = [PHAsset]()
-    
+    var topicCreatePhotoPickerTitleView: TopicCreatePhotoPickerTitleView?
+    var isCameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
     fileprivate let targetSize = CGSize(width: width375(125), height: width375(125))
     fileprivate var previousPreheatRect = CGRect.zero
-    
+    lazy var topicCreatePhotosPickerPHAssetBunchViewTableViewHeightClosure: (Double)->CGFloat = { ratio in
+        let superView = self.topicCreatePhotosPickerPHAssetBunchView
+        let tableView = self.topicCreatePhotosPickerPHAssetBunchView.topicCreatePHAssetBunchViewTableView
+        superView.superview?.layoutIfNeeded()
+        superView.layoutIfNeeded()
+        tableView.layoutIfNeeded()
+        let height = CGFloat(self.tableView(tableView, numberOfRowsInSection: 0)) *
+            self.tableView(tableView, heightForRowAt: IndexPath(row: 0, section: 0))
+        return CGFloat( Double(min( height, superView.bounds.height - tableView.frame.origin.y )) * ratio )
+    }
     
     
     override func viewDidLoad() {
@@ -54,9 +65,105 @@ class TopicCreatePhotoPickerViewController: UIViewController {
          
         phImgCachingManager.startCachingImages(for: <#T##[PHAsset]#>, targetSize: <#T##CGSize#>, contentMode: <#T##PHImageContentMode#>, options: <#T##PHImageRequestOptions?#>)*/
         
-         let fetchCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
+        fetchPHAssetCollections()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "취소", style: .plain, target: self, action: #selector(topicCreatePhotoPickerCancelButtonTapped(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "사진선택", style: .plain, target: self, action: #selector(topicCreatePhotoPickerSelectButtonTapped(_:)))
+        topicCreatePhotoPickerTitleView = TopicCreatePhotoPickerTitleView(frame: CGRect(x: 0, y: 0, width: width375(250), height: (self.navigationController?.navigationBar.frame.height)!))
+        //testView.backgroundColor = UIColor.black
+        self.navigationItem.titleView = topicCreatePhotoPickerTitleView
+        topicCreatePhotoPickerTitleView?.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(photoPickerTitleViewTapped))
+        topicCreatePhotoPickerTitleView?.addGestureRecognizer(tapGesture)
+        viewInitConfigure()
+        topicCreatePhotoPickerCollectionViewConfigure()
+        fetchPHAssetData()
+        topicCreatePhotosPickerPHAssetBunchViewConfigure()
+        
+        
+        
+        topicCreatePhotosPickerPHAssetBunchView
+            .topicCreatePHAssetBunchViewTableViewHeightConstraint?.constant = 0
+        //    min(CGFloat(75 * photosCellPHAssetCollections.count), CGFloat(75 * 5))
+        /*topicCreatePhotosPickerPHAssetBunchView
+            .topicCreatePHAssetBunchViewTableViewHeightConstraint?.constant =
+            min(CGFloat(75 * photosCellPHAssetCollections.count), CGFloat(75 * 5))*/
+        /*topicCreatePhotosPickerPHAssetBunchView
+            .topicCreatePHAssetBunchViewTableViewHeightConstraint?.isActive = true*/
+        
+        topicCreatePhotosPickerPHAssetBunchView.isHidden = true
+        //topicCreatePhotosPickerPHAssetBunchView.topicCreatePHAssetBunchViewTableView.frame.size.height *= 0.1
+    }
+    
+    @objc func photoPickerTitleViewTapped() {
+        
+        self.topicCreatePhotosPickerPHAssetBunchView
+            .topicCreatePHAssetBunchViewTableViewHeightConstraint?.constant =
+            !self.topicCreatePhotosPickerPHAssetBunchView.isHidden ? 0 :
+                self.topicCreatePhotosPickerPHAssetBunchViewTableViewHeightClosure(1.0)
+        
+        //self.topicCreatePhotosPickerPHAssetBunchView.layoutIfNeeded()
+        
+        self.topicCreatePhotosPickerPHAssetBunchView.isHidden = !self.topicCreatePhotosPickerPHAssetBunchView.isHidden
+        
+        UIView.animate(withDuration: 0.3) {
+            
+            self.topicCreatePhotosPickerPHAssetBunchView
+                .topicCreatePHAssetBunchViewTableViewHeightConstraint?.constant = self.topicCreatePhotosPickerPHAssetBunchView.isHidden ? 0 :
+                        self.topicCreatePhotosPickerPHAssetBunchViewTableViewHeightClosure(1.0)
+            
+            self.topicCreatePhotosPickerPHAssetBunchView.layoutIfNeeded()
+        }
+    }
+    
+    
+    
+    fileprivate func viewInitConfigure() {
+        self.view.addSubview(topicCreatePhotoPickerCollectionView)
+        self.view.addSubview(topicCreatePhotosPickerPHAssetBunchView)
+        topicCreatePhotoPickerCollectionView.snp.makeConstraints {
+            guard let navigationBar = navigationController?.navigationBar else { return }
+            $0.top.equalTo(navigationBar.frame.origin.y + navigationBar.bounds.height)
+            $0.bottom.left.right.equalToSuperview()
+        }
+        topicCreatePhotosPickerPHAssetBunchView.snp.makeConstraints {
+            $0.top.bottom.left.right.equalTo(topicCreatePhotoPickerCollectionView)
+        }
+    }
+    
+    fileprivate func fetchPHAssetData(with assetCollection: PHAssetCollection? = nil){
+        DispatchQueue.global().async {
+            let phOption = PHFetchOptions()
+            phOption.fetchLimit = Int.max
+            let creSortDescripter = NSSortDescriptor(key: "creationDate",
+                                                     ascending: false)
+            let modiSortDescripter = NSSortDescriptor(key: "modificationDate",
+                                                      ascending: false)
+            phOption.sortDescriptors = [ creSortDescripter, modiSortDescripter ]
+            if let collection = assetCollection {
+                self.photosCellPHAssetDatas = PHAsset.fetchAssets(in: collection, options: phOption)
+                print("This is Renewed PHAssetData Count : \(self.photosCellPHAssetDatas?.count)")
+                DispatchQueue.main.async {
+                    self.topicCreatePhotoPickerCollectionView.reloadData()
+                }
+            } else {
+                self.photosCellPHAssetDatas = PHAsset.fetchAssets(with: phOption)
+                print("This is Photos datas : \(self.photosCellPHAssetDatas)")
+                DispatchQueue.main.async {
+                    self.topicCreatePhotoPickerCollectionView.reloadData()
+                }
+            }
+            
+        }
+    }
+    
+    fileprivate func fetchPHAssetCollections() {
+        let fetchCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
         print("This is smart album : \(fetchCollection.count)")
         print("This is Localized Title : \(fetchCollection.firstObject?.localizedTitle)")
+        guard let collectionTest = fetchCollection.firstObject as? PHAssetCollection else { return }
+        photosCellPHAssetCollections.append(collectionTest)
+        
         
         let phlist = PHCollectionList.fetchTopLevelUserCollections(with: nil)
         
@@ -64,56 +171,21 @@ class TopicCreatePhotoPickerViewController: UIViewController {
             guard let collection = phcollection as? PHAssetCollection else { return }
             self.photosCellPHAssetCollections.append(collection)
         }
-        print("This is collection Count : \(photosCellPHAssetCollections.count, phlist.count)")
         
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(title: "취소", style: .plain, target: self, action: #selector(topicCreatePhotoPickerCancelButtonTapped(_:)))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "사진선택", style: .plain, target: self, action: #selector(topicCreatePhotoPickerSelectButtonTapped(_:)))
-        let photoPickerTitleView = TopicCreatePhotoPickerTitleView(frame: CGRect(x: 0, y: 0, width: width375(250), height: (self.navigationController?.navigationBar.frame.height)!))
-        //testView.backgroundColor = UIColor.black
-        self.navigationItem.titleView = photoPickerTitleView
+        //let assets = PHAsset.fetchAssets(in: collectionTest, options: nil)
         
-        viewInitConfigure()
-        topicCreatePhotoPickerCollectionViewConfigure()
-        fetchPHAssetData()
-        topicCreatePhotosPickerPHAssetBunchViewConfigure()
-    }
-    
-    fileprivate func viewInitConfigure() {
-        self.view.addSubview(topicCreatePhotoPickerCollectionView)
-        self.view.addSubview(topicCreatePhotosPickerPHAssetBunchView)
-        topicCreatePhotoPickerCollectionView.snp.makeConstraints {
-            $0.bottom.top.left.right.equalToSuperview()
-        }
-        topicCreatePhotosPickerPHAssetBunchView.snp.makeConstraints {
-            let upperOffset = UIApplication.shared.statusBarFrame.height + (self.navigationController?.navigationBar.frame.height ?? 44)
-            $0.top.equalTo(topicCreatePhotoPickerCollectionView.snp.top)
-                .offset(upperOffset)
-            print("This is NavigationBar Height : \(self.navigationController?.navigationBar.frame.height)")
-            $0.bottom.left.right.equalToSuperview()
-        }
-    }
-    
-    fileprivate func fetchPHAssetData(){
-        DispatchQueue.global().async {
-            let phOption = PHFetchOptions()
-            phOption.fetchLimit = 1000
-            let creSortDescripter = NSSortDescriptor(key: "creationDate",
-                                                     ascending: true)
-            let modiSortDescripter = NSSortDescriptor(key: "modificationDate",
-                                                      ascending: true)
-            phOption.sortDescriptors = [ creSortDescripter, modiSortDescripter ]
-            self.photosCellPHAssetDatas = PHAsset.fetchAssets(with: phOption)
-            print("This is Photos datas : \(self.photosCellPHAssetDatas)")
-            DispatchQueue.main.async {
-                self.topicCreatePhotoPickerCollectionView.reloadData()
-            }
-        }
+        // photosCellPHAssetDatas = assets
+        topicCreatePhotosPickerPHAssetBunchView.topicCreatePHAssetBunchViewTableView.reloadData()
+        
+         print("This is collection Count : \(photosCellPHAssetCollections.count, phlist.count)")
+        
     }
     
     fileprivate func topicCreatePhotoPickerCollectionViewConfigure() {
         
         topicCreatePhotoPickerCollectionView.register(TopicCreatePhotosCell.self, forCellWithReuseIdentifier: "TopicCreatePhotosCell")
+        topicCreatePhotoPickerCollectionView.register(TopicCreateCameraCell.self, forCellWithReuseIdentifier: String(describing: TopicCreateCameraCell.self))
+//        topicCreatePhotoPickerCollectionView.register(TopicCreateCameraCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: String(describing: TopicCreateCameraCell.self))
         topicCreatePhotoPickerCollectionView.dataSource = self
         topicCreatePhotoPickerCollectionView.delegate = self
         topicCreatePhotoPickerCollectionView.backgroundColor = UIColor.white
@@ -169,15 +241,21 @@ class TopicCreatePhotoPickerViewController: UIViewController {
         let (addedRects, removedRects) = differencesBetweenRects(previousPreheatRect, preheatRect)
         let addedAssets = addedRects
             .flatMap { rect in topicCreatePhotoPickerCollectionView.indexPathsForElements(in: rect) }
-        .map { indexPath in photosCellPHAssetDatas?.object(at: indexPath.item) }
+        .map { indexPath in
+            photosCellPHAssetDatas?.object(at: indexPath.item == 0 ? indexPath.item : indexPath.item - 1) }
         let removedAssets = removedRects
             .flatMap { rect in topicCreatePhotoPickerCollectionView.indexPathsForElements(in: rect) }
-        .map { indexPath in photosCellPHAssetDatas?.object(at: indexPath.item) }
+        .map { indexPath in
+            photosCellPHAssetDatas?.object(at: indexPath.item == 0 ? indexPath.item : indexPath.item - 1) }
         phImageCachingManager.startCachingImages(for: addedAssets as! [PHAsset],
                                         targetSize: targetSize, contentMode: .aspectFill, options: nil)
         phImageCachingManager.stopCachingImages(for: removedAssets as! [PHAsset],
                                        targetSize: targetSize, contentMode: .aspectFill, options: nil)
         previousPreheatRect = preheatRect
+    }
+    
+    func phassetCollectionSelected(selectedIndex: Int) {
+        
     }
 }
 
@@ -185,82 +263,117 @@ extension TopicCreatePhotoPickerViewController: UICollectionViewDelegateFlowLayo
 UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let topicCreatePhotoscell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicCreatePhotosCell", for: indexPath) as! TopicCreatePhotosCell
-        let phiRequestOption = PHImageRequestOptions()
         
-        fetchingQueue.async { [weak self] in
+        if indexPath.item == 0 {
+            let topicCreateCameraCell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: TopicCreateCameraCell.self), for: indexPath)
+            return topicCreateCameraCell
+        } else {
+            let topicCreatePhotosCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicCreatePhotosCell", for: indexPath) as! TopicCreatePhotosCell
+            let phiRequestOption = PHImageRequestOptions()
             
-            guard let `self` = self else { return }
-            guard let data = self.photosCellPHAssetDatas?.object(at: indexPath.item) else { return }
-            
-            self.phImageCachingManager.requestImage(for: data, targetSize: self.targetSize, contentMode: .aspectFit, options: phiRequestOption, resultHandler: { (image, _) in
-                DispatchQueue.main.async {
-                    topicCreatePhotoscell.topicCreatePhotosCellImageView.image = image
-                }
-            })
+            fetchingQueue.async { [weak self] in
+                
+                guard let `self` = self else { return }
+                guard let data = self.photosCellPHAssetDatas?.object(at: (indexPath.item - 1)) else { return }
+                
+                self.phImageCachingManager.requestImage(for: data, targetSize: self.targetSize, contentMode: .aspectFit, options: phiRequestOption, resultHandler: { (image, _) in
+                    DispatchQueue.main.async {
+                        topicCreatePhotosCell.topicCreatePhotosCellImageView.image = image
+                    }
+                })
+            } 
+            return topicCreatePhotosCell
         }
-        return topicCreatePhotoscell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let willDisplayCell = cell as! TopicCreatePhotosCell
-        print("앞으로 나올 path : \(indexPath.item)")
-        if let phassetData = photosCellPHAssetDatas?.object(at: indexPath.item),
-            !selectedPHAssetDataFromVC.isEmpty,
-            let index = selectedPHAssetDataFromVC.index(where: { asset -> Bool in
-                return phassetData == asset
-            }) {
-            selectedPHAssetDataFromVC.remove(at: index)
-            selectedPhotoDatas.append((indexPath.item, phassetData))
-            willDisplayCell.isSelectedPhoto = true
-        }
-        if selectedPhotoDatas.contains(where: { $0.0 == indexPath.item }) {
-            willDisplayCell.isSelectedPhoto = true
+        
+        if indexPath.item == 0 {
+            // TODO:
+        } else {
+            guard let willDisplayCell = cell as? TopicCreatePhotosCell else { return }
+            print("앞으로 나올 path : \(indexPath.item)")
+            if let phassetData = photosCellPHAssetDatas?.object(at: indexPath.item - 1) {
+                    if !selectedPHAssetDataFromVC.isEmpty,
+                        let index = selectedPHAssetDataFromVC.index(where: { asset -> Bool in
+                        return phassetData == asset
+                        }) {
+                        selectedPHAssetDataFromVC.remove(at: index)
+                        selectedPhotoDatas.append((indexPath.item, phassetData))
+                        willDisplayCell.isSelectedPhoto = true
+                    } else  {
+                        if selectedPhotoDatas.contains(where: { $0.0 == indexPath.item && $0.1 == phassetData }) {
+                            willDisplayCell.isSelectedPhoto = true
+                        }
+                    }
+            }
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (self.view.frame.width - 6) / 4
         return CGSize(width: width, height: width)
     }
     
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        
+    /*func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionElementKindSectionHeader:
+            let cameraHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: String(describing: TopicCreateCameraCell.self), for: indexPath)
+            return cameraHeaderView
+        case UICollectionElementKindSectionFooter:
+            return UICollectionReusableView()
+        default:
+            fatalError()
+        }
     }
+ 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let width = (self.view.frame.width - 6) / 4
+        return CGSize(width: width, height: width)
+    }*/
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 2
+        return 0
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 2
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.photosCellPHAssetDatas?.count ?? 0
+        return (photosCellPHAssetDatas?.count ?? 0) + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedcell = collectionView.cellForItem(at: indexPath) as! TopicCreatePhotosCell
+        let selectedcell = collectionView.cellForItem(at: indexPath)
         
         print("\(indexPath.item)")
         
-        if !selectedcell.isSelectedPhoto {
-            selectedcell.isSelectedPhoto = true
-            if let _ = selectedcell.topicCreatePhotosCellImageView.image {
-                guard let phassetData = self.photosCellPHAssetDatas?.object(at: indexPath.item) else { return }
-                selectedPhotoDatas.append((indexPath.item, phassetData))
+        if let cameraCell = selectedcell as? TopicCreateCameraCell {
+            let topicCreateCustomCameraViewController = TopicCreateCustomCameraViewController()
+            self.present(topicCreateCustomCameraViewController, animated: true)
+        } else if let photosCell = selectedcell as? TopicCreatePhotosCell {
+            if !photosCell.isSelectedPhoto {
+                photosCell.isSelectedPhoto = true
+                if let _ = photosCell.topicCreatePhotosCellImageView.image {
+                    guard let phassetData = self.photosCellPHAssetDatas?.object(at: indexPath.item - 1) else { return }
+                    selectedPhotoDatas.append((indexPath.item, phassetData))
+                }
+            } else {
+                photosCell.isSelectedPhoto = false
+                if let selectedDataIndex = selectedPhotoDatas.index(where: { (index, _) -> Bool in
+                    return index == indexPath.item
+                }){
+                    selectedPhotoDatas.remove(at: selectedDataIndex)
+                }
+                
             }
-        } else {
-            selectedcell.isSelectedPhoto = false
-            if let selectedDataIndex = selectedPhotoDatas.index(where: { (index, _) -> Bool in
-                return index == indexPath.item
-            }){
-                selectedPhotoDatas.remove(at: selectedDataIndex)
-            }
-            
         }
+        
     }
 }
 
@@ -315,6 +428,8 @@ class TopicCreatePhotoPickerTitleView: UIView {
         return topicCreatePhotoPickerBottomArrowImageView
     }()
     
+    
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewInitConfigure()
@@ -336,16 +451,18 @@ class TopicCreatePhotoPickerTitleView: UIView {
         topicCreatePhotoPickerStackView.addArrangedSubview(topicCreatePhotoPickerInnerStackView)
         topicCreatePhotoPickerInnerStackView.addArrangedSubview(topicCreatePhotoPickerCoachLabel)
         topicCreatePhotoPickerInnerStackView.addArrangedSubview(topicCreatePhotoPickerBottomArrowImageView)
-        
         topicCreatePhotoPickerStackView.distribution = .equalSpacing
         topicCreatePhotoPickerStackView.spacing = 2
-        topicCreatePhotoPickerTitleLabel.text = title ?? "카메라 롤"
+        topicCreatePhotoPickerTitleLabel.text = title ?? "Camera Roll"
         topicCreatePhotoPickerTitleLabel.textAlignment = .center
         topicCreatePhotoPickerTitleLabel.font = UIFont.boldSystemFont(ofSize: 17)
         topicCreatePhotoPickerCoachLabel.text = coachComment ?? "변경하려면 여기를 누르세요"
-        topicCreatePhotoPickerCoachLabel.textAlignment = .center
+        topicCreatePhotoPickerCoachLabel.textAlignment = .left
         topicCreatePhotoPickerCoachLabel.font = UIFont.systemFont(ofSize: 12)
         topicCreatePhotoPickerBottomArrowImageView.image = UIImage(named: "ic_arrow_drop_down")
+        topicCreatePhotoPickerBottomArrowImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        
         topicCreatePhotoPickerStackView.snp.makeConstraints {
             $0.top.left.right.bottom.equalToSuperview()
         }
@@ -354,18 +471,45 @@ class TopicCreatePhotoPickerTitleView: UIView {
 
 extension TopicCreatePhotoPickerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return photosCellPHAssetCollections.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let phassetBunchTableCell = tableView.dequeueReusableCell(withIdentifier: String(describing: TopicCreatePHAssetBunchViewCell.self) , for: indexPath) as! TopicCreatePHAssetBunchViewCell
+        let phassetCollection = photosCellPHAssetCollections[indexPath.row]
+        print("This is Collection estimated Asset Count : \(phassetCollection.estimatedAssetCount)")
+        phassetBunchTableCell.bunchViewPhotosCountLabel.text =
+            "\(PHAsset.fetchAssets(in: phassetCollection, options: PHFetchOptions()).count)"
+        phassetBunchTableCell.bunchViewTitleLabel.text = phassetCollection.localizedTitle!
+        
+        if let phasset = PHAsset.fetchAssets(in: phassetCollection, options: nil).firstObject {
+            phImageManager.requestImage(for: phasset, targetSize: CGSize.init(width: 50, height: 50), contentMode: PHImageContentMode.aspectFit, options: nil) { (image, _) in
+                DispatchQueue.main.async {
+                    phassetBunchTableCell.bunchViewThumbnailImageView.image = image
+                }
+            }
+        }
         return phassetBunchTableCell
     }
 }
 
+
+
+
 extension TopicCreatePhotoPickerViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 75
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        UIView.animate(withDuration: 0.3) {
+            self.topicCreatePhotosPickerPHAssetBunchView.isHidden = true
+        }
+        let phassetCollection = photosCellPHAssetCollections[indexPath.row]
+        self.topicCreatePhotoPickerTitleView?.topicCreatePhotoPickerTitleLabel.text =
+            phassetCollection.localizedTitle
+        fetchPHAssetData(with: phassetCollection)
     }
 }
 

@@ -49,15 +49,15 @@ class TopicCreatePHAssetBunchViewCell: UITableViewCell {
         bunchViewStackView.addArrangedSubview(bunchViewPhotosCountLabel)
         
         bunchViewTitleLabel.text = "카메라 롤"
-        bunchViewTitleLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        bunchViewTitleLabel.font = UIFont.boldSystemFont(ofSize: 16)
         bunchViewPhotosCountLabel.text = "754"
-        bunchViewPhotosCountLabel.font = UIFont.systemFont(ofSize: 12)
+        bunchViewPhotosCountLabel.font = UIFont.systemFont(ofSize: 11)
         bunchViewStackView.distribution = .fillProportionally
         
         bunchViewThumbnailImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.left.equalTo(self.snp.left).offset(width375(15))
-            $0.height.width.equalTo(width375(60))
+            $0.height.width.equalTo(width375(50))
         }
         bunchViewStackView.snp.makeConstraints {
             $0.left.equalTo(bunchViewThumbnailImageView.snp.right).offset(15)

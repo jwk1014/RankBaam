@@ -7,26 +7,39 @@
 //
 
 import UIKit
+import SnapKit
 
 class SignInViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var dismissButton: UIButton!
-    @IBOutlet weak var signUpButton: UIButton!
-    @IBOutlet weak var emailSignInButton: UIButton!
-    @IBOutlet weak var facebookSignInButton: UIButton!
-    @IBOutlet weak var googleSignInButton: UIButton!
-    @IBOutlet weak var kakaoSignInButton: UIButton!
     
+    var signInLogoImageview: UIImageView = {
+        let signInLogoImageview = UIImageView()
+        return signInLogoImageview
+    }()
+    
+    var signInEmailTextField: UITextField = {
+        let signInEmailTextField = UITextField()
+        return signInEmailTextField
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        dismissButton.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
-        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
-        emailSignInButton.addTarget(self, action: #selector(emailSignInButtonTapped), for: .touchUpInside)
-        facebookSignInButton.addTarget(self, action: #selector(facebookSignInButtonTapped), for: .touchUpInside)
-        googleSignInButton.addTarget(self, action: #selector(googleSignInButtonTapped), for: .touchUpInside)
-        kakaoSignInButton.addTarget(self, action: #selector(kakaoSignInButtonTapped), for: .touchUpInside)
+        viewInitConfigure()
+        
+    }
+    
+    fileprivate func viewInitConfigure() {
+        self.view.addSubview(signInLogoImageview)
+        self.view.backgroundColor = UIColor.white
+        
+        signInLogoImageview.image = UIImage(named: "logoIcn")
+        
+        signInLogoImageview.snp.makeConstraints {
+            $0.top.equalTo(self.view).offset(height667(122, forX: 145))
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(width375(191))
+            $0.height.equalTo(height667(36))
+        }
     }
     
     @objc func dismissButtonTapped(_ sender: UIButton) {

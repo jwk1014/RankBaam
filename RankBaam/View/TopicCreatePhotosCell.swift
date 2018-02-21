@@ -43,8 +43,11 @@ class TopicCreatePhotosCell: UICollectionViewCell {
     fileprivate func viewInitConfigure() {
         self.addSubview(topicCreatePhotosCellImageView)
         self.addSubview(selectedLogoImageView)
+        
         selectedLogoImageView.image = UIImage(named: "noimage")
         selectedLogoImageView.alpha = 0
+        
+        
         topicCreatePhotosCellImageView.snp.makeConstraints {
             $0.top.bottom.left.right.equalToSuperview()
         }

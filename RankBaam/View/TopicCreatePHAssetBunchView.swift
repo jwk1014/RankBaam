@@ -20,6 +20,7 @@ class TopicCreatePHAssetBunchView: UIView {
         return TopicCreatePHAssetBunchViewTableView
     }()
     
+    
     var topicCreatePHAssetBunchViewTableViewHeightConstraint: NSLayoutConstraint?
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,6 +37,7 @@ class TopicCreatePHAssetBunchView: UIView {
         self.backgroundColor = UIColor.rankbaamOrange.withAlphaComponent(0.6)
         self.addSubview(topicCreatePHAssetBunchViewUpwardArrowImageView)
         self.addSubview(topicCreatePHAssetBunchViewTableView)
+        self.layer.cornerRadius = 5
         
         topicCreatePHAssetBunchViewUpwardArrowImageView.image = UIImage(named: "ic_arrow_drop_up")?.withRenderingMode(.alwaysTemplate)
         topicCreatePHAssetBunchViewUpwardArrowImageView.tintColor = UIColor.white
@@ -50,6 +52,7 @@ class TopicCreatePHAssetBunchView: UIView {
             $0.width.equalTo(70)
             $0.height.equalTo(80)
         }
+        
         topicCreatePHAssetBunchViewTableView.translatesAutoresizingMaskIntoConstraints = false
         let topCon = topicCreatePHAssetBunchViewTableView.topAnchor
             .constraint(equalTo: topicCreatePHAssetBunchViewUpwardArrowImageView.bottomAnchor)
@@ -57,8 +60,9 @@ class TopicCreatePHAssetBunchView: UIView {
         topCon.isActive = true
         topicCreatePHAssetBunchViewTableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         topicCreatePHAssetBunchViewTableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        let heightCon = topicCreatePHAssetBunchViewTableView.heightAnchor.constraint(equalToConstant: height667(250))
+        let heightCon = topicCreatePHAssetBunchViewTableView.heightAnchor.constraint(equalToConstant: height667(0))
         heightCon.isActive = true
         topicCreatePHAssetBunchViewTableViewHeightConstraint = heightCon
+        
     }
 }

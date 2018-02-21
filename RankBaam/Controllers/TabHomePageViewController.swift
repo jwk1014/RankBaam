@@ -84,7 +84,7 @@ class TabHomePageViewController: UIPageViewController {
         
         mainCustomNavigationBar.snp.makeConstraints {
             $0.top.equalTo(self.view.snp.top).offset(-(UIApplication.shared.statusBarFrame.height))
-            $0.top.left.right.equalToSuperview()
+            $0.left.right.equalToSuperview()
             $0.height.equalTo(height667(68, forX: 90))
         }
         
