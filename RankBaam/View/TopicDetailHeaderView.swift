@@ -157,14 +157,13 @@ class TopicDetailHeaderView: UICollectionReusableView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewInitConfigure()
-        print("This is CollectionView Height : \(topicDetailHeaderImagesCollectionView.frame.height)")
-        print("This is defaultimage Height : \(topicDetailHeaderImagesCollectionViewDefaultImageView.frame.height)")
         topicDetailHeaderImagesCollectionViewConfigure()
         topicDetailHeaderViewConfigure()
         
     }
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         viewInitConfigure()
         topicDetailHeaderImagesCollectionViewConfigure()
         topicDetailHeaderViewConfigure()
@@ -250,49 +249,36 @@ class TopicDetailHeaderView: UICollectionReusableView {
         topicDetailImagesCollectionViewPageControl.numberOfPages = 0
         topicDetailHeaderTitleLabel.text = ""
         topicDetailHeaderTitleLabel.textColor = UIColor(red: 77/255, green: 77/255, blue: 77/255, alpha: 1)
-        topicDetailHeaderTitleLabel.font = topicDetailHeaderTitleLabel
-                                                    .font
-                                                    .withSize(Constants.screenHeight * ( 16 / 667 ))
+        topicDetailHeaderTitleLabel.font = UIFont(name: "NanumSquareB", size: 16)
         topicDetailHeaderNicknameStarImageView.image = UIImage(named: "starImg")
         topicDetailHeaderNicknameStarImageView.contentMode = .center
         topicDetailHeaderNicknameLabel.textColor = UIColor.rankbaamDarkgray
-        topicDetailHeaderNicknameLabel.font = topicDetailHeaderNicknameLabel
-                                                    .font
-                                                    .withSize(Constants.screenHeight * ( 12 / 667 ))
+        topicDetailHeaderNicknameLabel.font = UIFont(name: "NanumSquareB", size: 12)
         topicDetailNicknameCreationDateSeperatorView
             .backgroundColor = UIColor.rankbaamSeperatorColor
         topicDetailHeaderCreationDateLabel.textColor = UIColor.rankbaamDarkgray
-        topicDetailHeaderCreationDateLabel.font = topicDetailHeaderNicknameLabel
-                                                    .font
-                                                    .withSize(Constants.screenHeight * ( 12 / 667 ))
+        topicDetailHeaderCreationDateLabel.font = UIFont(name: "NanumSquareB", size: 12)
         topicDetailHeaderVoteBoxImageView.image = UIImage(named: "voteImg")
         topicDetailHeaderVoteBoxImageView.contentMode = .scaleAspectFit
         topicDetailHeaderVoteCountLabel.textColor = UIColor.rankbaamBlack
-        topicDetailHeaderVoteCountLabel.font = topicDetailHeaderVoteCountLabel
-                                                    .font
-                                                    .withSize(self.frame.height * (13 / 520))
+        topicDetailHeaderVoteCountLabel.font = UIFont(name: "NanumSquareB", size: 13)
         topicDetailHeaderLikeThumbImageView.image = UIImage(named: "likeImg")
         topicDetailHeaderLikeThumbImageView.contentMode = .scaleAspectFit
         topicDetailHeaderLikeCountLabel.textColor = UIColor.rankbaamBlack
-        topicDetailHeaderLikeCountLabel.font = topicDetailHeaderVoteCountLabel
-                                                    .font
-                                                    .withSize(self.frame.height * (13 / 520))
+        topicDetailHeaderLikeCountLabel.font = UIFont(name: "NanumSquareB", size: 13)
         topicDetailHeaderTextLikeButton.setImage(UIImage.init(named: "likeBtnN"), for: .normal)
         topicDetailHeaderTextLikeButton.contentMode = .scaleToFill
         topicDetailHeaderDescriptionSeperatorView.backgroundColor = UIColor.rankbaamSeperatorColor
         topicDetailHeaderBottomOptionCellsTopView.backgroundColor = UIColor.rankbaamGray
         topicDetailHeaderDescriptionLabel.textColor =
             UIColor(red: 77/255, green: 77/255, blue: 77/255, alpha: 1)
-        topicDetailHeaderDescriptionLabel.font = topicDetailHeaderVoteCountLabel
-                                                    .font
-                                                    .withSize(self.frame.height * (13 / 520))
+        topicDetailHeaderDescriptionLabel.font = UIFont(name: "NanumSquareB", size: 13)
         topicDetailHeaderDescriptionLabel.sizeToFit()
         topicDetailHeaderDescriptionLabel.numberOfLines = 0
         topicDetailHeaderVoteCountCoachTextLabel
             .textColor = UIColor.rankbaamDarkgray
-        topicDetailHeaderVoteCountCoachTextLabel.font = topicDetailHeaderVoteCountLabel
-                                                    .font
-                                                    .withSize(self.frame.height * (12 / 520))
+        topicDetailHeaderVoteCountCoachTextLabel.font =
+            UIFont(name: "NanumSquareB", size: 12)
         
         
         topicDetailHeaderBackgroundView.snp.makeConstraints {
@@ -300,133 +286,132 @@ class TopicDetailHeaderView: UICollectionReusableView {
         }
         topicDetailHeaderImagesCollectionViewDefaultImageView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(self.frame.height * (208 / 520))
-            print("\(self.frame.height * (208 / 520))")
+            $0.height.equalTo(height667(208))
+            
         }
         topicDetailHeaderImagesCollectionView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(self.frame.height * (208 / 520))
-            print("\(self.frame.height * (208 / 520))")
+            $0.height.equalTo(height667(208))
         }
         
         topicDetailHeaderImagesCollectionView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(self.frame.height * (208 / 520))
+            $0.height.equalTo(height667(208))
         }
         topicDetailImagesCollectionViewPageControl.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderImagesCollectionView.snp.bottom)
-                .offset(-(self.frame.height * (3 / 520)))
+                .offset(-(height667(3)))
             $0.centerX.equalTo(self.snp.centerX)
-            $0.width.equalTo(self.frame.width * (270 / 375))
-            $0.height.equalTo(self.frame.height * (32 / 520))
+            $0.width.equalTo(width375(270))
+            $0.height.equalTo(width375(32))
         }
         topicDetailHeaderTitleLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderImagesCollectionView.snp.bottom)
-                .offset(self.frame.height * (35 / 520))
+                .offset(height667(35))
             $0.left.equalTo(topicDetailHeaderBackgroundView.snp.left)
-                .offset(self.frame.width * (20 / 375))
-            $0.width.equalTo(self.frame.width * (335 / 375))
-            $0.height.equalTo(self.frame.height * (42 / 520))
+                .offset(width375(20))
+            $0.width.equalTo(width375(335))
+            $0.height.equalTo(height667(42))
         }
         topicDetailHeaderNicknameStarImageView.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderTitleLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 520))
+                .offset(height667(10))
             $0.left.equalTo(topicDetailHeaderBackgroundView.snp.left)
-                .offset(self.frame.width * (20 / 375))
-            $0.width.equalTo(self.frame.width * (13 / 375))
-            $0.height.equalTo(self.frame.height * (13 / 520))
+                .offset(width375(20))
+            $0.width.equalTo(width375(13))
+            $0.height.equalTo(width375(13))
         }
         topicDetailHeaderNicknameLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderTitleLabel.snp.bottom)
-                .offset(self.frame.height * (11 / 520))
+                .offset(height667(11))
             $0.left.equalTo(topicDetailHeaderNicknameStarImageView.snp.right)
-                .offset(self.frame.width * (4 / 375))
-            $0.width.equalTo(self.frame.width * (50 / 375))
-            $0.height.equalTo(self.frame.height * (13 / 520))
+                .offset(height667(4))
+            $0.width.equalTo(width375(50))
+            $0.height.equalTo(height667(13))
         }
         topicDetailNicknameCreationDateSeperatorView.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderTitleLabel.snp.bottom)
-                .offset(self.frame.height * (12 / 520))
+                .offset(height667(12))
             $0.left.equalTo(topicDetailHeaderNicknameLabel.snp.right)
-                .offset(self.frame.width * (18 / 375))
-            $0.width.equalTo(self.frame.width * (2 / 375))
-            $0.height.equalTo(self.frame.height * (11 / 520))
+                .offset(width375(18))
+            $0.width.equalTo(width375(2))
+            $0.height.equalTo(height667(11))
         }
         topicDetailHeaderCreationDateLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderTitleLabel.snp.bottom)
-                .offset(self.frame.height * (11 / 520))
+                .offset(height667(11))
             $0.left
                 .equalTo(topicDetailNicknameCreationDateSeperatorView.snp.right)
-                .offset(self.frame.width * (18 / 375))
-            $0.width.equalTo(self.frame.width * (80 / 375))
-            $0.height.equalTo(self.frame.height * (13 / 520))
+                .offset(width375(18))
+            $0.width.equalTo(width375(80))
+            $0.height.equalTo(height667(13))
         }
         topicDetailHeaderVoteBoxImageView.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderNicknameStarImageView.snp.bottom)
-                .offset(self.frame.height * (11 / 520))
+                .offset(height667(11))
             $0.left.equalTo(topicDetailHeaderBackgroundView.snp.left)
-                .offset(self.frame.width * (20 / 375))
-            $0.width.equalTo(self.frame.width * (18 / 375))
-            $0.height.equalTo(self.frame.height * (14 / 520))
+                .offset(width375(20))
+            $0.width.equalTo(width375(18))
+            $0.height.equalTo(height667(14))
         }
         topicDetailHeaderVoteCountLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderNicknameLabel.snp.bottom)
-                .offset(self.frame.height * (9 / 520))
+                .offset(height667(9))
             $0.left.equalTo(topicDetailHeaderVoteBoxImageView.snp.right)
-                .offset(self.frame.width * (4 / 375))
-            $0.width.equalTo(self.frame.width * (43 / 375))
-            $0.height.equalTo(self.frame.height * (16 / 520))
+                .offset(width375(4))
+            $0.width.equalTo(width375(43))
+            $0.height.equalTo(height667(16))
         }
         topicDetailHeaderLikeThumbImageView.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderCreationDateLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 520))
+                .offset(height667(10))
             $0.left.equalTo(topicDetailHeaderVoteCountLabel.snp.right)
-                .offset(self.frame.width * (36 / 375))
-            $0.width.equalTo(self.frame.width * (15 / 375))
-            $0.height.equalTo(self.frame.height * (15 / 520))
+                .offset(width375(36))
+            $0.width.equalTo(width375(15))
+            $0.height.equalTo(height667(15))
         }
         topicDetailHeaderLikeCountLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderCreationDateLabel.snp.bottom)
-                .offset(self.frame.height * (9 / 520))
+                .offset(height667(9))
             $0.left.equalTo(topicDetailHeaderLikeThumbImageView.snp.right)
-                .offset(self.frame.width * (4 / 375))
-            $0.width.equalTo(self.frame.width * (43 / 375))
-            $0.height.equalTo(self.frame.height * (16 / 520))
+                .offset(width375(4))
+            $0.width.equalTo(width375(43))
+            $0.height.equalTo(height667(16))
         }
         topicDetailHeaderTextLikeButton.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderTitleLabel.snp.bottom)
-                .offset(self.frame.height * (15 / 520))
+                .offset(height667(15))
             $0.left.equalTo(topicDetailHeaderLikeCountLabel.snp.right)
-                .offset(self.frame.width * (90 / 375))
-            $0.width.equalTo(self.frame.width * (76 / 375))
-            $0.height.equalTo(self.frame.height * (36 / 520))
+                .offset(width375(90))
+            $0.width.equalTo(width375(76))
+            $0.height.equalTo(height667(36))
         }
         topicDetailHeaderDescriptionSeperatorView.snp.makeConstraints {
             $0.left.right.equalToSuperview()
             $0.top.equalTo(topicDetailHeaderTextLikeButton.snp.bottom)
-                .offset(self.frame.height * (14 / 520))
-            $0.height.equalTo(self.frame.height * (2 / 520))
+                .offset(height667(14))
+            $0.height.equalTo(height667(2))
         }
         topicDetailHeaderBottomOptionCellsTopView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.height.equalTo(self.frame.height * (36 / 520))
+            $0.height.equalTo(height667(36))
         }
         topicDetailHeaderDescriptionLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderDescriptionSeperatorView.snp.bottom)
-                .offset(self.frame.height * (20 / 520))
+                .offset(height667(20))
             $0.left.equalTo(topicDetailHeaderBackgroundView.snp.left)
-                .offset(self.frame.width * (20 / 375))
+                .offset(width375(20))
             $0.bottom.equalTo(topicDetailHeaderBottomOptionCellsTopView.snp.top)
-                .offset(-(self.frame.height * (20 / 520)))
-            $0.width.equalTo(self.frame.width * (335 / 375))
+                .offset(-(height667(20)))
+            $0.width.equalTo(width375(335))
         }
         topicDetailHeaderVoteCountCoachTextLabel.snp.makeConstraints {
             $0.top.equalTo(topicDetailHeaderBottomOptionCellsTopView.snp.top)
-                .offset(self.frame.height * (16 / 520))
+                .offset(height667(16))
             $0.left.equalTo(topicDetailHeaderBottomOptionCellsTopView.snp.left)
-                .offset(self.frame.width * (17 / 375))
-            $0.height.equalTo(self.frame.height * (13 / 520))
-            $0.width.equalTo(self.frame.width * (250 / 375))
+                .offset(width375(17))
+            $0.height.equalTo(height667(13))
+            $0.width.equalTo(width375(250))
         }
     }
 }

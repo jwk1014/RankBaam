@@ -9,8 +9,17 @@
 import UIKit
 import SDWebImage
 import SnapKit
+import AssetsLibrary
+
+protocol LikeStoredRankCellDelegate {
+    func likeStoredRankCellDeleteHandler(with cell: UICollectionViewCell)
+}
+
 
 class MainAllRankCell: UICollectionViewCell {
+    
+    let placeHolderImage = UIImage(named: "noimage")
+    var delegate: LikeStoredRankCellDelegate?
     
     var mainAllRankCellBackgroundView: UIView = {
         let mainAllRankCellBackgroundView = UIView()
@@ -25,6 +34,16 @@ class MainAllRankCell: UICollectionViewCell {
     var mainAllRankCellImageView: UIImageView = {
         let mainAllRankCellImageView = UIImageView()
         return mainAllRankCellImageView
+    }()
+    
+    var mainAllRankCellDeleteImageView: UIImageView = {
+        let mainAllRankCellEditingImageView = UIImageView()
+        return mainAllRankCellEditingImageView
+    }()
+    
+    var mainAllRankCellDeleteButton: UIButton = {
+        let mainAllRankCellDeleteButton = UIButton()
+        return mainAllRankCellDeleteButton
     }()
     
     var mainAllRankCellTitleLabel: UILabel = {
@@ -67,7 +86,6 @@ class MainAllRankCell: UICollectionViewCell {
         return likedStoredRankCellEditingCheckBox
     }()
     
-    @IBOutlet weak var mainRankCellImgShadowView: UIView!
     
     var likeCount: Int = 0 {
         didSet {
@@ -90,15 +108,29 @@ class MainAllRankCell: UICollectionViewCell {
             
         }
     }
+    
+    var isSelectedLikedCell: Bool = false {
+        didSet {
+                if isSelectedLikedCell {
+                    self.mainAllRankCellBackgroundView.layer.borderWidth = 3
+                    self.likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBtn")
+                } else {
+                    self.mainAllRankCellBackgroundView.layer.borderWidth = 0
+                    self.likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBoxIcn")
+                }
+        }
+    }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewInitConfigure()
     }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewInitConfigure()
     }
+    
     func cellDatasConfigure(topic: Topic) {
         mainAllRankCellTitleLabel.text = topic.title
         likeCount = topic.likeCount
@@ -110,12 +142,11 @@ class MainAllRankCell: UICollectionViewCell {
                     return photo.order == topic.photoMain
                 }) else { return }
                 let imgURL = URL(string: mainPhoto.realUrl)
-                mainAllRankCellImageView.sd_setImage(with: imgURL, completed: nil)
+               mainAllRankCellImageView.sd_setImage(with: imgURL, placeholderImage: placeHolderImage)
             } else {
                 let imgURL = URL(string: topic.photos[0].realUrl)
-                mainAllRankCellImageView.sd_setImage(with: imgURL, completed: nil)
+                mainAllRankCellImageView.sd_setImage(with: imgURL, placeholderImage: placeHolderImage)
             }
-            
         }
     }
     
@@ -124,9 +155,13 @@ class MainAllRankCell: UICollectionViewCell {
         self.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         self.layer.shadowRadius = 5
         self.layer.shadowOpacity = 0.7
+        self.addSubview(mainAllRankCellDeleteImageView)
         self.addSubview(mainAllRankCellBackgroundView)
         self.addSubview(mainAllRankCellImageViewShadowView)
         self.addSubview(mainAllRankCellImageView)
+        self.addSubview(mainAllRankCellDeleteButton)
+        self.isUserInteractionEnabled = true
+        
         mainAllRankCellBackgroundView.addSubview(mainAllRankCellTitleLabel)
         mainAllRankCellBackgroundView
             .addSubview(mainAllRankCellNicknameStarImageView)
@@ -137,11 +172,16 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellBackgroundView.addSubview(mainAllRankLikeCountLabel)
         mainAllRankCellBackgroundView
             .addSubview(likedStoredRankCellEditingCheckBox)
+    
         
-        
+        mainAllRankCellDeleteImageView.image = UIImage(named: "icCancel")
+        mainAllRankCellDeleteImageView.isHidden = true
+        mainAllRankCellDeleteButton.addTarget(self, action: #selector(likeStoredCellDeleteButtonTapped(sender:)), for: .touchUpInside)
+        //mainAllRankCellDeleteButton.backgroundColor = UIColor.red
         mainAllRankCellBackgroundView.backgroundColor = UIColor.white
         mainAllRankCellBackgroundView.layer.cornerRadius = 8
         mainAllRankCellBackgroundView.layer.masksToBounds = true
+        mainAllRankCellBackgroundView.layer.borderColor = UIColor.rankbaamOrange.cgColor
         mainAllRankCellImageViewShadowView.backgroundColor = UIColor.white
         mainAllRankCellImageViewShadowView.layer.cornerRadius = 8
         mainAllRankCellImageViewShadowView.layer.shadowOpacity = 0.7
@@ -153,124 +193,131 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellImageView.contentMode = .scaleAspectFill
         mainAllRankCellImageView.layer.cornerRadius = 8
         mainAllRankCellImageView.layer.masksToBounds = true
-        mainAllRankCellTitleLabel.text = "겨울에 가기 좋은 해외 여행지는?"
-        mainAllRankCellTitleLabel.font = mainAllRankCellTitleLabel
-            .font
-            .withSize( self.frame.height * (14 / 122))
+        mainAllRankCellTitleLabel.font = UIFont(name: "NanumSquareB", size: 14)
         mainAllRankCellNicknameStarImageView.image = UIImage(named: "starImg")
         mainAllRankCellNicknameStarImageView.contentMode = .scaleAspectFit
-        mainAllRankCellWriterNicknameLabel.text = "iphoneuser1234"
         mainAllRankCellWriterNicknameLabel.textColor = UIColor.rankbaamDarkgray
-        mainAllRankCellWriterNicknameLabel.font = mainAllRankCellWriterNicknameLabel
-            .font
-            .withSize(self.frame.height * (12 / 122))
+        mainAllRankCellWriterNicknameLabel.font = UIFont(name: "NanumSquareB", size: 12)
         mainAllRankVoteBoxImageView.image = UIImage(named: "voteImg")
         mainAllRankVoteBoxImageView.contentMode = .scaleAspectFit
-        mainAllRankVoteCountLabel.text = "9999+"
+        mainAllRankVoteCountLabel.text = "0"
         mainAllRankVoteCountLabel.textColor = UIColor.rankbaamBlack
-        mainAllRankVoteCountLabel.font = mainAllRankVoteCountLabel
-            .font
-            .withSize(self.frame.height * (13 / 122))
+        mainAllRankVoteCountLabel.font = UIFont(name: "NanumSquareB", size: 13)
         mainAllRankLikeThumbImageView.image = UIImage(named: "likeImg")
         mainAllRankLikeThumbImageView.contentMode = .scaleAspectFit
-        mainAllRankLikeCountLabel.text = "9999+"
+        mainAllRankLikeCountLabel.text = "0"
         mainAllRankLikeCountLabel.textColor = UIColor.rankbaamBlack
-        mainAllRankLikeCountLabel.font = mainAllRankVoteCountLabel
-            .font
-            .withSize(self.frame.height * (13 / 122))
+        mainAllRankLikeCountLabel.font = UIFont(name: "NanumSquareB", size: 13)
         likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBoxIcn")
         likedStoredRankCellEditingCheckBox.contentMode = .center
         likedStoredRankCellEditingCheckBox.isHidden = true
         
+        mainAllRankCellDeleteImageView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.right.equalTo(self.snp.left).offset(-width375(15))
+            $0.width.height.equalTo(width375(24))
+        }
+        
+        mainAllRankCellDeleteButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.right.equalTo(self.snp.left)
+            $0.height.equalToSuperview().multipliedBy(0.7)
+            $0.width.equalTo(width375(40))
+        }
+        
         mainAllRankCellBackgroundView.snp.makeConstraints {
-            $0.left.equalTo(self.snp.left).offset(self.frame.width * ( 24 / 343 ))
+            $0.left.equalTo(self.snp.left).offset(width375(24))
             $0.top.right.bottom.equalToSuperview()
         }
         mainAllRankCellImageView.snp.makeConstraints {
             $0.left.equalToSuperview()
-            $0.top.equalTo(self.snp.top).offset(self.frame.height * (13 / 122))
-            $0.bottom.equalTo(self.snp.bottom).offset(-(self.frame.height * (13 / 122)))
-            $0.width.equalTo(self.frame.width * (96 / 343))
+            $0.top.equalTo(self.snp.top).offset(height667(13))
+            $0.bottom.equalTo(self.snp.bottom).offset(-(height667(13)))
+            $0.width.equalTo(width375(96))
         }
         mainAllRankCellImageViewShadowView.snp.makeConstraints {
             $0.left.equalToSuperview()
-            $0.top.equalTo(self.snp.top).offset(self.frame.height * (15 / 122))
-            $0.bottom.equalTo(self.snp.bottom).offset(-(self.frame.height * (15 / 122)))
-            $0.width.equalTo(self.frame.width * (94 / 343))
+            $0.top.equalTo(self.snp.top).offset(height667(15))
+            $0.bottom.equalTo(self.snp.bottom).offset(-(height667(15)))
+            $0.width.equalTo(width375(94))
         }
         mainAllRankCellTitleLabel.snp.makeConstraints {
             $0.left.equalTo(mainAllRankCellImageView.snp.right)
-                .offset(self.frame.width * (17 / 343))
+                .offset(width375(17))
             $0.top.equalTo(mainAllRankCellBackgroundView.snp.top)
-                .offset(self.frame.height * (18 / 122))
-            $0.width.equalTo(self.frame.width * (212 / 343))
-            $0.height.equalTo(self.frame.height * ( 40 / 122 ))
+                .offset(height667(18))
+            $0.width.equalTo(width375(212))
+            $0.height.equalTo(height667(40))
         }
         mainAllRankCellNicknameStarImageView.snp.makeConstraints {
             $0.left.equalTo(mainAllRankCellImageView.snp.right)
-                .offset(self.frame.width * (17 / 343))
+                .offset(width375(17))
             $0.top.equalTo(mainAllRankCellTitleLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 122))
-            $0.width.equalTo(self.frame.width * (14 / 343))
-            $0.height.equalTo(self.frame.height * ( 14 / 122 ))
+                .offset(height667(10))
+            $0.width.equalTo(width375(14))
+            $0.height.equalTo(width375(14))
         }
         mainAllRankCellWriterNicknameLabel.snp.makeConstraints {
             $0.left.equalTo(mainAllRankCellNicknameStarImageView.snp.right)
-                .offset(self.frame.width * (3 / 343))
+                .offset(width375(3))
             $0.top.equalTo(mainAllRankCellTitleLabel.snp.bottom)
-                .offset(self.frame.height * (11 / 122))
-            $0.width.equalTo(self.frame.width * (170 / 343))
-            $0.height.equalTo(self.frame.height * ( 13 / 122 ))
+                .offset(height667(11))
+            $0.width.equalTo(width375(170))
+            $0.height.equalTo(height667(13))
         }
         mainAllRankVoteBoxImageView.snp.makeConstraints {
             $0.left.equalTo(mainAllRankCellImageView.snp.right)
-                .offset(self.frame.width * (17 / 343))
+                .offset(width375(17))
             $0.top.equalTo(mainAllRankCellNicknameStarImageView.snp.bottom)
-                .offset(self.frame.height * (11 / 122))
-            $0.width.equalTo(self.frame.width * (18 / 343))
-            $0.height.equalTo(self.frame.height * ( 14 / 122 ))
+                .offset(height667(11))
+            $0.width.equalTo(width375(18))
+            $0.height.equalTo(height667(14))
         }
         mainAllRankVoteCountLabel.snp.makeConstraints {
             $0.left.equalTo(mainAllRankVoteBoxImageView.snp.right)
-                .offset(self.frame.width * (4 / 343))
+                .offset(width375(4))
             $0.top.equalTo(mainAllRankCellWriterNicknameLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 122))
-            $0.width.equalTo(self.frame.width * (43 / 343))
-            $0.height.equalTo(self.frame.height * ( 16 / 122 ))
+                .offset(height667(10))
+            $0.width.equalTo(width375(43))
+            $0.height.equalTo(height667(16))
         }
         mainAllRankLikeThumbImageView.snp.makeConstraints {
             $0.left.equalTo(mainAllRankVoteCountLabel.snp.right)
-                .offset(self.frame.width * (57 / 343))
+                .offset(width375(57))
             $0.top.equalTo(mainAllRankCellWriterNicknameLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 122))
-            $0.width.equalTo(self.frame.width * (15 / 343))
-            $0.height.equalTo(self.frame.height * ( 15 / 122 ))
+                .offset(height667(10))
+            $0.width.equalTo(width375(15))
+            $0.height.equalTo(height667(15))
         }
         mainAllRankLikeCountLabel.snp.makeConstraints {
             $0.left.equalTo(mainAllRankLikeThumbImageView.snp.right)
-                .offset(self.frame.width * (4 / 343))
+                .offset(width375(4))
             $0.top.equalTo(mainAllRankCellWriterNicknameLabel.snp.bottom)
-                .offset(self.frame.height * (10 / 122))
-            $0.width.equalTo(self.frame.width * (43 / 343))
-            $0.height.equalTo(self.frame.height * ( 16 / 122 ))
+                .offset(height667(10))
+            $0.width.equalTo(width375(43))
+            $0.height.equalTo(height667(16))
         }
         likedStoredRankCellEditingCheckBox.snp.makeConstraints {
             $0.right.equalTo(mainAllRankCellBackgroundView.snp.right)
-                .offset(-(self.frame.width * (10 / 343)))
+                .offset(-(width375(10)))
             $0.bottom.equalTo(mainAllRankCellBackgroundView.snp.bottom)
-                .offset(-(self.frame.height * (10 / 122)))
-            $0.width.equalTo(self.frame.width * (24 / 343))
-            $0.height.equalTo(self.frame.height * ( 24 / 122 ))
+                .offset(-(height667(10)))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
+        
         let shadowLayer = CAShapeLayer()
-        shadowLayer.path = UIBezierPath(roundedRect: CGRect.init(x: 2, y: self.frame.height * (16 / 122), width: self.frame.width * (85 / 343), height: self.frame.height - (self.frame.height * (20 / 122) * 2)), cornerRadius: 0).cgPath
+        shadowLayer.path = UIBezierPath(roundedRect: CGRect.init(x: 2, y: height667(16), width: width375(85), height: self.frame.height - (height667(20) * 2)), cornerRadius: 0).cgPath
     }
     
+    @objc func likeStoredCellDeleteButtonTapped(sender: UIButton) {
+        delegate?.likeStoredRankCellDeleteHandler(with: self)
+    }
     
     override func prepareForReuse() {
         mainAllRankCellImageView.image = UIImage(named: "noimage")
+        isSelectedLikedCell = false
     }
-    
 }
 
 

@@ -36,10 +36,9 @@ class TabMyViewPageViewController: UIPageViewController {
     
     var tabMyViewRankingsCommentsViewControllers: [UIViewController] = {
         let tabMyViewRankingsViewController = TabMyViewRankingsViewController()
-        let tabHomeViewController = TabHomeViewController()
+        let tabMyViewCommentsViewController = TabMyViewCommentsViewController()
         
-        
-        return [tabHomeViewController, tabMyViewRankingsViewController]
+        return [tabMyViewRankingsViewController, tabMyViewCommentsViewController]
     }()
     
     override init(transitionStyle style: UIPageViewControllerTransitionStyle, navigationOrientation: UIPageViewControllerNavigationOrientation, options: [String : Any]? = nil) {
@@ -76,32 +75,31 @@ class TabMyViewPageViewController: UIPageViewController {
         
         tabMyViewCustomNavigationBar.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview()
-            make.height.equalTo(Constants.screenHeight * (68/667))
+            make.height.equalTo(height667(68, forX: 90))
         }
         
         tabMyViewNavigationBarTitle.text = "내 글 관리"
-        tabMyViewNavigationBarTitle.font = UIFont.boldSystemFont(ofSize: Constants.screenHeight * (18 / 667))
+        tabMyViewNavigationBarTitle.font = UIFont(name: "NanumSquareB", size: 18)
         tabMyViewNavigationBarTitle.snp.makeConstraints {
             $0.top.equalTo(tabMyViewCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (38 / 667))
-            $0.left.equalTo(tabMyViewCustomNavigationBar.snp.left)
-                .offset(Constants.screenWidth * (150 / 375))
-            $0.height.equalTo(Constants.screenHeight * (21 / 667))
+                .offset(height667(38, forX: 60))
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(height667(21))
         }
         tabMyViewEditingButton.snp.makeConstraints {
             $0.left.equalTo(tabMyViewCustomNavigationBar.snp.left)
-                .offset(Constants.screenWidth * (335 / 375))
+                .offset(width375(335))
             $0.top.equalTo(tabMyViewCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (36 / 667))
-            $0.width.equalTo(Constants.screenWidth * (24 / 375))
-            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+                .offset(height667(36))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
         self.view.addSubview(upperTabView)
         upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: tabMyViewCustomNavigationBar.bottomAnchor).isActive = true
         upperTabView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         upperTabView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        upperTabView.heightAnchor.constraint(equalToConstant: Constants.screenHeight * (35 / 667)).isActive = true
+        upperTabView.heightAnchor.constraint(equalToConstant: height667(35)).isActive = true
         upperTabView.delegate = self
         
         
@@ -149,7 +147,7 @@ extension TabMyViewPageViewController: UIScrollViewDelegate {
         
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
             self.upperTabView.selectedUnderBarLeadingConstraint?.constant  =
-                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + Constants.screenWidth * (61 / 375)
+                ((x < self.view.bounds.width) ? 0 : (self.view.bounds.width)/2 ) + width375(61)
             self.upperTabView.layoutIfNeeded()
         }, completion: nil)
         

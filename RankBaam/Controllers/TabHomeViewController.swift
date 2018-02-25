@@ -7,10 +7,6 @@
 //
 
 import UIKit
-import Kingfisher
-
-
-
 
 protocol CellDataRefreshable: class {
     
@@ -58,28 +54,32 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         super.viewDidLoad()
         
         viewInitConfigure()
-        loadMainRankCellDatas()
+        fetchMainRankCellDatas()
         mainRankCollectionViewConfigure()
         
         navigationController?.navigationBar.isHidden = true
         
     }
+    /*override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        loadMainRankCellDatas(1)
+        mainAllRankCollectionView.reloadData()
+    }*/
     
     fileprivate func viewInitConfigure() {
         self.view.addSubview(mainAllRankCollectionView)
+        
         mainAllRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+            $0.top.equalTo(height667(103, forX: 125))
         }
-      
-        
     }
     
     func mainRankCollectionViewConfigure() {
         mainAllRankCollectionView.dataSource = self
         mainAllRankCollectionView.delegate = self
         let footerNib = UINib(nibName: "MainAllRankLoadingFooterView", bundle: nil)
-        mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL)
+        mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabHomeViewControllerNames.MAINALLRANKCELL)
         mainAllRankCollectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "loadingFooterView")
         mainRankRefreshControl.tintColor = UIColor.rankbaamOrange
         mainAllRankCollectionView.refreshControl = mainRankRefreshControl
@@ -87,26 +87,27 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         mainAllRankCollectionView.backgroundColor = UIColor.rankbaamGray
        
         mainAllRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
-        
+        mainAllRankCollectionView.showsVerticalScrollIndicator = false
     }
     
     @objc func pullToRefresh() {
         self.page = 1
         isMoreDataExist = true
         setRefreshAllDataNeeded()
-        loadMainRankCellDatas()
+        fetchMainRankCellDatas()
         self.mainAllRankLoadingFooterView?.backToInit()
     }
     
-    func loadMainRankCellDatas() {
+    func fetchMainRankCellDatas(_ pageInput: Int? = nil) {
         
         if !isOnGoingLoading {
         isOnGoingLoading = true
-        TopicService.list(page: page, count: 15, categorySN: nil, order: .new) {
+        TopicService.list(page: pageInput ?? self.page, count: 15, order: .new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
                     guard let topicDatas = result.topics else {return}
+                    print("This is topicDatas Count : \(topicDatas.count)")
                     self.loadedDataHandle(topicDatas)
                 } else if let msg = result.msg {
                     self.mainAllRankLoadingFooterView?.endLoad()
@@ -124,7 +125,6 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
              }
             self.isOnGoingLoading = false
           }
-        
        }
     }
     
@@ -142,6 +142,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         }
         
         page += 1
+        
         if loadedData.isEmpty {
             isMoreDataExist = false
             mainAllRankLoadingFooterView?.endLoad()
@@ -156,7 +157,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         if indexPath.item >= cellDatas.count - loadThreshold,
             isMoreDataExist, !isOnGoingLoading {
             mainAllRankLoadingFooterView?.startLoad()
-            loadMainRankCellDatas()
+            fetchMainRankCellDatas()
         }
     }
 }
@@ -168,7 +169,7 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let mainAllRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabMainViewControllerNames.MAINALLRANKCELL, for: indexPath) as! MainAllRankCell
+        let mainAllRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsNames.TabHomeViewControllerNames.MAINALLRANKCELL, for: indexPath) as! MainAllRankCell
         
         mainAllRankCell.cellDatasConfigure(topic: cellDatas[indexPath.item])
         return mainAllRankCell
@@ -189,11 +190,12 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
             return UICollectionReusableView()
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let topicDetailViewController = TopicDetailViewController()
         let topicSN = cellDatas[indexPath.item].topicSN
         
-        if let parentViewCon = self.parent as? TabMyViewPageViewController {
+        if let _ = self.parent as? TabMyViewPageViewController {
             topicDetailViewController.bottomButtonTitleConverter =
                 .isForRevisingTopic
             topicDetailViewController.navigationTitleConverter =
@@ -214,25 +216,14 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.screenHeight * (12 / 667)
+        return height667(12)
     }
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return /*Constants.screenHeight == 812 ?
-            CGSize(width: Constants.screenWidth * (343 / 375), height: 122) :*/
-            CGSize(width: Constants.screenWidth * (343 / 375), height: Constants.screenHeight * (122 / 667))
+        return CGSize(width: width375(343), height: height667(122))
     }
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//         print("\(scrollView.contentOffset.x)")
-//    }
 }
-//
-//extension TabHomeViewController: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//    }
-//}
+
 

@@ -10,9 +10,12 @@ import Foundation
 
 class ConstantsNames {
     
-    class TabMainViewControllerNames {
+    class TabHomeViewControllerNames {
         
         static let MAINALLRANKCELL: String = "MainAllRankCell"
+    }
+    class TabMyViewRankingControllerNames {
+        static let MYVIEWRANKCELL: String = "MyViewRankCell"
     }
     
 }

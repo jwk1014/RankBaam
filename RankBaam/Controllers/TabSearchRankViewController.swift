@@ -39,6 +39,7 @@ class TabSearchRankViewController: UIViewController {
         //tabSearchCustomSearchBarConfigure()
         self.navigationController?.isNavigationBarHidden = true
       
+      
     }
 
     fileprivate func viewInitConfigure() {
@@ -121,11 +122,21 @@ class TabSearchRankViewController: UIViewController {
                 self.tabSearchCustomNavigationBarTitleLabel.textColor = UIColor.rankbaamOrange
             })
         }
-        
     }
-   
 }
 
 extension TabSearchRankViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
+    }
+   
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.tabSearchCustomNavigationBar.backgroundColor = UIColor.rankbaamOrange
+            self.tabSearchCustomNavigationBarTitleLabel.textColor = UIColor.white
+        })
+        return true
+    }
     
 }

@@ -7,11 +7,63 @@
 //
 
 import UIKit
+import SnapKit
 
 class SplashViewController: UIViewController {
-
+    
+    var splashLogoImageView: UIImageView = {
+        let splashLogoImageView = UIImageView()
+        return splashLogoImageView
+    }()
+    
+    var splashTitleLabel: UILabel = {
+        let splashTitleLabel = UILabel()
+        return splashTitleLabel
+    }()
+    
+    fileprivate func viewInitConfigure() {
+        self.view.backgroundColor = UIColor.rankbaamOrange
+        self.view.addSubview(splashLogoImageView)
+        self.view.addSubview(splashTitleLabel)
+        
+        splashLogoImageView.image = UIImage(named: "group")
+        splashLogoImageView.contentMode = .center
+        splashTitleLabel.text = "세상의 모든 랭킹"
+        splashTitleLabel.font = UIFont(name: "NanumSquareB", size: 14)
+        splashTitleLabel.textColor = UIColor.white
+        splashTitleLabel.textAlignment = .center
+        
+        splashLogoImageView.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(self.view).offset(height667(268, forX: 291))
+            $0.width.equalTo(width375(85))
+            $0.height.equalTo(height667(87, forX: 87))
+        }
+        
+        splashTitleLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(splashLogoImageView.snp.bottom).offset(height667(14))
+            $0.width.equalTo(width375(152))
+            $0.height.equalTo(height667(31))
+        }
+    }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewInitConfigure()
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+            UIView.animate(withDuration: 1, delay: 0, animations: {
+                self.view.backgroundColor = UIColor.white
+                self.splashTitleLabel.text = "Rank Baam"
+                self.splashTitleLabel.font = UIFont(name: "NanumSquareB", size: 28)
+                self.splashTitleLabel.textColor = UIColor.rankbaamOrange
+            }, completion: nil)        
+        }
+        
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
           TopicService.categoryList{
@@ -26,6 +78,8 @@ class SplashViewController: UIViewController {
                             
                         case .success(let sResult):
                             if sResult.succ {
+                                
+                                
                                 let vc = MainTabViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
 

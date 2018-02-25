@@ -79,7 +79,6 @@ class MainAllRankTopTabbar: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 12)
         self.layer.masksToBounds = false
         setupStackView(leftTabTitle, rightTabTitle)
-        print("\(selectedUnderBarLeadingConstraint)")
     }
     
     
@@ -114,7 +113,7 @@ class MainAllRankTopTabbar: UIView {
     }
     
     @objc func upperBarSelected(_ sender: UIButton) {
-        let constants = (self.frame.width / 2 * CGFloat(sender.tag) ) + CGFloat( Constants.screenWidth * (61 / 375))
+        let constants = (self.frame.width / 2 * CGFloat(sender.tag) ) + CGFloat( width375(61))
         self.selectedUnderBarLeadingConstraint?.constant = constants
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
@@ -134,14 +133,14 @@ class MainAllRankTopTabbar: UIView {
         selectedUnderBar.backgroundColor = UIColor.rankbaamOrange
         selectedUnderBar.translatesAutoresizingMaskIntoConstraints = false
         let leading = selectedUnderBar.leadingAnchor.constraint(equalTo: self.leadingAnchor,
-                                                            constant: Constants.screenWidth * (61 / 375))
+                                                            constant: width375(61))
         leading.isActive = true
         self.selectedUnderBarLeadingConstraint = leading
         selectedUnderBar.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
             .isActive = true
-        selectedUnderBar.widthAnchor.constraint(equalToConstant: Constants.screenWidth * ( 62 / 375 ))
+        selectedUnderBar.widthAnchor.constraint(equalToConstant: width375(62))
             .isActive = true
-        selectedUnderBar.heightAnchor.constraint(equalToConstant: Constants.screenHeight * ( 3 / 667 ))
+        selectedUnderBar.heightAnchor.constraint(equalToConstant: height667(3))
             .isActive = true
     }
     

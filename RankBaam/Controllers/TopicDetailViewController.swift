@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import Photos
 
 enum optionDataFetchState {
     case FetchAllDatas
@@ -82,32 +83,39 @@ class TopicDetailViewController: UIViewController {
          }
      }
     
-    var isLikedForHeartButton: Bool = false {
+    var isLikedForHeartButton: Bool? {
         didSet {
-            topicDetailHeartLikeButtonImageView.image = isLikedForHeartButton ?heartButtonImgForLiked : heartButtonImgForUnliked
-            semaphore.wait()
-            TopicService.like(topicSN: topicSN, isLiked: isLikedForHeartButton) {
-                switch($0.result) {
-                case .success(let sResult):
-                    if sResult.succ {
-                        //TODO
-                    } else if let msg = sResult.msg {
-                        switch msg {
-                        default:
-                            break
+            topicDetailHeartLikeButtonImageView.image = isLikedForHeartButton! ?heartButtonImgForLiked : heartButtonImgForUnliked
+            if (oldValue != nil) && (isLikedForHeartButton != nil) {
+                if let newValue = isLikedForHeartButton {
+                    
+                    
+                    
+                    
+                    TopicService.like(topicSN: topicSN, isLiked: newValue) {
+                        switch($0.result) {
+                        case .success(let sResult):
+                            if sResult.succ {
+                                //TODO
+                            } else if let msg = sResult.msg {
+                                switch msg {
+                                default:
+                                    break
+                                }
+                            }
+                            
+                        case .failure(let error):
+                            if let error = error as? SolutionProcessableProtocol {
+                                error.handle(self)
+                            } else {
+                                
+                            }
+                            
                         }
                     }
-                    
-                case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                        error.handle(self)
-                    } else {
-                        
-                    }
-                    
                 }
-                self.semaphore.signal()
             }
+            
         }
     }
     
@@ -152,9 +160,9 @@ class TopicDetailViewController: UIViewController {
         return topicDetailNavigationBarTitleLabel
     }()
     
-    var topicDetailMoreFunctionsButtonImageView: UIImageView = {
-        let topicDetailMoreFunctionsButtonImageView = UIImageView()
-        return topicDetailMoreFunctionsButtonImageView
+    var topicDetailMoreFunctionsOrDeleteMyRankButtonImageView: UIImageView = {
+        let topicDetailMoreFunctionsOrDeleteMyRankButtonImageView = UIImageView()
+        return topicDetailMoreFunctionsOrDeleteMyRankButtonImageView
     }()
     
     var topicDetailHeartLikeButtonImageView: UIImageView = {
@@ -167,14 +175,14 @@ class TopicDetailViewController: UIViewController {
         return topicDetailShareButtonImageView
     }()
     
-    var topicDetailMoreFunctionsButton: UIButton = {
-        let topicDetailMoreFunctionsButton = UIButton()
-        return topicDetailMoreFunctionsButton
+    var topicDetailMoreFunctionsOrDeleteMyRankButton: UIButton = {
+        let topicDetailMoreFunctionsOrDeleteMyRankButton = UIButton()
+        return topicDetailMoreFunctionsOrDeleteMyRankButton
     }()
     
-    var topicDetailHeartLikeButton: UIButton = {
-        let topicDetailHeartLikeButton = UIButton()
-        return topicDetailHeartLikeButton
+    var topicDetailHeartLikeOrShareButton: UIButton = {
+        let topicDetailHeartLikeOrShareButton = UIButton()
+        return topicDetailHeartLikeOrShareButton
     }()
     
     var topicDetailShareButton: UIButton = {
@@ -222,15 +230,15 @@ class TopicDetailViewController: UIViewController {
         topicDetailTopCustomNavigationBar
             .addSubview(topicDetailNavigationBarTitleLabel)
         topicDetailTopCustomNavigationBar
-            .addSubview(topicDetailMoreFunctionsButtonImageView)
+            .addSubview(topicDetailMoreFunctionsOrDeleteMyRankButtonImageView)
         topicDetailTopCustomNavigationBar
             .addSubview(topicDetailHeartLikeButtonImageView)
         topicDetailTopCustomNavigationBar
             .addSubview(topicDetailShareButtonImageView)
         topicDetailTopCustomNavigationBar
-            .addSubview(topicDetailMoreFunctionsButton)
+            .addSubview(topicDetailMoreFunctionsOrDeleteMyRankButton)
         topicDetailTopCustomNavigationBar
-            .addSubview(topicDetailHeartLikeButton)
+            .addSubview(topicDetailHeartLikeOrShareButton)
         topicDetailTopCustomNavigationBar
             .addSubview(topicDetailShareButton)
         self.view.addSubview(topicDetailRankVoteButton)
@@ -242,20 +250,25 @@ class TopicDetailViewController: UIViewController {
         topicDetailScrollViewContentsView.backgroundColor = UIColor.rankbaamOrange
         topicDetailRankOptionCollectionView.backgroundColor = UIColor.rankbaamBlue
         topicDetailScrollViewForRankOptionCollectionView
-            .contentSize = CGSize(width: Constants.screenWidth, height: Constants.screenHeight * ( 591 / 667))
+            .contentSize = CGSize(width: Constants.screenWidth, height: height667(591, forX: 658))
         topicDetailrankMainBackButtonImageView.image = UIImage(named: "back")?
             .withRenderingMode(.alwaysTemplate)
         topicDetailrankMainBackButtonImageView.tintColor = UIColor.rankbaamOrange
         topicDetailrankMainBackButton.addTarget(self, action: #selector(rankMainBackButtonTapped), for: .touchUpInside)
         topicDetailNavigationBarTitleLabel.text = navigationTitleConverter?.description ?? "RANK BAAM"
         topicDetailNavigationBarTitleLabel.textColor = UIColor.rankbaamOrange
-        topicDetailNavigationBarTitleLabel.font = topicDetailNavigationBarTitleLabel
-                                                    .font
-                                                    .withSize(Constants.screenWidth * (16 / 375))
-        topicDetailMoreFunctionsButtonImageView.image = UIImage(named: "moreIcn")
-        topicDetailMoreFunctionsButtonImageView.contentMode = .center
-        topicDetailHeartLikeButtonImageView.image = UIImage(named: "heartIcnN")
-        topicDetailHeartLikeButtonImageView.contentMode = .center
+        topicDetailNavigationBarTitleLabel.font = UIFont(name: "NanumSquareB", size: 16)
+        if self.navigationTitleConverter != NavigationTitleConverter.isSettingMyView {
+            topicDetailHeartLikeButtonImageView.image = UIImage(named: "heartIcnN")
+            topicDetailHeartLikeButtonImageView.contentMode = .center
+            topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.image = UIImage(named: "moreIcn")
+            topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.contentMode = .center
+        } else {
+            topicDetailHeartLikeButtonImageView.image = UIImage(named: "shareIcn")
+            topicDetailHeartLikeButtonImageView.contentMode = .center
+            topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.image = UIImage(named: "icDelete")
+            topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.contentMode = .center
+        }
         topicDetailShareButtonImageView.image = UIImage(named: "shareIcn")
         topicDetailShareButtonImageView.contentMode = .center
         /*topicDetailMoreFunctionsButton.backgroundColor = UIColor.rankbaamOrange
@@ -263,83 +276,82 @@ class TopicDetailViewController: UIViewController {
         topicDetailShareButton.backgroundColor = UIColor.rankbaamDarkgray*/
         topicDetailRankVoteButton.backgroundColor = UIColor.rankbaamDarkgray
         topicDetailRankVoteButton.setTitle(bottomButtonTitleConverter?.description ?? "투표하기", for: .normal)
-        topicDetailRankVoteButton.titleLabel?.font = topicDetailRankVoteButton.titleLabel?
-            .font
-            .withSize(Constants.screenHeight * (16 / 667))
+        topicDetailRankVoteButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 16)
         topicDetailRankVoteButton.setTitleColor(UIColor.init(r: 77, g: 77, b: 77), for: .normal)
         
         
         topicDetailTopCustomNavigationBar.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(Constants.screenHeight * (76 / 667))
+            $0.height.equalTo(height667(76, forX: 98))
         }
         topicDetailrankMainBackButtonImageView.snp.makeConstraints {
             $0.left.equalTo(topicDetailTopCustomNavigationBar.snp.left)
-                .offset(Constants.screenWidth * (16 / 375))
+                .offset(width375(16))
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (42 / 667))
-            $0.width.equalTo(Constants.screenWidth * (24 / 375))
-            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+                .offset(height667(42, forX: 64))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
         topicDetailrankMainBackButton.snp.makeConstraints {
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (42 / 667))
+                .offset(height667(42, forX: 64))
             $0.left.bottom.equalToSuperview()
-            $0.width.equalTo(Constants.screenWidth * (56 / 375))
+            $0.width.equalTo(width375(56))
         }
         topicDetailNavigationBarTitleLabel.snp.makeConstraints {
             $0.left.equalTo(topicDetailrankMainBackButton.snp.right)
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (45 / 667))
-            $0.width.equalTo(Constants.screenWidth * (100 / 375))
-            $0.height.equalTo(Constants.screenHeight * (18 / 667))
+                .offset(height667(45, forX: 67))
+            $0.width.equalTo(width375(100))
+            $0.height.equalTo(height667(18))
         }
-        topicDetailMoreFunctionsButtonImageView.snp.makeConstraints {
+        topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.snp.makeConstraints {
             $0.right.equalTo(topicDetailTopCustomNavigationBar.snp.right)
-                .offset(-(Constants.screenWidth * (10 / 375)))
+                .offset(-(width375(10)))
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (42 / 667))
-            $0.width.equalTo(Constants.screenWidth * (24 / 375))
-            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+                .offset(height667(42, forX: 64))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
         topicDetailHeartLikeButtonImageView.snp.makeConstraints {
-            $0.right.equalTo(topicDetailMoreFunctionsButtonImageView.snp.left)
-                .offset(-(Constants.screenWidth * (26 / 375)))
+            $0.right.equalTo(topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.snp.left)
+                .offset(-(width375(26)))
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (42 / 667))
-            $0.width.equalTo(Constants.screenWidth * (24 / 375))
-            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+                .offset(height667(42, forX: 64))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
         topicDetailShareButtonImageView.snp.makeConstraints {
+            
             $0.right.equalTo(topicDetailHeartLikeButtonImageView.snp.left)
-                .offset(-(Constants.screenWidth * (26 / 375)))
+                .offset(-(width375(26)))
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (42 / 667))
-            $0.width.equalTo(Constants.screenWidth * (24 / 375))
-            $0.height.equalTo(Constants.screenHeight * (24 / 667))
+                .offset(height667(42, forX: 64))
+            $0.width.equalTo(width375(24))
+            $0.height.equalTo(height667(24))
         }
-        topicDetailMoreFunctionsButton.snp.makeConstraints {
+        topicDetailMoreFunctionsOrDeleteMyRankButton.snp.makeConstraints {
             $0.right.bottom.equalToSuperview()
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (21 / 667))
+                .offset(height667(21, forX: 43))
             $0.left.equalTo(topicDetailHeartLikeButtonImageView.snp.right)
-                .offset(Constants.screenWidth * (13 / 375))
+                .offset(width375(13))
         }
-        topicDetailHeartLikeButton.snp.makeConstraints {
+        topicDetailHeartLikeOrShareButton.snp.makeConstraints {
             $0.bottom.equalToSuperview()
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (21 / 667))
+                .offset(height667(21, forX: 43))
             $0.left.equalTo(topicDetailShareButtonImageView.snp.right)
-                .offset(Constants.screenWidth * (13 / 375))
-            $0.right.equalTo(topicDetailMoreFunctionsButton.snp.left)
+                .offset(width375(13))
+            $0.right.equalTo(topicDetailMoreFunctionsOrDeleteMyRankButton.snp.left)
         }
         topicDetailShareButton.snp.makeConstraints {
             $0.bottom.equalToSuperview()
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
-                .offset(Constants.screenHeight * (21 / 667))
+                .offset(height667(21, forX: 43))
             $0.left.equalTo(topicDetailNavigationBarTitleLabel.snp.right)
-                .offset(Constants.screenWidth * (70 / 375))
-            $0.right.equalTo(topicDetailHeartLikeButton.snp.left)
+                .offset(width375(70))
+            $0.right.equalTo(topicDetailHeartLikeOrShareButton.snp.left)
         }
         topicDetailScrollViewForRankOptionCollectionView.snp.makeConstraints {
             $0.bottom.left.right.equalToSuperview()
@@ -348,14 +360,19 @@ class TopicDetailViewController: UIViewController {
         topicDetailScrollViewContentsView.snp.makeConstraints {
             $0.top.left.equalToSuperview()
             $0.width.equalTo(Constants.screenWidth)
-            $0.height.equalTo(Constants.screenHeight * (591 / 667))
+            $0.height.equalTo(height667(591, forX: 658))
         }
         topicDetailRankOptionCollectionView.snp.makeConstraints {
             $0.top.left.right.bottom.equalToSuperview()
         }
         topicDetailRankVoteButton.snp.makeConstraints {
             $0.bottom.left.right.equalToSuperview()
-            $0.height.equalTo(Constants.screenHeight * (56 / 667))
+            $0.height.equalTo(height667(56))
+        }
+        
+        if self.navigationTitleConverter == NavigationTitleConverter.isSettingMyView {
+            topicDetailShareButtonImageView.isHidden = true
+            topicDetailShareButton.isUserInteractionEnabled = false
         }
         
     }
@@ -370,7 +387,9 @@ class TopicDetailViewController: UIViewController {
                     guard let topic = sResult.topic else {return}
                     DispatchQueue.main.async {
                         self.topic = topic
-                        self.topicDetailHeartLikeButtonImageView.image = topic.isLike ? self.heartButtonImgForLiked : self.heartButtonImgForUnliked
+                        if self.navigationTitleConverter != .isSettingMyView {
+                            self.isLikedForHeartButton = topic.isLike
+                        }
                         self.topicDetailRankOptionCollectionView.reloadData()
                     }
                 } else if let msg = sResult.msg {
@@ -421,19 +440,12 @@ class TopicDetailViewController: UIViewController {
                                 self.optionDataFetchState = .FetchAllDatas
                             }, completion: { (isCompleted) in
                                 
-                                let index = IndexPath(row: 0, section: 0)
                                 if isCompleted {
                                     self.topicDetailRankOptionCollectionView
                                         .reloadData()
                                     self.topicDetailRankOptionCollectionView
                                         .collectionViewLayout
                                         .invalidateLayout()
-//                                    self.topicDetailRankOptionCollectionView
-//                                        .scrollToItem(
-//                                            at: index,
-//                                            at: UICollectionViewScrollPosition
-//                                                .right,
-//                                            animated: true)
                                     self.topicDetailRankOptionCollectionView.scrollRectToVisible(CGRect.init(x: 0, y:Constants.screenHeight * (440 / 667), width: 10, height: 10), animated: true)
                                 }
                             })
@@ -459,13 +471,16 @@ class TopicDetailViewController: UIViewController {
 
     fileprivate func rankMainButtonsConfigure() {
 
-        topicDetailHeartLikeButton.addTarget(self, action: #selector(heartLikeButtonTapped), for: .touchUpInside)
+        topicDetailHeartLikeOrShareButton.addTarget(self, action: #selector(heartLikeButtonTapped), for: .touchUpInside)
+        topicDetailRankVoteButton.addTarget(self, action: #selector(topicDetailRankVoteButtonTapped(_:)), for: .touchUpInside)
     }
 
     @objc fileprivate func heartLikeButtonTapped() {
-        self.isLikedForHeartButton = !isLikedForHeartButton
-        topicDetailHeaderView?.isLiked = isLikedForHeartButton
-        topicDetailHeaderView?.likeCount = isLikedForHeartButton ? (topicDetailHeaderView?.likeCount)! + 1 : (topicDetailHeaderView?.likeCount)! - 1
+        guard let oldValue = self.isLikedForHeartButton else { return }
+        let newValue = !oldValue
+        self.isLikedForHeartButton = newValue
+        topicDetailHeaderView?.isLiked = newValue
+        topicDetailHeaderView?.likeCount = newValue ? (topicDetailHeaderView?.likeCount)! + 1 : (topicDetailHeaderView?.likeCount)! - 1
     }
 
     @objc fileprivate func rankMainBackButtonTapped() {
@@ -479,7 +494,7 @@ class TopicDetailViewController: UIViewController {
         let upperLayer = CAShapeLayer()
         topicDetailRankOptionCollectionView.layer.insertSublayer(upperLayer, at: 0)
         upperLayer.path = UIBezierPath.init(rect: CGRect.init(
-            x: 0, y: -(Constants.screenHeight * (591 / 667)), width: view.bounds.width, height: Constants.screenHeight * (591 / 667)
+            x: 0, y: -(height667(591)), width: view.bounds.width, height: height667(591)
         )).cgPath
         upperLayer.fillColor = UIColor.white.cgColor
         
@@ -489,7 +504,7 @@ class TopicDetailViewController: UIViewController {
         topicDetailRankOptionCollectionView.register(TopicDetailOptionCell.self, forCellWithReuseIdentifier: "TopicDetailOptionCell")
         topicDetailRankOptionCollectionView.showsVerticalScrollIndicator = false
         topicDetailRankOptionCollectionView.backgroundColor = UIColor.rankbaamGray
-        topicDetailRankOptionCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: Constants.screenHeight * ( 60 / 667 ), right: 0)
+        topicDetailRankOptionCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height667(60), right: 0)
     }
 
     /*@IBAction func createOptionButtonTapped(_ sender: UIButton) {
@@ -555,10 +570,34 @@ class TopicDetailViewController: UIViewController {
     }
     
     @objc fileprivate func topicDetailRankVoteButtonTapped(_ sender: UIButton) {
-        for (_, optionSN) in selectedOptionIndexPath.enumerated() {
-            
+        
+        for (_, optionSN) in selectedOptionIndexPath {
+            OptionService.vote(topicSN: self.topicSN, optionSN: optionSN, isVoted: true, completion: {
+                switch $0.result {
+                case .success(let sResult):
+                    if sResult.succ {
+                        print("Vote Action is Success")
+                        
+                    } else if let msg = sResult.msg {
+                        switch msg {
+                        default:
+                            break
+                        }
+                    }
+                    
+                case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                        error.handle(self)
+                    } else {
+                    }
+                }
+            })
         }
+        
+        
     }
+    
+    
 
    /* @IBAction func deleteTopicButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController.init(title: nil, message: "삭제하시겠습니까?", preferredStyle: .alert)
@@ -605,6 +644,9 @@ extension TopicDetailViewController: UICollectionViewDataSource {
         let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicDetailOptionCell", for: indexPath) as! TopicDetailOptionCell
         let optionData = optionDatas[indexPath.item]
         optionCell.topicDetailOptionCellDataConfigure(optionData)
+        if let topic = self.topic, topic.voteCount > 0 {
+            optionCell.votePercentage = CGFloat(optionData.voteCount / topic.voteCount)
+        }
         if selectedOptionIndexPath.contains(where: { (index, _) -> Bool in
             return index == indexPath.item
         }){
@@ -667,10 +709,11 @@ extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: Constants.screenHeight * (7 / 667), right: 0)
     }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         let selectedCell = collectionView.cellForItem(at: indexPath) as! TopicDetailOptionCell
@@ -711,14 +754,56 @@ extension TopicDetailViewController: TopicDetailHeaderViewDelegate {
         present(topicDetailImagesViewCon, animated: true, completion: nil)
     }
     func likeTextButtonTapped(_ isLiked: Bool) {
-        isLikedForHeartButton = isLiked
+        if navigationTitleConverter == .isSettingMyView {
+            TopicService.like(topicSN: topicSN, isLiked: isLiked) {
+                switch($0.result) {
+                case .success(let sResult):
+                    if sResult.succ {
+                        //TODO
+                    } else if let msg = sResult.msg {
+                        switch msg {
+                        default:
+                            break
+                        }
+                    }
+                    
+                case .failure(let error):
+                    if let error = error as? SolutionProcessableProtocol {
+                        error.handle(self)
+                    } else {
+                        
+                    }
+                    
+                }
+                self.semaphore.signal()
+            }
+        } else {
+            isLikedForHeartButton = isLiked
+        }
     }
 }
 
 extension TopicDetailViewController: TopicDetailFooterViewDelegate {
+    
+    func addOptionPhotoButtonTapped() {
+        let photoLibStatus = PHPhotoLibrary.authorizationStatus()
+        if photoLibStatus == .notDetermined {
+            PHPhotoLibrary.requestAuthorization{ status in
+                if status == .authorized {
+                    
+                }
+            }
+        }
+        let photoPicker = UIImagePickerController()
+        photoPicker.allowsEditing = true
+        photoPicker.delegate = self
+        photoPicker.sourceType = .photoLibrary
+        self.present(photoPicker, animated: true)
+    }
+    
     func optionCreateButtonTapped(_ optionTitle: String) {
-        if (optionTitle.count <= 5) {
-            let alertCon = UIAlertController(title: "최소 글자수 미달", message: "최소 5자 이상 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
+        if (optionTitle.count > 100) {
+            let alertCon = UIAlertController(title: "글자수 제한", message: "랭킹 선택지는 100자 이하로 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
             let alertAction = UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil)
             alertCon.addAction(alertAction)
             present(alertCon, animated: true, completion: nil)
@@ -774,6 +859,19 @@ extension TopicDetailViewController: UIViewControllerTransitioningDelegate {
 
         spreadTransition.startFrame = self.startFrameForspreadTransition!
         return spreadTransition
+    }
+}
+
+extension TopicDetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.topicDetailFooterView?.topicDetailFooterOptionWriteImageView.image = image
+            if let url = info[UIImagePickerControllerReferenceURL] as? URL,
+                let phAsset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject{
+                //TODO
+            }
+        }
+        picker.dismiss(animated: true, completion: nil)
     }
 }
 

@@ -16,7 +16,8 @@ enum mainWeeklyBottomScrollDirection {
 
 class MainWeeklyRankCell: UICollectionViewCell {
     
-    var timer = Timer()
+    var timer: Timer?
+    let placeHolderImage = UIImage(named: "noimage")
     var scrollDirection: mainWeeklyBottomScrollDirection = .forward
     let widthForScrolling = Constants.screenWidth * 0.7 * ( 258 / 375 )
     
@@ -135,24 +136,70 @@ class MainWeeklyRankCell: UICollectionViewCell {
         return mainWeeklyBottomRankRightScrollingButton
     }()
     
+    var isTimerValid: Bool = false {
+        didSet {
+            if isTimerValid, self.timer == nil {
+                timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)
+                timer?.fire()
+            } else  {
+                timer?.invalidate()
+                timer = nil
+                
+            }
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)
-//        timer = Timer(timeInterval: 0.6, target: self, selector: , userInfo: nil, repeats: true)
         viewInitConfigure()
-        timer.fire()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-         timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(autoCarouselEffectRankTop3), userInfo: nil, repeats: true)        
         viewInitConfigure()
-        timer.fire()
     }
     
     deinit {
-        
-        timer.invalidate()
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func mainWeeklyRankCellDatasConfigure(with topic: Topic) {
+        self.mainWeeklyRankTitleLabel.text = topic.title
+        self.mainWeeklyNicknameLabel.text = topic.writer.nickname
+        self.mainWeeklyLikeCountLabel.text = "\(topic.likeCount)"
+        self.mainWeeklyVoteCountLabel.text = "\(topic.voteCount)"
+        if !topic.photos.isEmpty {
+            if topic.photos.count > 1 {
+                guard let mainPhoto = topic.photos.first(where: { photo -> Bool in
+                    return photo.order == topic.photoMain
+                }) else { return }
+                let imgURL = URL(string: mainPhoto.realUrl)
+                mainWeeklyRankImageView.sd_setImage(with: imgURL,
+                                                    placeholderImage: placeHolderImage)
+            } else {
+                let imgURL = URL(string: topic.photos[0].realUrl)
+                mainWeeklyRankImageView.sd_setImage(with: imgURL,
+                                                    placeholderImage: placeHolderImage)
+            }
+        }
+        if let top3optionDatas = topic.rankOptions, !top3optionDatas.isEmpty {
+            for index in 0..<top3optionDatas.count {
+                switch index {
+                case 0:
+                    self.mainWeeklyBottomRankFirstOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                case 1:
+                    self.mainWeeklyBottomRankSecondOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                case 2:
+                    self.mainWeeklyBottomRankThirdOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
+                default:
+                    fatalError()
+                }
+            }
+        }
     }
     
     fileprivate func viewInitConfigure() {
@@ -199,35 +246,32 @@ class MainWeeklyRankCell: UICollectionViewCell {
             .addSubview(mainWeeklyBottomRankLeftScrollingButton)
         mainWeeklyRankBackgroundView
             .addSubview(mainWeeklyBottomRankRightScrollingButton)
-        mainWeeklyRankImageView.image = UIImage(named: "winter1")
-        mainWeeklyRankTitleLabel.text = "2017년을 대표하는 한국영화는?"
+        mainWeeklyRankImageView.image = UIImage(named: "noimage")
         mainWeeklyRankTitleLabel.textColor = UIColor(red: 77/255,
                                                      green: 77/255,
                                                      blue: 77/255,
                                                      alpha: 1)
         mainWeeklyRankTitleLabel.font = mainWeeklyRankTitleLabel
             .font
-            .withSize(self.frame.height * ( 14 / 406 ))
+            .withSize(14)
         mainWeeklyRankTitleLabel.sizeToFit()
         mainWeeklyNicknameStarImageView.image = UIImage(named: "starImg")
-        mainWeeklyNicknameLabel.text = " iphoneuser1234"
         mainWeeklyNicknameLabel.font = mainWeeklyNicknameLabel
             .font
             .withSize(self.frame.height * ( 12 / 406 ))
         mainWeeklyNicknameLabel.textColor = UIColor.rankbaamDarkgray
         mainWeeklyVoteBoxImageView.image = UIImage(named: "voteImg")
         mainWeeklyVoteBoxImageView.contentMode = .scaleAspectFit
-        mainWeeklyVoteCountLabel.text = "9999+"
         mainWeeklyVoteCountLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyVoteCountLabel.font = mainWeeklyVoteCountLabel
             .font
             .withSize(self.frame.height * ( 11 / 406 ))
         mainWeeklyLikeThumbImageView.image = UIImage(named: "likeImg")
-        mainWeeklyLikeCountLabel.text = "9999+"
         mainWeeklyLikeCountLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyLikeCountLabel.font = mainWeeklyLikeCountLabel
             .font
             .withSize(self.frame.height * ( 11 / 406 ))
+        mainWeeklyBottomScrollView.isUserInteractionEnabled = false
         mainWeeklySeperatorLineView.backgroundColor = UIColor.rankbaamSeperatorColor
         mainWeeklyBottomRankFirstImageView.image = UIImage(named: "1GradeImg")
         mainWeeklyBottomRankFirstImageView.contentMode = .scaleAspectFit
@@ -236,7 +280,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankFirstLabel.font = mainWeeklyBottomRankFirstLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankFirstOptionLabel.text = "신과 함께"
         mainWeeklyBottomRankFirstOptionLabel.textAlignment = .center
         mainWeeklyBottomRankFirstOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankFirstOptionLabel.font = mainWeeklyBottomRankFirstOptionLabel
@@ -249,7 +292,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankSecondLabel.font = mainWeeklyBottomRankSecondLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankSecondOptionLabel.text = "1987"
         mainWeeklyBottomRankSecondOptionLabel.textAlignment = .center
         mainWeeklyBottomRankSecondOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankSecondOptionLabel.font = mainWeeklyBottomRankSecondOptionLabel
@@ -262,7 +304,6 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankThirdLabel.font = mainWeeklyBottomRankThirdLabel
             .font
             .withSize(Constants.screenHeight * ( 9 / 667 ))
-        mainWeeklyBottomRankThirdOptionLabel.text = "범죄도시"
         mainWeeklyBottomRankThirdOptionLabel.textAlignment = .center
         mainWeeklyBottomRankThirdOptionLabel.textColor = UIColor.rankbaamBlack
         mainWeeklyBottomRankThirdOptionLabel.font = mainWeeklyBottomRankThirdOptionLabel
@@ -281,14 +322,14 @@ class MainWeeklyRankCell: UICollectionViewCell {
         }
         mainWeeklyRankImageView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(self.frame.height * ( 177 / 406))
+            $0.height.equalTo(self.frame.height * (177 / 406))
         }
         mainWeeklyRankTitleLabel.sizeToFit()
         mainWeeklyRankTitleLabel.snp.makeConstraints {
             $0.top.equalTo(mainWeeklyRankImageView.snp.bottom)
-                .offset(self.frame.height * ( 17 / 406 ))
-            $0.left.equalTo(self.frame.width * ( 20 / 258 ))
-            $0.right.equalTo(-(self.frame.width * ( 20 / 258 )))
+                .offset(self.frame.height * (17 / 406))
+            $0.left.equalTo(self.frame.width * (20 / 258))
+            $0.right.equalTo(-(self.frame.width * (20 / 258)))
             $0.height.equalTo(self.frame.height * (40 / 406))
         }
         mainWeeklyNicknameStarImageView.snp.makeConstraints {

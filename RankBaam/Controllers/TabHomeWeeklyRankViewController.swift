@@ -10,6 +10,8 @@ import UIKit
 
 class TabHomeWeeklyRankViewController: UIViewController {
 
+    var weeklyRankDatas: [Topic] = []
+    
     var tabHomeWeeklyRankCollectionView: UICollectionView = {
         let coverFlowlayout = CoverFlowLayout()
         coverFlowlayout.scrollDirection = .horizontal
@@ -25,7 +27,48 @@ class TabHomeWeeklyRankViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
+        fetchWeeklyRankDatas()
         tabHomeWeeklyRankCollectionViewConfigure()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        let firstIndex = IndexPath(item: 0, section: 0)
+        if tabHomeWeeklyRankCollectionView.indexPathsForVisibleItems.contains(firstIndex) {
+            let firstRank = tabHomeWeeklyRankCollectionView
+                .cellForItem(at: firstIndex) as! MainWeeklyRankCell
+            firstRank.isTimerValid = true
+        }
+    }
+    
+    
+    func fetchWeeklyRankDatas() {
+        
+        TopicService.weekList(page: 1, count: 10) {
+            switch $0.result {
+            case .success(let result):
+                if result.succ {
+                    guard let topicDatas = result.topics else {return}
+                    self.weeklyRankDatas = topicDatas
+                    print("This is WeeklyLike List Count : \(self.weeklyRankDatas.count)")
+                    self.tabHomeWeeklyRankCollectionView.reloadData()
+                } else if let msg = result.msg {
+                    
+                    
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        }
         
     }
     
@@ -36,7 +79,7 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionView.showsHorizontalScrollIndicator = false
         tabHomeWeeklyRankCollectionView.register(MainWeeklyRankCell.self, forCellWithReuseIdentifier: "MainWeeklyRankCell")
         tabHomeWeeklyRankCollectionView.backgroundColor = UIColor.rankbaamGray
-        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, Constants.screenHeight * (50 / 667), 0)
+        tabHomeWeeklyRankCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0)
 
     }
     
@@ -46,14 +89,12 @@ class TabHomeWeeklyRankViewController: UIViewController {
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text = "1 / 10"
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textColor =  UIColor.rankbaamDarkgray
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl.textAlignment = .right
-        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = tabHomeWeeklyRankCollectionViewCustomNumberPageControl
-            .font
-            .withSize(Constants.screenHeight * ( 13 / 667 ))
+        tabHomeWeeklyRankCollectionViewCustomNumberPageControl.font = UIFont(name: "NanumSquareB", size: 13)
         
         
         tabHomeWeeklyRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(Constants.screenHeight * (103 / 667))
+            $0.top.equalTo(height667(103, forX: 125))
         }
         tabHomeWeeklyRankCollectionViewCustomNumberPageControl
             .snp.makeConstraints {
@@ -72,11 +113,13 @@ class TabHomeWeeklyRankViewController: UIViewController {
 
 extension TabHomeWeeklyRankViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return weeklyRankDatas.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let weeklyRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainWeeklyRankCell", for: indexPath)
+        let weeklyRankCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainWeeklyRankCell", for: indexPath) as! MainWeeklyRankCell
+        let cellData = self.weeklyRankDatas[indexPath.item]
+        weeklyRankCell.mainWeeklyRankCellDatasConfigure(with: cellData)
         return weeklyRankCell
     }
     
@@ -104,13 +147,36 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectio
         return UIEdgeInsets(top: 0, left:sideInset , bottom: 0, right: sideInset)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let topicDetailViewController = TopicDetailViewController()
+        let topicSN = weeklyRankDatas[indexPath.item].topicSN
+        topicDetailViewController.topicSN = topicSN
+        navigationController?.pushViewController(topicDetailViewController, animated: true)
+    }
+    
 }
 
 extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageNumber: Int = Int(scrollView.contentOffset.x / (self.view.frame.width / 2))
         print("\(pageNumber)")
         self.tabHomeWeeklyRankCollectionViewCustomNumberPageControl.text =
                 "\(pageNumber + 1) / 10"
+        /*if pageNumber == 0 {
+            timerControl(isOn: true, scrollView: scrollView)
+        }*/
+    }
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        timerControl(isOn: false, scrollView: scrollView)
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        timerControl(isOn: true, scrollView: scrollView)
+    }
+    func timerControl(isOn state: Bool, scrollView: UIScrollView) {
+        let pageNumber: Int = Int(scrollView.contentOffset.x / (self.view.frame.width / 2))
+        let indexPath = IndexPath(item: pageNumber, section: 0)
+        let recentCell = tabHomeWeeklyRankCollectionView.cellForItem(at: indexPath) as! MainWeeklyRankCell
+        recentCell.isTimerValid = state
     }
 }
