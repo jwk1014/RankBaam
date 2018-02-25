@@ -303,7 +303,7 @@ struct OptionCommentService {
     completion: @escaping (DataResponse<SResultOptionCommentList>) -> Void
   ) -> DataRequest {
     return Alamofire .request(OptionCommentRouter.list(topicSN: topicSN, optionSN: optionSN, page: page, count: count))
-              .responseRankBaam(completion)
+        .responseRankBaam(completion)
   }
   
   @discardableResult
@@ -312,7 +312,7 @@ struct OptionCommentService {
     completion: @escaping (DataResponse<SResultOptionSubCommentList>) -> Void
   ) -> DataRequest {
     return Alamofire .request(OptionCommentRouter.subList(pOptionCommentSN: optionCommentSN, page: page, count: count))
-              .responseRankBaam(completion)
+        .responseRankBaam(completion)
   }
   
   @discardableResult

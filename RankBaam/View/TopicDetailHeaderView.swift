@@ -27,14 +27,14 @@ class TopicDetailHeaderView: UICollectionReusableView {
     let unLikedImg: (heartButton: UIImage?, textButton: UIImage?) = (heartButton: UIImage(named: "heartIcnN"),  textButton: UIImage(named: "likeBtnN"))
     var likeCount: Int = 0 {
         didSet {
-            likeCount = likeCount < 0 ? 0 : likeCount
+          likeCount = max(likeCount, 0)
             topicDetailHeaderLikeCountLabel.text = likeCount <= 9999 ?
                 " \(likeCount)" : " 9999+"
         }
     }
     var voteCount: Int = 0 {
         didSet {
-            voteCount = voteCount < 0 ? 0 : voteCount
+          voteCount = max(voteCount, 0)
             topicDetailHeaderVoteCountLabel.text = voteCount <= 9999 ?
                 " \(voteCount)" : " 9999+"
         }

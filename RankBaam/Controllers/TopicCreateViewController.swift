@@ -22,7 +22,7 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
   }
   
   typealias OptionCellData = (imageData: ImageData?, text: String?)
-  var topicSN: Int? {
+  var topicSN: UInt? {
     willSet{
       if let _ = newValue {
         isVisible = true
@@ -150,7 +150,7 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
     customNaviBarView.isUserInteractionEnabled = true
     customNaviBarView.snp.makeConstraints {
       $0.top.leading.trailing.equalTo(self.view)
-      $0.height.equalTo(height667(76.0))
+      $0.height.equalTo(height667(76.0) - UIApplication.shared.statusBarFrame.height)
     }
     
     let backButton = UIButton()
@@ -676,11 +676,11 @@ class TopicCreateHeaderView: UICollectionReusableView {
   private(set) weak var descriptionTextView: UITextView?
   private weak var descriptionSeperatorView: UIView?
   private weak var optionsLabel: UILabel?
-  private var constraintImagesAreaScrollView: ConstraintMakerEditable?
+  private var imagesAreaScrollViewHeightConstraint: NSLayoutConstraint?
   private(set) var imageDatas = [ImageData]() {
     willSet {
       if newValue.count <= 1 {
-        constraintImagesAreaScrollView?.constraint.layoutConstraints.first?.constant =
+        imagesAreaScrollViewHeightConstraint?.constant =
           ( newValue.count == 1 ) ? imageAreaStackView?.bounds.height ?? 0 : 0
         callback?.invalidateLayoutCollectionView()
       }
@@ -857,8 +857,9 @@ class TopicCreateHeaderView: UICollectionReusableView {
       $0.leading.trailing.equalTo(self)
       $0.top.equalTo(addImageLabel.snp.bottom)
         .offset(height667(23.0))
-      constraintImagesAreaScrollView = $0.height.equalTo(0)
     }
+    imagesAreaScrollViewHeightConstraint = imagesAreaScrollView.heightAnchor.constraint(equalToConstant: 0)
+    imagesAreaScrollViewHeightConstraint?.isActive = true
 
     let imageAreaStackView = UIStackView()
     imageAreaStackView.axis = .horizontal
@@ -1195,13 +1196,6 @@ class TopicCreateFooterView: UICollectionReusableView {
   
   required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder); initView() }
   override init(frame: CGRect) { super.init(frame: frame); initView() }
-}
-
-extension UIView {
-  func addSubViewSnp(_ view: UIView, closure: (ConstraintMaker) -> Void) {
-    self.addSubview(view)
-    view.snp.makeConstraints(closure)
-  }
 }
 
 class TopicCreateNetworkModel {

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+//import Firebase
 
 var categories: [Category] = []
 
@@ -19,14 +19,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        FirebaseApp.configure()
+        //FirebaseApp.configure()
       
         if window == nil {
           window = UIWindow(frame: UIScreen.main.bounds)
         }
       
-        let splashViewController = SplashViewController()
-        window?.rootViewController = splashViewController
+        let splashVC = SplashViewController()
+        let naviVC = UINavigationController(rootViewController: splashVC)
+        naviVC.navigationBar.isHidden = true
+        window?.rootViewController = naviVC
         window?.makeKeyAndVisible()
       
         return true

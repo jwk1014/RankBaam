@@ -44,12 +44,13 @@ struct Topic: Decodable {
     var photoMain: Int
     var photos: [Photo]
     var createDate: String
+    var timeDistance: UInt
     var updateDate: String?
     var isMine: Bool
     var isLike: Bool
     var likeCount: Int
     var voteCount: Int
-    var weekVoteCount: Int?
+    var weekVoteCount: UInt?
     var votedOptions: [Int]?
     var rankOptions: [OptionSimple]?
     
@@ -76,7 +77,7 @@ struct OptionSimple: Decodable {
   var topicSN: Int
   var optionSN: Int
   var title: String
-  var voteCount: Int
+  var voteCount: UInt
 }
 
 struct Option: Decodable {
@@ -87,6 +88,7 @@ struct Option: Decodable {
     var description: String?
     var photos: [Photo]
     var createDate: String
+    var timeDistance: UInt
     var updateDate: String?
     var isMine: Bool
     var voteCount: Int
@@ -94,7 +96,7 @@ struct Option: Decodable {
     var commentNegativeCount: Int
 }
 
-enum SupportType: Int, Codable, CustomStringConvertible {
+enum SupportType: UInt8, Codable, CustomStringConvertible {
     case positive = 1
     case negative = 2
     var description: String {
@@ -104,24 +106,33 @@ enum SupportType: Int, Codable, CustomStringConvertible {
 
 struct OptionComment: Decodable {
     var optionCommentSN: String
-    var topicSN: Int
+    var topicSN: UInt
     var optionSN: Int
     var writer: User
     var description: String
     var isMine: Bool
     var supportType: SupportType // 1 = positive 2 = negative
     var createDate: String
+    var timeDistance: UInt
     var updateDate: String?
+  
+    var subCommentCount: UInt
+    var subComments: [OptionSubComment]?
 }
 
-struct OptionSubComment: Decodable {
+struct OptionSubComment: Equatable, Decodable {
   var optionCommentSN: String
   var pOptionCommentSN: String
   var writer: User
   var description: String
   var isMine: Bool
   var createDate: String
+  var timeDistance: UInt
   var updateDate: String?
+  
+  static func ==(lhs: OptionSubComment, rhs: OptionSubComment) -> Bool {
+    return lhs.optionCommentSN == rhs.optionCommentSN
+  }
 }
 
 struct Vote: Decodable {

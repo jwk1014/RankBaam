@@ -40,7 +40,12 @@
 		E359977F1FF6087F0064BBC1 /* SignInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E359977D1FF6087F0064BBC1 /* SignInViewController.xib */; };
 		E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997801FF6088D0064BBC1 /* SignUpViewController.swift */; };
 		E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997811FF6088D0064BBC1 /* SignUpViewController.xib */; };
+		E3754D2C20416712006BA12C /* OptionDetailFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3754D2B20416712006BA12C /* OptionDetailFooterCell.swift */; };
+		E3754D2E20416742006BA12C /* OptionDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3754D2D20416742006BA12C /* OptionDetailCell.swift */; };
 		E37FF1B62028B3CC005F8F68 /* OptionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37FF1B52028B3CC005F8F68 /* OptionDetailViewController.swift */; };
+		E39ACCC4203ADF74006CE5EE /* OptionDetailSupportVersusGaugeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39ACCC3203ADF74006CE5EE /* OptionDetailSupportVersusGaugeBarView.swift */; };
+		E39ACCC6203ADFC1006CE5EE /* OptionDetailTopHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39ACCC5203ADFC1006CE5EE /* OptionDetailTopHeaderCell.swift */; };
+		E39ACCC8203AE018006CE5EE /* OptionDetailHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39ACCC7203AE018006CE5EE /* OptionDetailHeaderCell.swift */; };
 		E3CC20F120010409006DE641 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F020010409006DE641 /* Extensions.swift */; };
 		E3CC20FF2001053A006DE641 /* CoverFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F62001053A006DE641 /* CoverFlowLayout.swift */; };
 		E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */; };
@@ -103,7 +108,12 @@
 		E359977D1FF6087F0064BBC1 /* SignInViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignInViewController.xib; sourceTree = "<group>"; };
 		E35997801FF6088D0064BBC1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		E35997811FF6088D0064BBC1 /* SignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
+		E3754D2B20416712006BA12C /* OptionDetailFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailFooterCell.swift; sourceTree = "<group>"; };
+		E3754D2D20416742006BA12C /* OptionDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailCell.swift; sourceTree = "<group>"; };
 		E37FF1B52028B3CC005F8F68 /* OptionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailViewController.swift; sourceTree = "<group>"; };
+		E39ACCC3203ADF74006CE5EE /* OptionDetailSupportVersusGaugeBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailSupportVersusGaugeBarView.swift; sourceTree = "<group>"; };
+		E39ACCC5203ADFC1006CE5EE /* OptionDetailTopHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailTopHeaderCell.swift; sourceTree = "<group>"; };
+		E39ACCC7203AE018006CE5EE /* OptionDetailHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailHeaderCell.swift; sourceTree = "<group>"; };
 		E3CC20F020010409006DE641 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3CC20F62001053A006DE641 /* CoverFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverFlowLayout.swift; sourceTree = "<group>"; };
 		E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
@@ -270,6 +280,11 @@
 				6CFD55102013737B00289BDB /* MainWeeklyRankCell.swift */,
 				6C5B839A201F88EC00E430B0 /* TopicDetailImagesCell.swift */,
 				6C0A986A2017183200D9D704 /* TopicDetailFooterView.swift */,
+				E39ACCC3203ADF74006CE5EE /* OptionDetailSupportVersusGaugeBarView.swift */,
+				E39ACCC5203ADFC1006CE5EE /* OptionDetailTopHeaderCell.swift */,
+				E39ACCC7203AE018006CE5EE /* OptionDetailHeaderCell.swift */,
+				E3754D2D20416742006BA12C /* OptionDetailCell.swift */,
+				E3754D2B20416712006BA12C /* OptionDetailFooterCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -474,11 +489,15 @@
 				6CFD549E2010501000289BDB /* MainAllRankTopTabbar.swift in Sources */,
 				6C5B83A32021DB8200E430B0 /* TabLikeStoredRankViewController.swift in Sources */,
 				E3DE12D41FEBB0A400738EE1 /* UserDefaultsManager.swift in Sources */,
+				E39ACCC8203AE018006CE5EE /* OptionDetailHeaderCell.swift in Sources */,
 				6C5B83A52022FB2F00E430B0 /* TabSearchRankViewController.swift in Sources */,
+				E39ACCC4203ADF74006CE5EE /* OptionDetailSupportVersusGaugeBarView.swift in Sources */,
 				6C5B839B201F88EC00E430B0 /* TopicDetailImagesCell.swift in Sources */,
 				E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */,
 				E3CF6FF620060BEA00DE3D41 /* TargetType.swift in Sources */,
+				E3754D2C20416712006BA12C /* OptionDetailFooterCell.swift in Sources */,
 				E3DE12D61FEBB0AF00738EE1 /* KeychainManager.swift in Sources */,
+				E39ACCC6203ADFC1006CE5EE /* OptionDetailTopHeaderCell.swift in Sources */,
 				E3CC20FF2001053A006DE641 /* CoverFlowLayout.swift in Sources */,
 				6CFD5442200A0A3200289BDB /* loadIndicatorFooter.swift in Sources */,
 				E3FEB4611FF615690074D778 /* TopicDetailViewController.swift in Sources */,
@@ -496,6 +515,7 @@
 				E3CF6FF920060C0B00DE3D41 /* Services.swift in Sources */,
 				E3CF6FEE20060BC900DE3D41 /* UserRouter.swift in Sources */,
 				E3CF6FF720060BEA00DE3D41 /* Error.swift in Sources */,
+				E3754D2E20416742006BA12C /* OptionDetailCell.swift in Sources */,
 				6C09B735201A3E17002CE625 /* PresentFadeInOut.swift in Sources */,
 				6C0A98722017990B00D9D704 /* TopicDetailImagesViewController.swift in Sources */,
 				6CFD549820104FA400289BDB /* ConstantsNames.swift in Sources */,
