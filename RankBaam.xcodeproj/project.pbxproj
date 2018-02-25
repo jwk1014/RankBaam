@@ -44,7 +44,6 @@
 		E359977A1FF608540064BBC1 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997781FF608540064BBC1 /* SplashViewController.swift */; };
 		E359977E1FF6087F0064BBC1 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E359977C1FF6087F0064BBC1 /* SignInViewController.swift */; };
 		E35997821FF6088D0064BBC1 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35997801FF6088D0064BBC1 /* SignUpViewController.swift */; };
-		E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E35997811FF6088D0064BBC1 /* SignUpViewController.xib */; };
 		E3CC20F120010409006DE641 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F020010409006DE641 /* Extensions.swift */; };
 		E3CC20FF2001053A006DE641 /* CoverFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CC20F62001053A006DE641 /* CoverFlowLayout.swift */; };
 		E3CF6FD62006073400DE3D41 /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */; };
@@ -111,7 +110,6 @@
 		E35997781FF608540064BBC1 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		E359977C1FF6087F0064BBC1 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		E35997801FF6088D0064BBC1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
-		E35997811FF6088D0064BBC1 /* SignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpViewController.xib; sourceTree = "<group>"; };
 		E3CC20F020010409006DE641 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3CC20F62001053A006DE641 /* CoverFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverFlowLayout.swift; sourceTree = "<group>"; };
 		E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
@@ -160,7 +158,6 @@
 				E35997781FF608540064BBC1 /* SplashViewController.swift */,
 				E359977C1FF6087F0064BBC1 /* SignInViewController.swift */,
 				E35997801FF6088D0064BBC1 /* SignUpViewController.swift */,
-				E35997811FF6088D0064BBC1 /* SignUpViewController.xib */,
 				E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */,
 				6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */,
 				6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */,
@@ -395,7 +392,6 @@
 				6CFD54A8201058C400289BDB /* MainAllRankLoadingFooterView.xib in Resources */,
 				E3D95DB82024476F00B0A3CA /* NanumSquareR.ttf in Resources */,
 				E3DE12D81FEBB7DA00738EE1 /* GoogleService-Info.plist in Resources */,
-				E35997831FF6088D0064BBC1 /* SignUpViewController.xib in Resources */,
 				E3D95DB62024476700B0A3CA /* NanumSquareB.ttf in Resources */,
 				E3DE12C41FEBAFD000738EE1 /* Assets.xcassets in Resources */,
 				6CFD5443200A0A3200289BDB /* loadIndicatorFooter.xib in Resources */,

@@ -157,14 +157,13 @@ class TopicDetailHeaderView: UICollectionReusableView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewInitConfigure()
-        print("This is CollectionView Height : \(topicDetailHeaderImagesCollectionView.frame.height)")
-        print("This is defaultimage Height : \(topicDetailHeaderImagesCollectionViewDefaultImageView.frame.height)")
         topicDetailHeaderImagesCollectionViewConfigure()
         topicDetailHeaderViewConfigure()
         
     }
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         viewInitConfigure()
         topicDetailHeaderImagesCollectionViewConfigure()
         topicDetailHeaderViewConfigure()

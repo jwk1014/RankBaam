@@ -77,8 +77,10 @@ class TopicCreateCustomCameraViewController: UIViewController {
     
     func topicCreateCameraSetupInputOutput() {
         
+        guard let presentDevice = presentDevice else { return }
+        
         do {
-            let captureDeviceInput = try AVCaptureDeviceInput(device: presentDevice!)
+            let captureDeviceInput = try AVCaptureDeviceInput(device: presentDevice)
             topicCreateCameracaptureSession.addInput(captureDeviceInput)
             topicCreatePhotoOutput = AVCapturePhotoOutput()
             if #available(iOS 11.0, *) {

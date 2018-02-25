@@ -11,9 +11,16 @@ import SDWebImage
 import SnapKit
 import AssetsLibrary
 
+protocol LikeStoredRankCellDelegate {
+    func likeStoredRankCellDeleteHandler(with cell: UICollectionViewCell)
+}
+
+
 class MainAllRankCell: UICollectionViewCell {
     
     let placeHolderImage = UIImage(named: "noimage")
+    var delegate: LikeStoredRankCellDelegate?
+    
     var mainAllRankCellBackgroundView: UIView = {
         let mainAllRankCellBackgroundView = UIView()
         return mainAllRankCellBackgroundView
@@ -27,6 +34,16 @@ class MainAllRankCell: UICollectionViewCell {
     var mainAllRankCellImageView: UIImageView = {
         let mainAllRankCellImageView = UIImageView()
         return mainAllRankCellImageView
+    }()
+    
+    var mainAllRankCellDeleteImageView: UIImageView = {
+        let mainAllRankCellEditingImageView = UIImageView()
+        return mainAllRankCellEditingImageView
+    }()
+    
+    var mainAllRankCellDeleteButton: UIButton = {
+        let mainAllRankCellDeleteButton = UIButton()
+        return mainAllRankCellDeleteButton
     }()
     
     var mainAllRankCellTitleLabel: UILabel = {
@@ -69,7 +86,6 @@ class MainAllRankCell: UICollectionViewCell {
         return likedStoredRankCellEditingCheckBox
     }()
     
-    @IBOutlet weak var mainRankCellImgShadowView: UIView!
     
     var likeCount: Int = 0 {
         didSet {
@@ -109,10 +125,12 @@ class MainAllRankCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         viewInitConfigure()
     }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         viewInitConfigure()
     }
+    
     func cellDatasConfigure(topic: Topic) {
         mainAllRankCellTitleLabel.text = topic.title
         likeCount = topic.likeCount
@@ -137,9 +155,13 @@ class MainAllRankCell: UICollectionViewCell {
         self.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         self.layer.shadowRadius = 5
         self.layer.shadowOpacity = 0.7
+        self.addSubview(mainAllRankCellDeleteImageView)
         self.addSubview(mainAllRankCellBackgroundView)
         self.addSubview(mainAllRankCellImageViewShadowView)
         self.addSubview(mainAllRankCellImageView)
+        self.addSubview(mainAllRankCellDeleteButton)
+        self.isUserInteractionEnabled = true
+        
         mainAllRankCellBackgroundView.addSubview(mainAllRankCellTitleLabel)
         mainAllRankCellBackgroundView
             .addSubview(mainAllRankCellNicknameStarImageView)
@@ -152,6 +174,10 @@ class MainAllRankCell: UICollectionViewCell {
             .addSubview(likedStoredRankCellEditingCheckBox)
     
         
+        mainAllRankCellDeleteImageView.image = UIImage(named: "icCancel")
+        mainAllRankCellDeleteImageView.isHidden = true
+        mainAllRankCellDeleteButton.addTarget(self, action: #selector(likeStoredCellDeleteButtonTapped(sender:)), for: .touchUpInside)
+        //mainAllRankCellDeleteButton.backgroundColor = UIColor.red
         mainAllRankCellBackgroundView.backgroundColor = UIColor.white
         mainAllRankCellBackgroundView.layer.cornerRadius = 8
         mainAllRankCellBackgroundView.layer.masksToBounds = true
@@ -185,6 +211,19 @@ class MainAllRankCell: UICollectionViewCell {
         likedStoredRankCellEditingCheckBox.image = UIImage(named: "bcheckBoxIcn")
         likedStoredRankCellEditingCheckBox.contentMode = .center
         likedStoredRankCellEditingCheckBox.isHidden = true
+        
+        mainAllRankCellDeleteImageView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.right.equalTo(self.snp.left).offset(-width375(15))
+            $0.width.height.equalTo(width375(24))
+        }
+        
+        mainAllRankCellDeleteButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.right.equalTo(self.snp.left)
+            $0.height.equalToSuperview().multipliedBy(0.7)
+            $0.width.equalTo(width375(40))
+        }
         
         mainAllRankCellBackgroundView.snp.makeConstraints {
             $0.left.equalTo(self.snp.left).offset(width375(24))
@@ -266,8 +305,13 @@ class MainAllRankCell: UICollectionViewCell {
             $0.width.equalTo(width375(24))
             $0.height.equalTo(height667(24))
         }
+        
         let shadowLayer = CAShapeLayer()
         shadowLayer.path = UIBezierPath(roundedRect: CGRect.init(x: 2, y: height667(16), width: width375(85), height: self.frame.height - (height667(20) * 2)), cornerRadius: 0).cgPath
+    }
+    
+    @objc func likeStoredCellDeleteButtonTapped(sender: UIButton) {
+        delegate?.likeStoredRankCellDeleteHandler(with: self)
     }
     
     override func prepareForReuse() {

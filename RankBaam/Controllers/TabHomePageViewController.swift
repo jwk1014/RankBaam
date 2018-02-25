@@ -64,7 +64,6 @@ class TabHomePageViewController: UIPageViewController {
         
     }
 
-    
     fileprivate func pageViewControllerConfigure() {
         let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
         scrollView.delegate = self
@@ -96,6 +95,7 @@ class TabHomePageViewController: UIPageViewController {
             $0.centerX.equalToSuperview()
             $0.height.equalTo(height667(21))
         }
+        
         mainFilterButton.snp.makeConstraints {
            
             $0.left.equalTo(mainNavigationBarTitle.snp.right)
@@ -105,6 +105,7 @@ class TabHomePageViewController: UIPageViewController {
             $0.width.equalTo(width375(24))
             $0.height.equalTo(height667(24))
         }
+        
         self.view.addSubview(upperTabView)
         upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: mainCustomNavigationBar.bottomAnchor).isActive = true
@@ -168,8 +169,6 @@ extension TabHomePageViewController: UIScrollViewDelegate {
         
         ( x < view.bounds.width ) ? (upperTabView.weeklyRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)) : (upperTabView.weeklyRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal))
         ( x < view.bounds.width ) ? (upperTabView.allRankTab.setTitleColor(UIColor.rankbaamOrange, for: .normal)) : ( upperTabView.allRankTab.setTitleColor(UIColor.rankbaamDarkgray, for: .normal))
-            
-        
         
         //upperTabView?.layoutIfNeeded()
         /*+= scrollView.contentOffset.x * 1 / 1000*/
@@ -198,7 +197,9 @@ extension TabHomePageViewController: UpperCustomTabbarDelegate {
             if let firstViewController = mainViewControllers.first {
                 self.setViewControllers([firstViewController], direction: .reverse, animated: true, completion: nil)
             }
+            
         } else {
+            
             let scrollView = view.subviews.filter { $0 is UIScrollView }.first as! UIScrollView
             scrollView.delegate = nil
             if let lastViewController = mainViewControllers.last {

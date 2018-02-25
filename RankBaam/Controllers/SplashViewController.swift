@@ -80,7 +80,7 @@ class SplashViewController: UIViewController {
                             if sResult.succ {
                                 
                                 
-                                let vc = SignInViewController()
+                                let vc = MainTabViewController()
                                 let naviVC = UINavigationController(rootViewController: vc)
 
                                 self.present(naviVC, animated: true, completion: nil)

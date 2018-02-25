@@ -19,6 +19,7 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
     var isEditingLikedCell: Bool = false
     var tabLikeStoredRankFooterView: MainAllRankLoadingFooterView?
     var cellDatas: [Topic] = [Topic]()
+    var isEditingMode: Bool = false
     let likeStoredRankRefreshControl = UIRefreshControl()
     
     var tabLikeStoredRankCustomNavigationBar: UIView = {
@@ -43,11 +44,6 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
         return tabLikeStoredRankEditingButton
     }()
     
-    var tabLikeStoredRankEditingCancelButton: UIButton = {
-        let tabLikeStoredRankEditingCancelButton = UIButton()
-        return tabLikeStoredRankEditingCancelButton
-    }()
-    
     var selectedLikedCellIndexPath: [(indexPath: Int, optionSN: Int)] = [(indexPath: Int, optionSN: Int)]()
     
     override func viewDidLoad() {
@@ -56,7 +52,7 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
         tabLikeStoredRankCollectionViewConfigure()
         fetchLikeStoredRankDatas()
         tabLikeStoredRankEditingButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
-        tabLikeStoredRankEditingCancelButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
+        //tabLikeStoredRankEditingCancelButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
         self.navigationController?.isNavigationBarHidden = true
         
     }
@@ -108,8 +104,6 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
             .addSubview(tabLikeStoredRankCustomNavigationBarTitleLabel)
         tabLikeStoredRankCustomNavigationBar
             .addSubview(tabLikeStoredRankEditingButton)
-        tabLikeStoredRankCustomNavigationBar
-            .addSubview(tabLikeStoredRankEditingCancelButton)
         
         
         
@@ -127,13 +121,8 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
         tabLikeStoredRankEditingButton
             .setTitleColor(UIColor.rankbaamDarkgray, for: .normal)
         tabLikeStoredRankEditingButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 16)
+        tabLikeStoredRankCollectionView.isUserInteractionEnabled = true
         
-        tabLikeStoredRankEditingCancelButton.setTitle("취소", for: .normal)
-        tabLikeStoredRankEditingCancelButton
-            .setTitleColor(UIColor.init(r: 250, g: 84, b: 76), for: .normal)
-        tabLikeStoredRankEditingCancelButton.titleLabel?.font =
-            UIFont(name: "NanumSquareB", size: 16)
-        tabLikeStoredRankEditingCancelButton.isHidden = true
         
         
         
@@ -160,17 +149,10 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
             $0.height.equalTo(height667(18))
             $0.width.equalTo(width375(40))
         }
-        tabLikeStoredRankEditingCancelButton.snp.makeConstraints {
-            $0.top.equalTo(tabLikeStoredRankCustomNavigationBar.snp.top)
-                .offset(height667(40))
-            $0.right.equalTo(tabLikeStoredRankCustomNavigationBar.snp.right)
-                .offset(-(width375(329)))
-            $0.height.equalTo(height667(18))
-            $0.width.equalTo(width375(40))
-        }
     }
     
     fileprivate func tabLikeStoredRankCollectionViewConfigure() {
+        
         tabLikeStoredRankCollectionView.backgroundColor = UIColor.rankbaamGray
         tabLikeStoredRankCollectionView.dataSource = self
         tabLikeStoredRankCollectionView.delegate = self
@@ -191,16 +173,20 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
     }
     
     @objc fileprivate func tabLikeStoredRankButtonsHandler(_ sender: UIButton) {
+        
         guard let buttonTitle = sender.currentTitle else { return }
         switch buttonTitle {
         case "편집":
-            sender.setTitle("삭제", for: .normal)
+            sender.setTitle("완료", for: .normal)
             sender.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
-            tabLikeStoredRankEditingCancelButton.isHidden = false
-            isEditingLikedCell = true
-            tabLikeStoredRankCollectionView.reloadData()
-            tabLikeStoredRankCollectionView.collectionViewLayout
-                .invalidateLayout()
+            isEditingMode = true
+            //tabLikeStoredRankEditingCancelButton.isHidden = false
+            //isEditingLikedCell = true
+            let visibleIndice = tabLikeStoredRankCollectionView.indexPathsForVisibleItems
+            tabLikeStoredRankCollectionView.reloadItems(at: visibleIndice)
+//            tabLikeStoredRankCollectionView.reloadData()
+//            tabLikeStoredRankCollectionView.collectionViewLayout
+//                .invalidateLayout()
         case "삭제":
             //TODO : FIXME
             print("\(selectedLikedCellIndexPath.count)")
@@ -254,6 +240,13 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
             tabLikeStoredRankCollectionView.collectionViewLayout
                 .invalidateLayout()
             break
+            
+        case "완료":
+            sender.setTitle("편집", for: .normal)
+            isEditingMode = false
+            let visibleIndice = tabLikeStoredRankCollectionView.indexPathsForVisibleItems
+            tabLikeStoredRankCollectionView.reloadItems(at: visibleIndice)
+            
         default:
             fatalError()
         }
@@ -295,6 +288,7 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
 }
 
 extension TabLikeStoredRankViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cellDatas.count
     }
@@ -304,13 +298,29 @@ extension TabLikeStoredRankViewController: UICollectionViewDataSource {
         let likedCellData = self.cellDatas[indexPath.item]
         likedStoredCell.isEditingLikedCell = isEditingLikedCell
         likedStoredCell.cellDatasConfigure(topic: likedCellData)
+        likedStoredCell.delegate = self
+        likedStoredCell.isUserInteractionEnabled = true
+        likedStoredCell.contentView.isUserInteractionEnabled = true
         if selectedLikedCellIndexPath.contains(where: { (index, _) -> Bool in
             return index == indexPath.item
         }){
             likedStoredCell.isSelectedLikedCell = true
         }
+        
+        if isEditingMode {
+            UIView.animate(withDuration: 0.7, animations: {
+                likedStoredCell.mainAllRankCellDeleteImageView.isHidden = false
+//                let aaa = CGAffineTransform(translationX: 55, y: 0)
+//                let bbb = CGAffineTransform(scaleX: 0.9, y: 0.9)
+                likedStoredCell.transform = CGAffineTransform.identity.translatedBy(x: 48, y: 0)//.scaledBy(x: 0.9, y: 0.9)
+            })
+            //likedStoredCell.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }
+        
+        
         return likedStoredCell
     }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
         case UICollectionElementKindSectionHeader:
@@ -337,6 +347,15 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        /*guard let seletedCell = collectionView.cellForItem(at: indexPath) as? MainAllRankCell else { return }
+        
+        seletedCell.transform = CGAffineTransform(translationX: 48, y: 0)
+        seletedCell.transform = CGAffineTransform(scaleX: 0.8, y: 0.9)
+        /*let button = UIButton(frame: CGRect(x: seletedCell.frame.origin.x - 36, y: seletedCell.frame.origin.y + 48, width: 24, height: 24))
+        button.setImage(UIImage(named: "icCancel"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        collectionView.addSubview(button)*/
+        
         if self.isEditingLikedCell {
             guard let seletedCell = collectionView.cellForItem(at: indexPath) as? MainAllRankCell else { return }
             seletedCell.isSelectedLikedCell = !seletedCell.isSelectedLikedCell
@@ -350,10 +369,7 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
                     self.selectedLikedCellIndexPath.remove(at: removeIndexPath)
                 }
             }
-            
-        }
-        
-        
+        }*/
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -367,6 +383,20 @@ extension TabLikeStoredRankViewController: UICollectionViewDelegate, UICollectio
             }
         }
         footerViewLoadDataHandler(indexPath)
+    }
+    
+//    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+//        return !isEditingMode
+//    }
+}
+
+extension TabLikeStoredRankViewController: LikeStoredRankCellDelegate {
+    func likeStoredRankCellDeleteHandler(with cell: UICollectionViewCell) {
+        guard let deleteCell = cell as? MainAllRankCell,
+            let deleteIndexPath = tabLikeStoredRankCollectionView.indexPath(for: deleteCell)
+        else { return }
+        print("This is IndexPath for deleteCell : \(deleteIndexPath)")
+        
     }
 }
 

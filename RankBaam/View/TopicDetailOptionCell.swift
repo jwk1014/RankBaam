@@ -78,7 +78,10 @@ class TopicDetailOptionCell: UICollectionViewCell {
         return optionCellBackgroundView
     }()
     
-    /*var optionCellVotePercentageViewPercentageConstraint: NSLayoutConstraint?*/
+    var optionCellVoteHundredPercentageView: UIView = {
+        let optionCellVoteHundredPercentageView = UIView()
+        return optionCellVoteHundredPercentageView
+    }()
     
     var optionCellVotePercentageView: UIView = {
         let optionCellVotePercentageView = UIView()
@@ -165,11 +168,13 @@ class TopicDetailOptionCell: UICollectionViewCell {
     }
     
     fileprivate func viewInitConfigure() {
+
         self.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
         self.layer.shadowOffset = CGSize(width: 3, height: 3)
         self.layer.shadowRadius = 3
         self.layer.shadowOpacity = 0.7
         self.addSubview(optionCellBackgroundView)
+        optionCellBackgroundView.addSubview(optionCellVoteHundredPercentageView)
         optionCellBackgroundView.addSubview(optionCellVotePercentageView)
         optionCellBackgroundView.addSubview(optionCellImageView)
         optionCellBackgroundView.addSubview(optionCellStackViewForTitle)
@@ -180,8 +185,8 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellBackgroundView.addSubview(optionCellVoteCountLabel)
         optionCellBackgroundView.addSubview(optionCellCommentDetailSeperatorView)
         optionCellStackViewForTitle.addArrangedSubview(optionCellCheckMarkImageView)
-//        optionCellCheckMarkImageView
-//            .setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: UILayoutConstraintAxis.horizontal)
+        /*optionCellCheckMarkImageView
+           .setContentCompressionResistancePriority(UILayoutPriority.fittingSizeLevel, for: UILayoutConstraintAxis.horizontal)*/
         optionCellStackViewForTitle.addArrangedSubview(optionCellTitleLabel)
         optionCellStackViewForTitle
             .addArrangedSubview(optionCellNewOptionMarkImageView)
@@ -223,14 +228,6 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellBackgroundView.snp.makeConstraints {
             $0.left.top.right.bottom.equalToSuperview()
         }
-        optionCellVotePercentageView
-            .translatesAutoresizingMaskIntoConstraints = false
-        optionCellVotePercentageView.leadingAnchor.constraint(equalTo: optionCellBackgroundView.leadingAnchor).isActive = true
-        optionCellVotePercentageView.topAnchor.constraint(equalTo: optionCellBackgroundView.topAnchor).isActive = true
-        optionCellVotePercentageView.bottomAnchor.constraint(equalTo: optionCellBackgroundView.bottomAnchor).isActive = true
-        let percentageWidth = optionCellVotePercentageView.widthAnchor.constraint(equalTo: optionCellBackgroundView.widthAnchor, multiplier: votePercentage)
-        percentageWidth.isActive = true
-        percentageWidth.identifier = "percentageWidth"
         
         optionCellCommentDetailButton.snp.makeConstraints {
             $0.right.top.bottom.equalToSuperview()
@@ -276,15 +273,11 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellStackViewForTitle.snp.makeConstraints {
             $0.left.equalTo(optionCellImageView.snp.right)
                 .offset(self.frame.width * (14 / 342))
-            
             // TODO : FIXME
-//            $0.right.equalTo(optionCellCommentDetailSeperatorView.snp.left)
-//                .offset(-(self.frame.width * (14 / 342)))
             $0.top.equalTo(optionCellBackgroundView.snp.top)
                 .offset(self.frame.height * (11 / 72))
             $0.bottom.equalTo(optionCellBackgroundView.snp.bottom)
                 .offset(-(self.frame.height * (40 / 72)))
-            
         }
         optionCellTitleLabel.snp.makeConstraints {
             $0.width.lessThanOrEqualTo(140)
@@ -298,6 +291,19 @@ class TopicDetailOptionCell: UICollectionViewCell {
                 .offset(self.frame.height * (10 / 72))
             $0.height.equalTo(self.frame.height * (16 / 72))
         }
+        optionCellVoteHundredPercentageView.snp.makeConstraints {
+            $0.top.left.bottom.equalToSuperview()
+            $0.right.equalTo(optionCellCommentDetailSeperatorView.snp.left)
+        }
+        
+        optionCellVotePercentageView
+            .translatesAutoresizingMaskIntoConstraints = false
+        optionCellVotePercentageView.leadingAnchor.constraint(equalTo: optionCellBackgroundView.leadingAnchor).isActive = true
+        optionCellVotePercentageView.topAnchor.constraint(equalTo: optionCellBackgroundView.topAnchor).isActive = true
+        optionCellVotePercentageView.bottomAnchor.constraint(equalTo: optionCellBackgroundView.bottomAnchor).isActive = true
+        let percentageWidth = optionCellVoteHundredPercentageView.widthAnchor.constraint(equalTo: optionCellCommentDetailSeperatorView.widthAnchor, multiplier: votePercentage)
+        percentageWidth.isActive = true
+        percentageWidth.identifier = "percentageWidth"
     }
     
     func topicDetailOptionCellDataConfigure(_ option: Option) {

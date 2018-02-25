@@ -10,9 +10,6 @@ import UIKit
 
 class TabHomeWeeklyRankViewController: UIViewController {
 
-    
-    
-    
     var weeklyRankDatas: [Topic] = []
     
     var tabHomeWeeklyRankCollectionView: UICollectionView = {
