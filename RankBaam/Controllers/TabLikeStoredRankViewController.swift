@@ -397,6 +397,31 @@ extension TabLikeStoredRankViewController: LikeStoredRankCellDelegate {
         else { return }
         print("This is IndexPath for deleteCell : \(deleteIndexPath)")
         
+        TopicService.like(topicSN: cellDatas[deleteIndexPath.item].topicSN, isLiked: false, completion: {
+            switch $0.result {
+            case .success(let result):
+                if result.succ {
+                    print("삭제 성공")
+                    self.cellDatas.remove(at: deleteIndexPath.item)
+                    self.tabLikeStoredRankCollectionView.performBatchUpdates({
+                        self.tabLikeStoredRankCollectionView.deleteItems(at: [deleteIndexPath])
+                    }, completion: nil)
+                    self.fetchLikeStoredRankDatas()
+                } else if let msg = result.msg {
+                    
+                    switch msg {
+                    default:
+                        break
+                    }
+                }
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        })
     }
 }
 

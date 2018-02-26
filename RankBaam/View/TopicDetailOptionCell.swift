@@ -301,7 +301,7 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellVotePercentageView.leadingAnchor.constraint(equalTo: optionCellBackgroundView.leadingAnchor).isActive = true
         optionCellVotePercentageView.topAnchor.constraint(equalTo: optionCellBackgroundView.topAnchor).isActive = true
         optionCellVotePercentageView.bottomAnchor.constraint(equalTo: optionCellBackgroundView.bottomAnchor).isActive = true
-        let percentageWidth = optionCellVoteHundredPercentageView.widthAnchor.constraint(equalTo: optionCellCommentDetailSeperatorView.widthAnchor, multiplier: votePercentage)
+        let percentageWidth = optionCellVotePercentageView.widthAnchor.constraint(equalTo: optionCellBackgroundView.widthAnchor, multiplier: votePercentage)
         percentageWidth.isActive = true
         percentageWidth.identifier = "percentageWidth"
     }

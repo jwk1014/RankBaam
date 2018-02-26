@@ -177,7 +177,7 @@ class MainAllRankCell: UICollectionViewCell {
         mainAllRankCellDeleteImageView.image = UIImage(named: "icCancel")
         mainAllRankCellDeleteImageView.isHidden = true
         mainAllRankCellDeleteButton.addTarget(self, action: #selector(likeStoredCellDeleteButtonTapped(sender:)), for: .touchUpInside)
-        //mainAllRankCellDeleteButton.backgroundColor = UIColor.red
+        mainAllRankCellDeleteButton.isUserInteractionEnabled = false
         mainAllRankCellBackgroundView.backgroundColor = UIColor.white
         mainAllRankCellBackgroundView.layer.cornerRadius = 8
         mainAllRankCellBackgroundView.layer.masksToBounds = true
@@ -308,6 +308,21 @@ class MainAllRankCell: UICollectionViewCell {
         
         let shadowLayer = CAShapeLayer()
         shadowLayer.path = UIBezierPath(roundedRect: CGRect.init(x: 2, y: height667(16), width: width375(85), height: self.frame.height - (height667(20) * 2)), cornerRadius: 0).cgPath
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if clipsToBounds || isHidden || alpha == 0 {
+            return nil
+        }
+        
+        for subview in subviews.reversed() {
+            let subPoint = subview.convert(point, from: self)
+            if let result = subview.hitTest(subPoint, with: event) {
+                return result
+            }
+        }
+        
+        return nil
     }
     
     @objc func likeStoredCellDeleteButtonTapped(sender: UIButton) {

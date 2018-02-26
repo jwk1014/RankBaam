@@ -13,7 +13,7 @@ class TabMyViewPageViewController: UIPageViewController {
     var scrollDelegate: MainUpperTabScrollViewDelegate?
     
     var upperTabView: MainAllRankTopTabbar =  {
-        let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "랭킹 글", rightTabTitle: "댓글")
+        let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "내 글 관리", rightTabTitle: "프로필 설정")
         return upperTabView
     }()
     
@@ -78,7 +78,7 @@ class TabMyViewPageViewController: UIPageViewController {
             make.height.equalTo(height667(68, forX: 90))
         }
         
-        tabMyViewNavigationBarTitle.text = "내 글 관리"
+        tabMyViewNavigationBarTitle.text = "마이페이지"
         tabMyViewNavigationBarTitle.font = UIFont(name: "NanumSquareB", size: 18)
         tabMyViewNavigationBarTitle.snp.makeConstraints {
             $0.top.equalTo(tabMyViewCustomNavigationBar.snp.top)
