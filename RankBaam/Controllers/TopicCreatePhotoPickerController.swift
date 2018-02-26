@@ -11,6 +11,15 @@ import Photos
 import SnapKit
 import MobileCoreServices
 
+protocol TopicCreatePhotoPickerViewControllerDelegate: class {
+  func photoPickerView(action: TopicCreatePhotoPickerViewAction)
+}
+
+enum TopicCreatePhotoPickerViewAction {
+  case success([PHAsset])
+  case cancel
+}
+
 private extension UICollectionView {
     func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
         let allLayoutAttributes = collectionViewLayout.layoutAttributesForElements(in: rect)!
@@ -32,6 +41,8 @@ class TopicCreatePhotoPickerViewController: UIViewController {
         let topicCreatePhotosPickerBunchView = TopicCreatePHAssetBunchView()
         return topicCreatePhotosPickerBunchView
     }()
+  
+    weak var delegate: TopicCreatePhotoPickerViewControllerDelegate?
     
     let fetchingQueue = DispatchQueue(label: "com.jaewook.RankBaamPhotoPicker")
     var photosCellPHAssetDatas: PHFetchResult<PHAsset>?
@@ -171,7 +182,9 @@ class TopicCreatePhotoPickerViewController: UIViewController {
     }
     
     @objc fileprivate func topicCreatePhotoPickerCancelButtonTapped(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+          self.delegate?.photoPickerView(action: .cancel)
+        })
     }
     
     @objc fileprivate func topicCreatePhotoPickerSelectButtonTapped(_ sender: UIBarButtonItem) {
@@ -182,6 +195,10 @@ class TopicCreatePhotoPickerViewController: UIViewController {
         totalSelectedPhassetDatas += selectedPhotoDatas.reduce([PHAsset?]()) { total , item in total + [item.1] }.flatMap{ $0! }
         
         print("This is count of result : \(totalSelectedPhassetDatas.count)")
+      
+        self.dismiss(animated: true, completion: {
+          self.delegate?.photoPickerView(action: .success(totalSelectedPhassetDatas))
+        })
     }
     
     fileprivate func differencesBetweenRects(_ old: CGRect, _ new: CGRect) -> (added: [CGRect], removed: [CGRect]) {

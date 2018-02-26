@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class SignInViewController: UIViewController, UITextFieldDelegate {
+class SignInViewController: UIViewController {
     
     var signInBackgroundScrollView: UIScrollView = {
         let signInBackgroundScrollView = UIScrollView()
@@ -129,9 +129,12 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         signInBottomStackView.addArrangedSubview(signInSignUpTextLabel)
         self.navigationController?.isNavigationBarHidden = true
         
-        
-        self.view.backgroundColor = UIColor.white
-        signInLogoImageview.image = UIImage(named: "logoIcn")
+        self.view.backgroundColor = UIColor.rankbaamOrange
+        self.view.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textFieldResignedWithBackgroundTapping))
+        self.view.addGestureRecognizer(tapGesture)
+        signInLogoImageview.image = UIImage(named: "logoIcn")?.withRenderingMode(.alwaysTemplate)
+        signInLogoImageview.tintColor = UIColor.white
         signInEmailTextField.layer.cornerRadius = 3
         signInEmailTextField.layer.borderColor = UIColor(r: 216, g: 216, b: 216).cgColor
         signInEmailTextField.layer.borderWidth = 1
@@ -140,15 +143,19 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         signInEmailTextField.attributedPlaceholder = attributedPlaceholer
         signInEmailTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: signInEmailTextField.frame.height))
         signInEmailTextField.leftViewMode = .always
+        signInEmailTextField.backgroundColor = UIColor.white
         signInPasswordTextField.layer.cornerRadius = 3
         signInPasswordTextField.layer.borderColor = UIColor(r: 216, g: 216, b: 216).cgColor
         signInPasswordTextField.layer.borderWidth = 1
+        signInPasswordTextField.backgroundColor = UIColor.white
         attributedPlaceholer = NSAttributedString(string: "비밀번호", attributes: [NSAttributedStringKey.font : nanumSquareBFont, NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray ])
         signInPasswordTextField.attributedPlaceholder = attributedPlaceholer
         signInPasswordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: signInEmailTextField.frame.height))
         signInPasswordTextField.leftViewMode = .always
-        signInLoginButton.backgroundColor = UIColor.rankbaamOrange
+        signInLoginButton.backgroundColor = UIColor.white.withAlphaComponent(0.7)
         signInLoginButton.layer.cornerRadius = 3
+        signInLoginButton.layer.borderWidth = 5
+        signInLoginButton.layer.borderColor = UIColor.white.withAlphaComponent(0.7).cgColor
         signInLoginButton.setTitle("로그인", for: .normal)
         signInLoginButton.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
         signInLoginButton.titleLabel?.font = nanumSquareBFont
@@ -227,6 +234,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
             $0.width.equalTo(width375(343))
             $0.height.equalTo(height667(46))
         }
+        
         signInFaceBookLoginButton.snp.makeConstraints {
             $0.top.equalTo(signInLoginButton.snp.bottom).offset(height667(50))
             $0.left.equalTo(self.view).offset(width375(16))
@@ -276,6 +284,13 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    @objc fileprivate func textFieldResignedWithBackgroundTapping() {
+        if signInPasswordTextField.isFirstResponder || signInEmailTextField.isFirstResponder {
+            signInPasswordTextField.resignFirstResponder()
+            signInEmailTextField.resignFirstResponder()
+        }
+    }
+    
     @objc func signInDismissButtonTapped(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
@@ -300,5 +315,11 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     @objc func kakaoSignInButtonTapped(_ sender: UIButton) {
         // TODO: FIXME
     }
+}
 
+extension SignInViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
+    }
 }

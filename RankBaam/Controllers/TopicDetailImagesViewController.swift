@@ -10,6 +10,13 @@ import UIKit
 import SnapKit
 import SDWebImage
 
+enum MovingDirection {
+    case Upward
+    case Downward
+    case Leftward
+    case Rightward
+}
+
 class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDelegate {
     var originalCenter: CGPoint?
     var firstTouchedPoint: CGPoint?
@@ -44,10 +51,37 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
     
     @objc func swipeDismissActionHandler(_ panGesture: UIPanGestureRecognizer) {
         let translation = panGesture.translation(in: view)
+        var direction: MovingDirection?
         
         if panGesture.state == .began {
             originalCenter = view.center
+            let initPosx = Int(self.view.center.x)
+            let initPosy = Int(self.view.center.y)
             firstTouchedPoint = panGesture.location(in: view)
+            let velocity = panGesture.velocity(in: self.view)
+            if (velocity.x > velocity.y) && (velocity.x > 0) {
+                print("moving right")
+                self.view.center.y = CGFloat(initPosy)
+                direction = .Rightward
+            }
+            else if ((abs(velocity.x)) > velocity.y) && (velocity.x < 0) {
+                print("moving left")
+                self.view.center.y = CGFloat(initPosy)
+                direction = .Leftward
+            }
+            else if (velocity.y > velocity.x) && (velocity.y > 0) {
+                print("moving down")
+                self.view.center.x = CGFloat(initPosx)
+                direction = .Downward
+            }
+            else if ((abs(velocity.y)) > velocity.x) && (velocity.y < 0){
+                print("moving up")
+//                self..center.x = CGFloat(initPosx)
+//                print(abs(velocity.y))
+//                movingUp = true
+            }
+            
+
         } else if panGesture.state == .changed {
             view.frame.origin = CGPoint(
                 x: 0,

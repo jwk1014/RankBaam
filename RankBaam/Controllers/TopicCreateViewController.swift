@@ -76,9 +76,17 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
       present(vc, animated: true, transitioningDelegate: presentFadeInOutManager, completion: nil)
     case .addImage:
       requestPhotoLibraryAuthorization {
-        let picker = UIImagePickerController()
+        //let picker = UIImagePickerController()
+        //picker.delegate = self
+        let picker = TopicCreatePhotoPickerViewController()
+        let navi = UINavigationController.init(rootViewController: picker)
+        if let headerView = self.headerView {
+          picker.selectedPHAssetDataFromVC = headerView.imageDatas.map({$1})
+        } else {
+          picker.selectedPHAssetDataFromVC = self.imageDatas.map({$1})
+        }
         picker.delegate = self
-        self.present(picker, animated: true, completion: nil)
+        self.present(navi, animated: true, completion: nil)
       }
     }
   }
@@ -92,8 +100,9 @@ class TopicCreateViewController: UIViewController, TopicCreateViewControllerCall
         PHPhotoLibrary.requestAuthorization{
           self.requestPhotoLibraryAuthorization(status: $0, requestAuth: false, closure: closure)
         }
+      } else {
+        assertionFailure("requestPhotoLibraryAuthorization requestAuth")
       }
-      assertionFailure("requestPhotoLibraryAuthorization requestAuth")
       
     case .authorized:
       closure()
@@ -254,6 +263,7 @@ extension TopicCreateViewController: UIImagePickerControllerDelegate, UINavigati
       if let url = info[UIImagePickerControllerReferenceURL] as? URL,
         let phAsset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject{
         headerView?.addImageInImageArea(imageData: ImageData(image: image, imageAsset: phAsset))
+        headerView?.fitSizeImagesAreaScrollView()
         flowLayout?.invalidateLayout()
       }
     }
@@ -308,6 +318,8 @@ extension TopicCreateViewController: UICollectionViewDataSource {
           }
           
           self.headerView = headerView
+        } else {
+          headerView.fitSizeImagesAreaScrollView()
         }
       }
       return headerView
@@ -677,15 +689,7 @@ class TopicCreateHeaderView: UICollectionReusableView {
   private weak var descriptionSeperatorView: UIView?
   private weak var optionsLabel: UILabel?
   private var imagesAreaScrollViewHeightConstraint: NSLayoutConstraint?
-  private(set) var imageDatas = [ImageData]() {
-    willSet {
-      if newValue.count <= 1 {
-        imagesAreaScrollViewHeightConstraint?.constant =
-          ( newValue.count == 1 ) ? imageAreaStackView?.bounds.height ?? 0 : 0
-        callback?.invalidateLayoutCollectionView()
-      }
-    }
-  }
+  private(set) var imageDatas = [ImageData]()
   
   deinit {
       callback?.topicTitle = titleTextField?.text
@@ -700,8 +704,44 @@ class TopicCreateHeaderView: UICollectionReusableView {
     }
   }
   
+  func fitSizeImagesAreaScrollView() {
+    imagesAreaScrollViewHeightConstraint?.isActive = (imageDatas.count > 0)
+  }
+  
   func addImagesInImageArea(imageDatas: [ImageData]) {
     imageDatas.forEach(addImageInImageArea)
+  }
+  
+  var tmpAssets: [PHAsset] = []
+  
+  func resetImagesInImageArea(phAssets: [PHAsset]) {
+    guard phAssets.count > 0 else {return}
+    clearImageInImageArea()
+    tmpAssets = phAssets
+    requestImage()
+  }
+  
+  func requestImage() {
+    let phAsset = tmpAssets.first!
+    
+    var ratio = Double(phAsset.pixelWidth) / Double(phAsset.pixelHeight)
+    ratio = max(0.5, min(2.0, ratio))
+    let h = Double(height667(121.0))
+    
+    PHImageManager.default().requestImage(for: phAsset, targetSize: CGSize(width: ratio * h, height: h), contentMode: PHImageContentMode.aspectFit, options: nil, resultHandler: patchImageResultHandler)
+  }
+  
+  func patchImageResultHandler(image: UIImage?, info: [AnyHashable:Any]?){
+    defer {
+      if tmpAssets.count > 0 {
+        requestImage()
+      } else {
+        fitSizeImagesAreaScrollView()
+        callback?.invalidateLayoutCollectionView()
+      }
+    }
+    guard let image = image, tmpAssets.count > 0 else {return}
+    addImageInImageArea(imageData: ImageData(image: image, imageAsset: tmpAssets.remove(at: 0)))
   }
   
   //min max
@@ -717,8 +757,8 @@ class TopicCreateHeaderView: UICollectionReusableView {
     var ratio = imageData.image.size.width / imageData.image.size.height
     ratio = max(0.5, min(2, ratio))
     imageView.snp.makeConstraints{
-      $0.width.equalTo(imageAreaStackView.snp.height).multipliedBy(ratio)
-      $0.height.equalTo(imageAreaStackView)
+      $0.height.equalToSuperview()
+      $0.width.equalTo(imageView.snp.height).multipliedBy(ratio)
     }
     imageView.isUserInteractionEnabled = true
     
@@ -741,6 +781,15 @@ class TopicCreateHeaderView: UICollectionReusableView {
     }
   }
   
+  func clearImageInImageArea(){
+    guard let imageViews = imageAreaStackView?.arrangedSubviews.flatMap({ $0 as? UIImageView }),
+      imageViews.count > 0 else { return }
+    imageDatas.removeAll()
+    for imageView in imageViews {
+      imageView.removeFromSuperview()
+    }
+  }
+  
   @objc func removeImageInImageArea(_ button: UIButton){
     guard let imageView = imageAreaStackView?.arrangedSubviews.filter({
       $0 == button.superview
@@ -749,6 +798,10 @@ class TopicCreateHeaderView: UICollectionReusableView {
       imageDatas.remove(at: index)
     }
     imageView.removeFromSuperview()
+    if imageDatas.count == 0 {
+      fitSizeImagesAreaScrollView()
+      callback?.invalidateLayoutCollectionView()
+    }
   }
   
   var descriptionAttributedString: NSAttributedString? {
@@ -798,6 +851,7 @@ class TopicCreateHeaderView: UICollectionReusableView {
           arrangedSubview.removeFromSuperview()
         }
       }
+      imagesAreaScrollViewHeightConstraint?.isActive = (imageDatas.count > 0)
     }
     if let title = headerView.titleTextField?.text {
       titleTextField?.text = title
@@ -852,14 +906,16 @@ class TopicCreateHeaderView: UICollectionReusableView {
       top: 0, left: width375(22.0),
       bottom: 0, right: width375(22.0))
     self.imagesAreaScrollView = imagesAreaScrollView
-    addSubview(imagesAreaScrollView)
+    self.addSubview(imagesAreaScrollView)
     imagesAreaScrollView.snp.makeConstraints {
       $0.leading.trailing.equalTo(self)
       $0.top.equalTo(addImageLabel.snp.bottom)
-        .offset(height667(23.0))
+        .offset(height667(34.0))
+      $0.height.equalTo(0).priority(ConstraintPriority.high)
     }
-    imagesAreaScrollViewHeightConstraint = imagesAreaScrollView.heightAnchor.constraint(equalToConstant: 0)
-    imagesAreaScrollViewHeightConstraint?.isActive = true
+    imagesAreaScrollViewHeightConstraint = imagesAreaScrollView.heightAnchor.constraint(equalToConstant: height667(121.0))
+    imagesAreaScrollViewHeightConstraint?.priority = .required
+    imagesAreaScrollViewHeightConstraint?.isActive = false
 
     let imageAreaStackView = UIStackView()
     imageAreaStackView.axis = .horizontal
@@ -870,7 +926,7 @@ class TopicCreateHeaderView: UICollectionReusableView {
     imagesAreaScrollView.addSubview(imageAreaStackView)
     imageAreaStackView.snp.makeConstraints {
       $0.top.leading.trailing.bottom.equalTo(imagesAreaScrollView)
-      $0.height.equalTo(height667(121.0))
+      $0.height.equalToSuperview()
     }
     
     let titleTextField = UITextField()
@@ -897,6 +953,7 @@ class TopicCreateHeaderView: UICollectionReusableView {
         .offset(height667(23.0))
       $0.leading.equalTo(categoryButton)
       $0.width.equalTo(width375(323.0))
+      //$0.height.equalTo(height667(20))
     }
     
     let titleSeperatorView = UIView()
@@ -1090,8 +1147,8 @@ class TopicCreateFooterView: UICollectionReusableView {
     }
     
     let titleLabel = UILabel()
-    titleLabel.font = UIFont.init(name: "NanumSquareB", size: 14.0)
-    titleLabel.textColor = UIColor.init(r: 112, g: 112, b: 112)
+    titleLabel.font = UIFont(name: "NanumSquareB", size: 14.0)
+    titleLabel.textColor = UIColor(r: 112, g: 112, b: 112)
     titleLabel.text = "랭킹 설정"
     addSubview(titleLabel)
     titleLabel.snp.makeConstraints {
@@ -1107,7 +1164,7 @@ class TopicCreateFooterView: UICollectionReusableView {
     
     let votableCountLabel = UILabel()
     votableCountLabel.font = UIFont(name: "NanumSquareR", size: 14.0)
-    votableCountLabel.textColor = UIColor.init(r: 112, g: 112, b: 112)
+    votableCountLabel.textColor = UIColor(r: 112, g: 112, b: 112)
     votableCountLabel.text = "복수 선택 가능"
     let votableCountInfoButton = UIButton()
     votableCountInfoButton.tag = ButtonTag.votableCount.rawValue
@@ -1355,4 +1412,50 @@ class TopicCreateNetworkModel {
       requestOptionCreate()
     }
   }
+}
+
+extension TopicCreateViewController: TopicCreatePhotoPickerViewControllerDelegate {
+  func photoPickerView(action: TopicCreatePhotoPickerViewAction) {
+    switch action {
+    case .success(let phAssets):
+      self.headerView?.resetImagesInImageArea(phAssets: phAssets)
+      //self.headerView?.clearImageInImageArea()
+      //patchImageInImageArea(phAssets: phAssets)
+      break
+    case .cancel:
+      break
+    }
+  }
+  
+  /*func patchImageInImageArea(phAssets: [PHAsset]) {
+    guard phAssets.count > 0 else {
+      self.flowLayout?.invalidateLayout(); return
+    }
+    
+    var tmpPhAssets = phAssets
+    
+    let phAsset = tmpPhAssets.remove(at: 0)
+    var ratio = Double(phAsset.pixelWidth) / Double(phAsset.pixelHeight)
+    ratio = max(0.5, min(2.0, ratio))
+    let h = Double(height667(121.0))
+    
+    PHImageManager.default().requestImage(for: phAsset, targetSize: CGSize(width: ratio * h, height: h), contentMode: PHImageContentMode.aspectFit, options: nil, resultHandler: patchImageResultHandler)
+    /*PHImageManager.default().requestImage(for: phAsset,
+      targetSize: CGSize(width: ratio * h, height: h),
+      contentMode: PHImageContentMode.aspectFit, options: nil ) { image, _ in
+        if let image = image {
+          self.headerView?.addImageInImageArea(imageData: ImageData(
+              image: image, imageAsset: phAsset))
+        }
+        self.patchImageInImageArea(phAssets: tmpPhAssets)
+    }*/
+  }
+  
+  func patchImageResultHandler(image: UIImage?, info: [AnyHashable: Any]?){
+    if let image = image {
+      self.headerView?.addImageInImageArea(imageData: ImageData(
+        image: image, imageAsset: phAsset))
+    }
+    self.patchImageInImageArea(phAssets: tmpPhAssets)
+  }*/
 }

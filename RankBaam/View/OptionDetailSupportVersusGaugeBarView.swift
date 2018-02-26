@@ -21,7 +21,7 @@ class OptionDetailSupportVersusGaugeBarView: UIView {
     willSet {
       if let redValue = newValue {
         loadValue(blueValue: blueValue, redValue: redValue)
-        redLabel?.text = "\(redValue)공감"
+        redLabel?.text = "\(redValue)비공감"
       }
     }
   }
@@ -32,12 +32,12 @@ class OptionDetailSupportVersusGaugeBarView: UIView {
   func loadValue(blueValue: Int?, redValue: Int?){
     guard let blueValue = blueValue, let redValue = redValue else {return}
     var blueRatio: Double
-    let minRatio: Double = 0.175
-    let maxRatio: Double = (1.0 - minRatio)
+    let minRatio: Double = 0.0//0.175
+    let maxRatio: Double = 1.0//(1.0 - minRatio)
     if blueValue == 0 || redValue == 0 {
       blueRatio = (blueValue > redValue) ? maxRatio : (blueValue == redValue) ? 0.5 : minRatio
     } else {
-      blueRatio = 375.0 * Double(blueValue) / Double(blueValue + redValue)
+      blueRatio = Double(blueValue) / Double(blueValue + redValue)
       blueRatio = max(min(blueRatio, maxRatio), minRatio)
     }
     blueWidthConstraint?.constant = width375(CGFloat(375.0 * blueRatio))

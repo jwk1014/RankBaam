@@ -152,13 +152,24 @@ class OptionDetailViewController: UIViewController {
           case .loading: break
           case .overflow:
             self.dataManager.more = false
-            let moreSection = self.dataManager.optionDetailSectionDataRange().upperBound + 1
-            if (self.collectionView?.numberOfSections ?? 0) > moreSection {
-                self.collectionView?.deleteSections(IndexSet(integer: moreSection))
-            }
+            self.collectionView?.performBatchUpdates({
+              if let numberOfSections = self.collectionView?.numberOfSections {
+                if numberOfSections > 1 {
+                self.collectionView?.deleteSections(IndexSet(integersIn: 1..<numberOfSections))
+                } else if numberOfSections == 0 {
+                  self.collectionView?.insertSections(IndexSet(integer: 0))
+                }
+              }
+            }, completion: { completion in
+              if completion {
+                self.collectionView?.reloadSections(IndexSet(integer: 0))
+                self.collectionView?.refreshControl?.endRefreshing()
+              }
+            })
           case .`else`( _): break
           case .error( _): break
         }
+        self.collectionView?.refreshControl?.endRefreshing()
       },
       c: nil))
   }
@@ -279,7 +290,7 @@ extension OptionDetailViewController: UICollectionViewDataSource {
     case .topHeader:
       guard let topHeaderCell = cell as? OptionDetailTopHeaderCell,
             let option = dataManager.option else {return false}
-      if topHeaderCell.delegate == nil {
+      //if topHeaderCell.delegate == nil {
         topHeaderCell.delegate = self
         if let photo = option.photos.first {
           topHeaderCell.setPhoto(url: photo.realUrl)
@@ -287,7 +298,7 @@ extension OptionDetailViewController: UICollectionViewDataSource {
         topHeaderTextView = topHeaderCell.commentDescriptionTextView
         topHeaderCell.contentView.layoutIfNeeded()
         topHeaderTextViewConvertFrame = topHeaderCell.commentDescriptionTextViewConvertFrame
-        topHeaderCell.descriptionText = option.description
+        topHeaderCell.descriptionText = option.title
         topHeaderCell.commentCount = option.commentPositiveCount + option.commentNegativeCount
         if let headerSupportBarView = topHeaderCell.supportBarView {
           headerSupportBarView.blueValue = option.commentPositiveCount
@@ -297,7 +308,7 @@ extension OptionDetailViewController: UICollectionViewDataSource {
           topHeaderSupportBarView = headerSupportBarView
         }
         //TODO
-      }
+      //}
     case .header:
       guard let headerCell = cell as? OptionDetailHeaderCell else {return false}
       headerCell.dataSource = dataManager
@@ -791,7 +802,7 @@ class OptionDetailDataManager: OptionDetailNetworkDataManager {
 //MARK: - extension DataCollectionViewDataSource
 extension OptionDetailDataManager: OptionDetailDataCollectionViewDataSource {
   func optionDetailSectionCount() -> Int {
-    return comments.count == 0 ? 0 : comments.count + firstSectionIndex + (more ? 1 : 0)
+    return comments.count == 0 ? (more ? 0 : 1) : comments.count + firstSectionIndex + (more ? 1 : 0)
   }
   func optionDetailSectionDataRange() -> ClosedRange<Int> {
     return (firstSectionIndex)...(firstSectionIndex+(comments.count > 0 ? comments.count - 1 : 0))

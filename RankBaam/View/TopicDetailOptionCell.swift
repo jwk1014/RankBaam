@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol TopicDetailOptionCellDelegate {
+    func optionCellCommentDetailButtonTapped(optionSN: Int)
+}
 
 class TopicDetailOptionCell: UICollectionViewCell {
     
     
     let placeHolderImage = UIImage(named: "ImageIcn")
+    var optionSN: Int?
+    var delegate: TopicDetailOptionCellDelegate?
+    
     var votePercentage: CGFloat = 0.0 {
         didSet {
             optionCellVotePercentageView.constraints.forEach { targetConstraint in
@@ -207,8 +213,7 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellNewOptionMarkImageView.image = UIImage(named: "newImg")
         optionCellNewOptionMarkImageView.contentMode = .topLeft
         optionCellNewOptionMarkImageView.isHidden = true
-        
-        
+    
         optionCellBackgroundView.backgroundColor = UIColor.white
         optionCellVotePercentageView.backgroundColor = UIColor.rankbaamOrange
         optionCellImageView.image = UIImage(named: "ImageIcn")
@@ -220,6 +225,7 @@ class TopicDetailOptionCell: UICollectionViewCell {
             UIImage(named: "rightIcn")?.withRenderingMode(.alwaysTemplate)
         optionCellCommentDetailRightShapeImageView.tintColor = UIColor.rankbaamBlue
         optionCellCommentDetailSeperatorView.backgroundColor = UIColor.rankbaamSeperatorColor
+        optionCellCommentDetailButton.addTarget(self, action: #selector(commentDetailButtonTapped), for: .touchUpInside)
         optionCellVoteCountLabel.text = "???표"
         optionCellVoteCountLabel.font = UIFont(name: "NanumSquareB", size: 14)
         
@@ -301,13 +307,19 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellVotePercentageView.leadingAnchor.constraint(equalTo: optionCellBackgroundView.leadingAnchor).isActive = true
         optionCellVotePercentageView.topAnchor.constraint(equalTo: optionCellBackgroundView.topAnchor).isActive = true
         optionCellVotePercentageView.bottomAnchor.constraint(equalTo: optionCellBackgroundView.bottomAnchor).isActive = true
-        let percentageWidth = optionCellVoteHundredPercentageView.widthAnchor.constraint(equalTo: optionCellCommentDetailSeperatorView.widthAnchor, multiplier: votePercentage)
+        let percentageWidth = optionCellVotePercentageView.widthAnchor.constraint(equalTo: optionCellBackgroundView.widthAnchor, multiplier: votePercentage)
         percentageWidth.isActive = true
         percentageWidth.identifier = "percentageWidth"
     }
     
+    @objc fileprivate func commentDetailButtonTapped() {
+        guard let optionSN = self.optionSN else { return }
+        delegate?.optionCellCommentDetailButtonTapped(optionSN: optionSN)
+    }
+    
     func topicDetailOptionCellDataConfigure(_ option: Option) {
         self.optionCellTitleLabel.text = option.title
+        self.optionSN = option.optionSN
         /*let randomPercentage = Float(arc4random()) / Float(UInt32.max)
         self.votePercentage = CGFloat(randomPercentage)*/
         if !option.photos.isEmpty {
