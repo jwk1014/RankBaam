@@ -88,6 +88,8 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
        
         mainAllRankCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 110, right: 0)
         mainAllRankCollectionView.showsVerticalScrollIndicator = false
+        mainAllRankCollectionView.contentOffset = CGPoint(x: 0, y: -mainRankRefreshControl.bounds.size.height)
+        mainRankRefreshControl.beginRefreshing()
     }
     
     @objc func pullToRefresh() {

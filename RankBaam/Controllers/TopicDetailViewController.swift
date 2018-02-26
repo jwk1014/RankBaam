@@ -642,6 +642,7 @@ extension TopicDetailViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let optionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicDetailOptionCell", for: indexPath) as! TopicDetailOptionCell
+        optionCell.delegate = self
         let optionData = optionDatas[indexPath.item]
         optionCell.topicDetailOptionCellDataConfigure(optionData)
         if let topic = self.topic, topic.voteCount > 0 {
@@ -875,6 +876,14 @@ extension TopicDetailViewController: UIImagePickerControllerDelegate, UINavigati
     }
 }
 
+
+extension TopicDetailViewController: TopicDetailOptionCellDelegate {
+    func optionCellCommentDetailButtonTapped(optionSN: Int) {
+        print("clicked")
+    }
+    
+    
+}
 
 
 

@@ -206,8 +206,8 @@
 			isa = PBXGroup;
 			children = (
 				E3CF6FEB20060BC900DE3D41 /* UserRouter.swift */,
-				E3CF6FEC20060BC900DE3D41 /* TopicRouter.swift */,
 				E3CF6FED20060BC900DE3D41 /* OptionRouter.swift */,
+				E3CF6FEC20060BC900DE3D41 /* TopicRouter.swift */,
 				E3E90F1F2014F1C4002B41F6 /* OptionCommentRouter.swift */,
 			);
 			path = Router;
