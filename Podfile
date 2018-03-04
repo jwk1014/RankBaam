@@ -13,4 +13,6 @@ target 'RankBaam' do
   pod 'SnapKit', '4.0.0'
   pod 'SwiftKeychainWrapper', '3.0.1'
   pod 'SDWebImage', '~> 4.2.3'
+  pod 'Fabric', '~> 1.7.5'
+  pod 'Crashlytics', '~> 3.10.1'
 end

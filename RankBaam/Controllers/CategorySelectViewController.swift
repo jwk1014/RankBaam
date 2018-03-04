@@ -89,8 +89,6 @@ class CategorySelectViewController: UIViewController {
     
     let mainStackView = UIStackView(arrangedSubviews: arrangedSubviews)
     mainStackView.setting(axis: .vertical, distribution: .fillProportionally, alignment: .fill)
-    mainStackView.backgroundColor = UIColor.white
-    mainStackView.layer.cornerRadius = 3.0
     view.addSubview(mainStackView)
     mainStackView.snp.makeConstraints {
       $0.centerX.equalTo(view)
@@ -157,8 +155,8 @@ class CategorySelectView: UIView{
   
   @objc func handleLabel(_ sender: UITapGestureRecognizer) {
     var category: Category? = nil
-    if let tag = sender.view?.tag, tag >= 0 && tag < snapshotCategories.count {
-      category = snapshotCategories[tag]
+    if let tag = sender.view?.tag {
+      category = snapshotCategories.filter({$0.categorySN == tag}).first
     }
     if let label = selectedCategoryLabel {
       changeTextColorLabel(label, selected: false)

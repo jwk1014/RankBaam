@@ -42,7 +42,7 @@ class MainTabViewController: UIViewController {
   }
   
   @objc func handleButton(_ button: UIButton) {
-    let vc = TopicCreateViewController()
+    let vc = TopicEditViewController()
     present(vc, animated: true, completion: nil)
   }
   

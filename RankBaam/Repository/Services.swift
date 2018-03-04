@@ -109,14 +109,16 @@ struct TopicService {
               .responseRankBaam(completion)
   }
   
-  static func photoCreate(
+  /* 시뮬레이터에서만 정상동작
+   static func photoCreate(
     topicSN: Int,
     photoUrl: URL,
     completion: @escaping (DataResponse<SResult>) -> Void
     ) {
+    let requestUrl = TopicRouter.photoCreate(topicSN: topicSN).url
     Alamofire.upload(
       multipartFormData: { $0.append(photoUrl, withName: "photo") },
-      to: TopicRouter.photoCreate(topicSN: topicSN).url,
+      to: requestUrl,
       encodingCompletion: {
         switch $0 {
         case .success(let upload, _, _):
@@ -125,6 +127,34 @@ struct TopicService {
           let error = DataResponse<SResult>(
             request: nil, response: nil, data: nil,
             result: Result<SResult>.failure(encodingError))
+          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
+          completion(error)
+        }
+    })
+  }*/
+  
+  static func photoCreate(
+    topicSN: Int,
+    photoData: Data,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    let requestUrl = TopicRouter.photoCreate(topicSN: topicSN).url
+    Alamofire.upload(
+      multipartFormData: {
+        if let mimeType = $0.getImageMimeType(data: photoData) {
+          $0.append(photoData, withName: "photo", fileName: "photo", mimeType: mimeType)
+        }
+      },
+      to: requestUrl,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
           completion(error)
         }
     })
@@ -229,12 +259,17 @@ struct OptionService {
   static func photoCreate(
     topicSN: Int,
     optionSN: Int,
-    photoUrl: URL,
+    photoData: Data,
     completion: @escaping (DataResponse<SResult>) -> Void
     ) {
+    let requestUrl = OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url
     Alamofire.upload(
-      multipartFormData: { $0.append(photoUrl, withName: "photo") },
-      to: OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url,
+      multipartFormData: {
+        if let mimeType = $0.getImageMimeType(data: photoData) {
+          $0.append(photoData, withName: "photo", fileName: "photo", mimeType: mimeType)
+        }
+      },
+      to: requestUrl,
       encodingCompletion: {
         switch $0 {
         case .success(let upload, _, _):
@@ -243,10 +278,36 @@ struct OptionService {
           let error = DataResponse<SResult>(
             request: nil, response: nil, data: nil,
             result: Result<SResult>.failure(encodingError))
+          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
           completion(error)
         }
     })
   }
+  
+  /* 시뮬레이터에서만 정상동작
+   static func photoCreate(
+    topicSN: Int,
+    optionSN: Int,
+    photoUrl: URL,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    let requestUrl = OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url
+    Alamofire.upload(
+      multipartFormData: { $0.append(photoUrl, withName: "photo") },
+      to: requestUrl,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
+          completion(error)
+        }
+    })
+  }*/
   
   @discardableResult
   // TODO completion

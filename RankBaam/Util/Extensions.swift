@@ -37,14 +37,6 @@ extension String {
     }
 }
 
-extension UIViewController {
-  func present(_ vc: UIViewController, animated: Bool, transitioningDelegate: UIViewControllerTransitioningDelegate, completion: (() -> Void)?){
-    vc.transitioningDelegate = transitioningDelegate
-    vc.modalPresentationStyle = .custom
-    present(vc, animated: animated, completion: completion)
-  }
-}
-
 extension UITextField {
     var isEmpty: Bool {
         return text == nil || text!.isEmpty
@@ -111,7 +103,39 @@ extension DataResponse {
     }
 }
 
+extension MultipartFormData {
+  func getImageMimeType(data: Data) -> String? {
+    if data[0] == 0xff && data[1] == 0xd8 && data[2] == 0xff &&
+      [0xe0, 0xe1, 0xe2, 0xe8].contains(data[3]) {
+      return "image/jpeg"
+    } else if data[0] == 0x89 && data[1] == 0x50 &&
+      data[2] == 0x4e && data[3] == 0x47 {
+      return "image/png"
+    } else if data[0] == 0x47 && data[1] == 0x49 && data[2] == 0x46 &&
+      data[3] == 0x38 && [0x37, 0x39].contains(data[4]) &&
+      data[5] == 0x61 {
+      return "image/gif"
+    }
+    return nil
+  }
+}
+
 extension DataRequest {
+    static func debugMultipartEncodingFailure(
+      requestUrl: URLConvertible,
+      result: SessionManager.MultipartFormDataEncodingResult){
+      
+      #if DEBUG
+        
+        if case SessionManager.MultipartFormDataEncodingResult.failure(let error) = result {
+          var log: String = "\n===== \("Alamofire MultipartEncodingFailure") =====\n\n"
+          log += "[URL]\n\((try? requestUrl.asURL())?.absoluteString ?? "url empty")\n\n"
+          log += "[ERROR]\n\(error)\n\n"
+          print(log)
+        }
+        
+      #endif
+    }
     
     func debug<T: Decodable>(response: DataResponse<Data>, type: T.Type){
         
@@ -120,9 +144,9 @@ extension DataRequest {
             var log: String = "\n===== \((response.request?.url?.absoluteString)!) =====\n\n"
           
             log += "[TIMELINE]\n\(response.timeline)\n\n"
-            
-            if let error = response.error {
-                log += "[ERROR]\n\(error.localizedDescription)\n\n"
+          
+            if case Result.failure(let error) = response.result {
+                log += "[ERROR]\n\(error)\n\n"
             } else {
                 
                 if  let headerFields = response.response?.allHeaderFields as? [String: String],
@@ -159,6 +183,8 @@ extension DataRequest {
                     let data = request.httpBody,
                     let str = String(data: data, encoding: .utf8),
                     !str.isEmpty {
+                  var str = str.replacingCharacters(in: str.startIndex..<str.endIndex, with: "\n")
+                  str = str.removingPercentEncoding ?? str
                   log += "[POST BODY]\n\(str)\n\n"
                 }
                 

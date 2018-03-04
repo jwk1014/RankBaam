@@ -82,9 +82,9 @@ class TabHomePageViewController: UIPageViewController {
         mainFilterButton.contentMode = .scaleAspectFit
         
         mainCustomNavigationBar.snp.makeConstraints {
-            $0.top.equalTo(self.view.snp.top).offset(-(UIApplication.shared.statusBarFrame.height))
+            $0.top.equalTo(self.view.snp.top)
             $0.left.right.equalToSuperview()
-            $0.height.equalTo(height667(68, forX: 90))
+            $0.height.equalTo(height667(48)+(UIApplication.shared.statusBarFrame.height))
         }
         
         mainNavigationBarTitle.text = "RANK BAAM"
