@@ -351,7 +351,8 @@ extension TopicEditCollectionViewManager: UICollectionViewDelegateFlowLayout {
 
 extension TopicEditCollectionViewManager: TopicEditTopViewDelegate {
   func topViewHandleTapCategory() {
-    let categorySelectVC = CategorySelectViewController()
+    let categorySelectVC = CategorySelectViewController
+      .createForCategory(selectedCategory: dataManager?.category)
     categorySelectVC.delegate = self
     //categorySelectVC.modalPresentationStyle = .overFullScreen
     //delegate?.present(categorySelectVC, animated: true, completion: nil)
@@ -392,9 +393,10 @@ extension TopicEditCollectionViewManager: TopicEditTopViewDelegate {
 }
 
 extension TopicEditCollectionViewManager: CategorySelectDelegate {
-  func selected(category: Category?) {
+  func submitted(category: Category?) {
     dataManager?.category = category
   }
+  func closed(category: Category?) {}
 }
 
 extension TopicEditCollectionViewManager: TopicCreatePhotoPickerViewControllerDelegate{

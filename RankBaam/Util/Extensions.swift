@@ -129,7 +129,7 @@ extension DataRequest {
         
         if case SessionManager.MultipartFormDataEncodingResult.failure(let error) = result {
           var log: String = "\n===== \("Alamofire MultipartEncodingFailure") =====\n\n"
-          log += "[URL]\n\((try? requestUrl.asURL())?.absoluteString ?? "url empty")\n\n"
+          log += "[URL]\n\((try? requestUrl.asURL())?.absoluteString.removingPercentEncoding ?? "url empty")\n\n"
           log += "[ERROR]\n\(error)\n\n"
           print(log)
         }
@@ -141,7 +141,7 @@ extension DataRequest {
         
         #if DEBUG
             
-            var log: String = "\n===== \((response.request?.url?.absoluteString)!) =====\n\n"
+            var log: String = "\n===== \((response.request?.url?.absoluteString.removingPercentEncoding)!) =====\n\n"
           
             log += "[TIMELINE]\n\(response.timeline)\n\n"
           
