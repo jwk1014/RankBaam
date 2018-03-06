@@ -1282,12 +1282,24 @@ class TopicCreateNetworkModel {
   private func requestOptionCreate() {
     if  let topicSN = topicSN,
         let optionData = optionDatas?.first {
-      OptionService.create( optionWrite: OptionWrite(
-          topicSN: topicSN,
-          optionSN: nil,
-          title: optionData.text,
-          description: nil),
-        completion: responseOptionCreate)
+      let optionCreateClosure: (Data?) -> Void = { photoData in
+        OptionService.create( optionWrite: OptionWrite(
+            topicSN: topicSN,
+            optionSN: nil,
+            title: optionData.text,
+            description: nil),
+            photoData: photoData,
+          completion: self.responseOptionCreate)
+      }
+      
+      if let imageAsset = optionData.imageAsset {
+        PHImageManager.default().requestImageData(
+          for: imageAsset, options: nil) { (data,_,_,_) in
+            optionCreateClosure(data)
+        }
+      } else {
+        optionCreateClosure(nil)
+      }
     } else {
       presentTopicDetail()
     }
@@ -1297,16 +1309,12 @@ class TopicCreateNetworkModel {
     switch(response.result) {
     case .success(let sResult):
       if sResult.succ {
-        guard let optionSN = sResult.optionSN,
-              let previousOptionData = optionDatas?.remove(at: 0) else {
+        guard let _ = sResult.optionSN,
+              let _ = optionDatas?.removeFirst() else {
           presentTopicDetail(); return
         }
         
-        if let imageAsset = previousOptionData.imageAsset {
-          requestOptionPhotoCreate(optionSN: optionSN, imageAsset: imageAsset)
-        } else {
-          requestOptionCreate()
-        }
+        requestOptionCreate()
       } else if let msg = sResult.msg {
         switch msg { default: break }
         presentTopicDetail()
@@ -1316,15 +1324,14 @@ class TopicCreateNetworkModel {
     }
   }
   
-  private func requestOptionPhotoCreate(optionSN: Int, imageAsset: PHAsset) {
+  /*private func requestOptionPhotoCreate(optionSN: Int, imageAsset: PHAsset) {
     guard let topicSN = topicSN else { debugPrint("topicSN is nil"); return }
     PHImageManager.default().requestImageData(
-      for: imageAsset, options: nil) { (_,_,_,info) in
-        if let info = info,
-          let url = info["PHImageFileURLKey"] as? URL {
-          OptionService.photoCreate(
-            topicSN: topicSN, optionSN: optionSN, photoUrl: url,
-            completion: self.responseOptionPhotoCreate)
+      for: imageAsset, options: nil) { (data,_,_,_) in
+        if let data = data {
+        OptionService.photoCreate(
+          topicSN: topicSN, optionSN: optionSN,
+          photoData: data, completion: self.responseOptionPhotoCreate)
         } else {
           self.requestOptionCreate()
         }
@@ -1343,7 +1350,7 @@ class TopicCreateNetworkModel {
     case .failure(let _):
       requestOptionCreate()
     }
-  }
+  }*/
   
   func requestTopicCreate(
     topicWrite: TopicWrite, topicImageAssets: [PHAsset], optionDatas: [OptionData],
@@ -1382,13 +1389,13 @@ class TopicCreateNetworkModel {
   
   private func requestTopicPhotoCreate(){
     if  let topicSN = topicSN,
-        let topicImageAsset = topicImageAssets?.remove(at: 0) {
+        let topicImageAsset = topicImageAssets?.first {
+        topicImageAssets?.removeFirst()
         PHImageManager.default().requestImageData(
-        for: topicImageAsset, options: nil) { (_,_,_,info) in
-          if let info = info,
-            let url = info["PHImageFileURLKey"] as? URL {
+        for: topicImageAsset, options: nil) { (data,_,_,_) in
+          if let data = data {
             TopicService.photoCreate(
-              topicSN: topicSN, photoUrl: url,
+              topicSN: topicSN, photoData: data,
               completion: self.responseTopicPhotoCreate)
           } else {
             self.requestOptionCreate()
