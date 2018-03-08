@@ -84,11 +84,6 @@ class TopicDetailOptionCell: UICollectionViewCell {
         return optionCellBackgroundView
     }()
     
-    var optionCellVoteHundredPercentageView: UIView = {
-        let optionCellVoteHundredPercentageView = UIView()
-        return optionCellVoteHundredPercentageView
-    }()
-    
     var optionCellVotePercentageView: UIView = {
         let optionCellVotePercentageView = UIView()
         return optionCellVotePercentageView
@@ -180,7 +175,6 @@ class TopicDetailOptionCell: UICollectionViewCell {
         self.layer.shadowRadius = 3
         self.layer.shadowOpacity = 0.7
         self.addSubview(optionCellBackgroundView)
-        optionCellBackgroundView.addSubview(optionCellVoteHundredPercentageView)
         optionCellBackgroundView.addSubview(optionCellVotePercentageView)
         optionCellBackgroundView.addSubview(optionCellImageView)
         optionCellBackgroundView.addSubview(optionCellStackViewForTitle)
@@ -296,10 +290,6 @@ class TopicDetailOptionCell: UICollectionViewCell {
             $0.top.equalTo(optionCellStackViewForTitle.snp.bottom)
                 .offset(self.frame.height * (10 / 72))
             $0.height.equalTo(self.frame.height * (16 / 72))
-        }
-        optionCellVoteHundredPercentageView.snp.makeConstraints {
-            $0.top.left.bottom.equalToSuperview()
-            $0.right.equalTo(optionCellCommentDetailSeperatorView.snp.left)
         }
         
         optionCellVotePercentageView

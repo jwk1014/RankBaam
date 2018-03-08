@@ -15,6 +15,10 @@ enum optionDataFetchState {
     case NewOptionAdded
 }
 
+protocol TopicDetailViewControllerDelegate {
+    func tabHomeWeeklyRankCellTimerRestartHander()
+}
+
 enum BottomButtonTitleConverter: CustomStringConvertible {
     
     case isAlreadyVoted
@@ -70,6 +74,7 @@ class TopicDetailViewController: UIViewController {
     var optionDataFetchState: optionDataFetchState = .FetchAllDatas
     var navigationTitleConverter: NavigationTitleConverter?
     var bottomButtonTitleConverter: BottomButtonTitleConverter?
+    var delegate: TopicDetailViewControllerDelegate?
 
      var selectedOptionIndexPath: [(indexPath: Int, optionSN: Int)] = [] {
          didSet {
@@ -484,6 +489,7 @@ class TopicDetailViewController: UIViewController {
     }
 
     @objc fileprivate func rankMainBackButtonTapped() {
+        delegate?.tabHomeWeeklyRankCellTimerRestartHander()
         navigationController?.popViewController(animated: true)
     }
 
@@ -697,18 +703,19 @@ extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         
-        let standardHeight = Constants.screenHeight == 812 ? 700 : Constants.screenHeight
+        /*let standardHeight = Constants.screenHeight == 812 ? 700 : Constants.screenHeight
         
-        return CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (120 / 667))
+        return CGSize(width: Constants.screenWidth * (342 / 375), height: standardHeight * (120 / 667))*/
+        return CGSize(width: width375(342), height: height667(120))
     }
     
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return (Constants.screenHeight * (16 / 667))
+        return height667(16)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: Constants.screenHeight * (7 / 667), right: 0)
+        return UIEdgeInsets(top: 0, left: 0, bottom: height667(7), right: 0)
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -854,10 +861,6 @@ extension TopicDetailViewController: UIViewControllerTransitioningDelegate {
         return nil
     }
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-
-        /*let test = self.rankOptionCollectionView.visibleCells[0].superview?.superview
-        print("####SuperView is :\(test)####")*/
-
         spreadTransition.startFrame = self.startFrameForspreadTransition!
         return spreadTransition
     }
@@ -882,8 +885,6 @@ extension TopicDetailViewController: TopicDetailOptionCellDelegate {
       let vc = OptionDetailViewController.create(topicSN: topicSN, optionSN: optionSN)
       navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
 }
 
 

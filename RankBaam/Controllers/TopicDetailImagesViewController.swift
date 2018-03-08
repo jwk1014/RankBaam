@@ -21,6 +21,7 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
     var originalCenter: CGPoint?
     var firstTouchedPoint: CGPoint?
     var firstImageView: UIImageView?
+    var direction: MovingDirection?
     
 
     var topicImages: [Photo] = [Photo]()
@@ -51,46 +52,57 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
     
     @objc func swipeDismissActionHandler(_ panGesture: UIPanGestureRecognizer) {
         let translation = panGesture.translation(in: view)
-        var direction: MovingDirection?
-        
+        let initCenterX = Int(self.view.center.x)
+        let initCenterY = Int(self.view.center.y)
         if panGesture.state == .began {
             originalCenter = view.center
-            let initPosx = Int(self.view.center.x)
-            let initPosy = Int(self.view.center.y)
+            
             firstTouchedPoint = panGesture.location(in: view)
             let velocity = panGesture.velocity(in: self.view)
             if (velocity.x > velocity.y) && (velocity.x > 0) {
                 print("moving right")
-                self.view.center.y = CGFloat(initPosy)
                 direction = .Rightward
             }
             else if ((abs(velocity.x)) > velocity.y) && (velocity.x < 0) {
                 print("moving left")
-                self.view.center.y = CGFloat(initPosy)
                 direction = .Leftward
             }
             else if (velocity.y > velocity.x) && (velocity.y > 0) {
                 print("moving down")
-                self.view.center.x = CGFloat(initPosx)
+                topicImagesScrollView.isScrollEnabled = false
                 direction = .Downward
             }
             else if ((abs(velocity.y)) > velocity.x) && (velocity.y < 0){
                 print("moving up")
-//                self..center.x = CGFloat(initPosx)
-//                print(abs(velocity.y))
-//                movingUp = true
+                print(abs(velocity.y))
+                direction = .Upward
             }
             
 
         } else if panGesture.state == .changed {
-            view.frame.origin = CGPoint(
-                x: 0,
-                y: translation.y
-            )
+            if let direction = direction {
+            
+                switch direction {
+                    case .Upward:
+                        print("up changed")
+                    case .Downward:
+                        print("down changed")
+                        view.frame.origin = CGPoint(
+                            x: 0,
+                            y: translation.y
+                        )
+                    case .Leftward:
+                        print("left changed")
+                    case .Rightward:
+                        print("right changed")
+                }
+            }
+            
         } else if panGesture.state == .ended {
+            topicImagesScrollView.isScrollEnabled = true
             let movingVelocity = panGesture.velocity(in: view)
             
-            if movingVelocity.y >= 170 {
+            if movingVelocity.y >= 120 {
                 UIView.animate(withDuration: 0.2
                     , animations: {
                         self.view.frame.origin = CGPoint(
@@ -107,6 +119,7 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
                     self.view.center = self.originalCenter!
                 })
             }
+            direction = nil
         }
     }
     
@@ -148,7 +161,7 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(swipeDismissActionHandler))
         panGesture.delegate = self
         topicImagesScrollView.addGestureRecognizer(panGesture)
-        
+        topicImagesScrollView.bounces = false
         let dismissImage = UIImage.init(named: "ic_clear")?.withRenderingMode(.alwaysTemplate)
         topicImagesDismissButton.setImage(dismissImage, for: .normal)
         topicImagesDismissButton.tintColor = UIColor.white
@@ -156,6 +169,7 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
         imagesPageCounterLabel.textColor = UIColor.white
         imagesPageCounterLabel.font = imagesPageCounterLabel.font.withSize(Constants.screenWidth * (15 / 375))
         imagesPageCounterLabel.textAlignment = .center
+        self.imagesPageCounterLabel.text = "1 / \(topicImages.count)"
         
         topicImagesScrollViewConfigure()
         topicImagesScrollView.snp.makeConstraints {

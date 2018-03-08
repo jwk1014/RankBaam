@@ -35,13 +35,13 @@ class TabHomeWeeklyRankViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         let firstIndex = IndexPath(item: 0, section: 0)
-        if tabHomeWeeklyRankCollectionView.indexPathsForVisibleItems.contains(firstIndex) {
+        if tabHomeWeeklyRankCollectionView.indexPathsForVisibleItems.contains(firstIndex),
+            tabHomeWeeklyRankCollectionView.contentOffset.x == 0 {
             let firstRank = tabHomeWeeklyRankCollectionView
                 .cellForItem(at: firstIndex) as! MainWeeklyRankCell
             firstRank.isTimerValid = true
         }
     }
-    
     
     func fetchWeeklyRankDatas() {
         
@@ -148,7 +148,10 @@ extension TabHomeWeeklyRankViewController: UICollectionViewDelegate, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedCell = collectionView.cellForItem(at: indexPath) as! MainWeeklyRankCell
+        selectedCell.isTimerValid = false
         let topicDetailViewController = TopicDetailViewController()
+        topicDetailViewController.delegate = self
         let topicSN = weeklyRankDatas[indexPath.item].topicSN
         topicDetailViewController.topicSN = topicSN
         navigationController?.pushViewController(topicDetailViewController, animated: true)
@@ -178,5 +181,15 @@ extension TabHomeWeeklyRankViewController: UIScrollViewDelegate {
         let indexPath = IndexPath(item: pageNumber, section: 0)
         let recentCell = tabHomeWeeklyRankCollectionView.cellForItem(at: indexPath) as! MainWeeklyRankCell
         recentCell.isTimerValid = state
+    }
+}
+
+extension TabHomeWeeklyRankViewController: TopicDetailViewControllerDelegate {
+    func tabHomeWeeklyRankCellTimerRestartHander() {
+        let centerCells = self.tabHomeWeeklyRankCollectionView.visibleCells.filter { cell -> Bool in
+            return Int(cell.frame.width) > Int(Constants.screenWidth * 0.7 * ( 258 / 375 ))
+        }
+        guard let centerCell = centerCells.first as? MainWeeklyRankCell else { return }
+        centerCell.isTimerValid = true
     }
 }

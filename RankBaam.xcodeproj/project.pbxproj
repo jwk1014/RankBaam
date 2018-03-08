@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C0623262049445E00D6EAB8 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0623252049445E00D6EAB8 /* String+Extension.swift */; };
+		6C0623282049770A00D6EAB8 /* TabMyViewProfileResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0623272049770A00D6EAB8 /* TabMyViewProfileResetPasswordViewController.swift */; };
 		6C09B735201A3E17002CE625 /* PresentFadeInOut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C09B734201A3E16002CE625 /* PresentFadeInOut.swift */; };
 		6C09B73D201B3B0E002CE625 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C09B73C201B3B0E002CE625 /* Constants.swift */; };
 		6C0A98632015ADD700D9D704 /* TopicDetailOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0A98612015ADD700D9D704 /* TopicDetailOptionCell.swift */; };
@@ -17,7 +19,7 @@
 		6C5B839B201F88EC00E430B0 /* TopicDetailImagesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B839A201F88EC00E430B0 /* TopicDetailImagesCell.swift */; };
 		6C5B839D2021A05700E430B0 /* TabMyViewPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B839C2021A05700E430B0 /* TabMyViewPageViewController.swift */; };
 		6C5B839F2021A83400E430B0 /* TabMyViewRankingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B839E2021A83400E430B0 /* TabMyViewRankingsViewController.swift */; };
-		6C5B83A12021BD3F00E430B0 /* TabMyViewCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A02021BD3F00E430B0 /* TabMyViewCommentsViewController.swift */; };
+		6C5B83A12021BD3F00E430B0 /* TabMyViewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A02021BD3F00E430B0 /* TabMyViewProfileViewController.swift */; };
 		6C5B83A32021DB8200E430B0 /* TabLikeStoredRankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */; };
 		6C5B83A52022FB2F00E430B0 /* TabSearchRankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */; };
 		6C5B83C9202DABE900E430B0 /* TopicCreatePhotoPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5B83C8202DABE900E430B0 /* TopicCreatePhotoPickerController.swift */; };
@@ -82,6 +84,8 @@
 
 /* Begin PBXFileReference section */
 		3200F22B635D81C27B2E50AC /* Pods-RankBaam.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RankBaam.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RankBaam/Pods-RankBaam.debug.xcconfig"; sourceTree = "<group>"; };
+		6C0623252049445E00D6EAB8 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		6C0623272049770A00D6EAB8 /* TabMyViewProfileResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewProfileResetPasswordViewController.swift; sourceTree = "<group>"; };
 		6C09B734201A3E16002CE625 /* PresentFadeInOut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentFadeInOut.swift; sourceTree = "<group>"; };
 		6C09B73C201B3B0E002CE625 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6C0A98612015ADD700D9D704 /* TopicDetailOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailOptionCell.swift; sourceTree = "<group>"; };
@@ -92,7 +96,7 @@
 		6C5B839A201F88EC00E430B0 /* TopicDetailImagesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicDetailImagesCell.swift; sourceTree = "<group>"; };
 		6C5B839C2021A05700E430B0 /* TabMyViewPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewPageViewController.swift; sourceTree = "<group>"; };
 		6C5B839E2021A83400E430B0 /* TabMyViewRankingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewRankingsViewController.swift; sourceTree = "<group>"; };
-		6C5B83A02021BD3F00E430B0 /* TabMyViewCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewCommentsViewController.swift; sourceTree = "<group>"; };
+		6C5B83A02021BD3F00E430B0 /* TabMyViewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMyViewProfileViewController.swift; sourceTree = "<group>"; };
 		6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabLikeStoredRankViewController.swift; sourceTree = "<group>"; };
 		6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSearchRankViewController.swift; sourceTree = "<group>"; };
 		6C5B83C8202DABE900E430B0 /* TopicCreatePhotoPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCreatePhotoPickerController.swift; sourceTree = "<group>"; };
@@ -181,7 +185,7 @@
 				E3CF6FD42006073400DE3D41 /* MainTabViewController.swift */,
 				6C5B83A42022FB2F00E430B0 /* TabSearchRankViewController.swift */,
 				6C5B83A22021DB8200E430B0 /* TabLikeStoredRankViewController.swift */,
-				6C5B83A02021BD3F00E430B0 /* TabMyViewCommentsViewController.swift */,
+				6C5B83A02021BD3F00E430B0 /* TabMyViewProfileViewController.swift */,
 				6C5B839C2021A05700E430B0 /* TabMyViewPageViewController.swift */,
 				6C5B839E2021A83400E430B0 /* TabMyViewRankingsViewController.swift */,
 				E3FEB4551FF6149C0074D778 /* TopicEditViewController.swift */,
@@ -195,6 +199,7 @@
 				6CB93707203968D100EEB3BF /* TopicCreateCustomCameraViewController.swift */,
 				6CB93729203BF3E200EEB3BF /* TopicCreateCapturedPhotoViewController.swift */,
 				E3263EDE204406590001E5BB /* OptionDetailViewController.swift */,
+				6C0623272049770A00D6EAB8 /* TabMyViewProfileResetPasswordViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				E3CC20F020010409006DE641 /* Extensions.swift */,
 				6CFD549720104FA400289BDB /* ConstantsNames.swift */,
 				6CFD549F2010508B00289BDB /* UIColor+Extension.swift */,
+				6C0623252049445E00D6EAB8 /* String+Extension.swift */,
 				6C0A986E201797FE00D9D704 /* SpreadTransition.swift */,
 				6C0A987420186E1800D9D704 /* RankBaamIndicator.swift */,
 				E3CC20F62001053A006DE641 /* CoverFlowLayout.swift */,
@@ -532,8 +538,10 @@
 				E3C4054F20481D4100E55AA7 /* TopicEditBottomView.swift in Sources */,
 				6CFD54A02010508B00289BDB /* UIColor+Extension.swift in Sources */,
 				6CFD550E2013711E00289BDB /* TabHomeWeeklyRankViewController.swift in Sources */,
+				6C0623262049445E00D6EAB8 /* String+Extension.swift in Sources */,
 				6C5B839D2021A05700E430B0 /* TabMyViewPageViewController.swift in Sources */,
 				6CB937062039673D00EEB3BF /* TopicCreateCameraCell.swift in Sources */,
+				6C0623282049770A00D6EAB8 /* TabMyViewProfileResetPasswordViewController.swift in Sources */,
 				6CB9372A203BF3E200EEB3BF /* TopicCreateCapturedPhotoViewController.swift in Sources */,
 				6CFD54AD2011D3AB00289BDB /* TopicDetailHeaderView.swift in Sources */,
 				E3263ED9204406100001E5BB /* OptionDetailCell.swift in Sources */,
@@ -561,7 +569,7 @@
 				6CFD55122013737B00289BDB /* MainWeeklyRankCell.swift in Sources */,
 				6CFD549520104CE400289BDB /* TabHomeViewController.swift in Sources */,
 				6CB93708203968D100EEB3BF /* TopicCreateCustomCameraViewController.swift in Sources */,
-				6C5B83A12021BD3F00E430B0 /* TabMyViewCommentsViewController.swift in Sources */,
+				6C5B83A12021BD3F00E430B0 /* TabMyViewProfileViewController.swift in Sources */,
 				E3CC20F120010409006DE641 /* Extensions.swift in Sources */,
 				6CFD54A7201058C400289BDB /* MainAllRankLoadingFooterView.swift in Sources */,
 				E3263ED8204406100001E5BB /* OptionDetailHeaderCell.swift in Sources */,

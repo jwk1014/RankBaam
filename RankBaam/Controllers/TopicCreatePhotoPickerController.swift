@@ -49,10 +49,13 @@ class TopicCreatePhotoPickerViewController: UIViewController {
     var photosCellPHAssetCollections = [PHAssetCollection]()
     var phImageCachingManager = PHCachingImageManager()
     var phImageManager = PHImageManager()
-    var selectedPhotoDatas = [(Int, PHAsset?)]()
+    //var selectedPhotoDatas = [(Int, PHAsset?)]()
+    var selectedPhotoDatas = [PHAsset]()
     var selectedPHAssetDataFromVC = [PHAsset]()
     var topicCreatePhotoPickerTitleView: TopicCreatePhotoPickerTitleView?
     var isCameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
+    var limitNumberOfPhotoSelection: Int?
+    var exSelectedCell: TopicCreatePhotosCell?
     fileprivate let targetSize = CGSize(width: width375(125), height: width375(125))
     fileprivate var previousPreheatRect = CGRect.zero
     lazy var topicCreatePhotosPickerPHAssetBunchViewTableViewHeightClosure: (Double)->CGFloat = { ratio in
@@ -69,7 +72,6 @@ class TopicCreatePhotoPickerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         viewInitConfigure()
         fetchPHAssetCollections()
         topicCreateNavigationBarConfigure()
@@ -80,6 +82,14 @@ class TopicCreatePhotoPickerViewController: UIViewController {
         topicCreatePhotosPickerPHAssetBunchView
             .topicCreatePHAssetBunchViewTableViewHeightConstraint?.constant = 0
         topicCreatePhotosPickerPHAssetBunchView.isHidden = true
+        limitNumberOfPhotoSelection = limitNumberOfPhotoSelection ?? 1
+    }
+    
+    func create(with selected: [PHAsset], limit limitNum: Int ) -> TopicCreatePhotoPickerViewController {
+        let vc = TopicCreatePhotoPickerViewController()
+        vc.selectedPHAssetDataFromVC = selected
+        vc.limitNumberOfPhotoSelection = limitNum
+        return vc
     }
     
     fileprivate func viewInitConfigure() {
@@ -189,10 +199,11 @@ class TopicCreatePhotoPickerViewController: UIViewController {
     
     @objc fileprivate func topicCreatePhotoPickerSelectButtonTapped(_ sender: UIBarButtonItem) {
         var totalSelectedPhassetDatas = [PHAsset]()
-        if !selectedPHAssetDataFromVC.isEmpty {
-            totalSelectedPhassetDatas = selectedPHAssetDataFromVC
-        }
-        totalSelectedPhassetDatas += selectedPhotoDatas.reduce([PHAsset?]()) { total , item in total + [item.1] }.flatMap{ $0! }
+//        if !selectedPHAssetDataFromVC.isEmpty {
+//            totalSelectedPhassetDatas = selectedPHAssetDataFromVC
+//        }
+//        totalSelectedPhassetDatas += selectedPhotoDatas.reduce([PHAsset?]()) { total , item in total + [item.1] }.flatMap{ $0! }
+        totalSelectedPhassetDatas += selectedPhotoDatas.reduce([PHAsset]()) { total , item in total + [item] }
         
         print("This is count of result : \(totalSelectedPhassetDatas.count)")
       
@@ -266,9 +277,9 @@ UICollectionViewDataSource, UICollectionViewDelegate {
             let topicCreatePhotosCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopicCreatePhotosCell", for: indexPath) as! TopicCreatePhotosCell
             let phiRequestOption = PHImageRequestOptions()
             
-            fetchingQueue.async {/* [weak self] in*/
+            fetchingQueue.async { [weak self] in
                 
-               // guard let `self` = self else { return }
+                guard let `self` = self else { return }
                 guard let data = self.photosCellPHAssetDatas?.object(at: (indexPath.item - 1)) else { return }
                 
                 self.phImageCachingManager.requestImage(for: data, targetSize: self.targetSize, contentMode: .aspectFit, options: phiRequestOption, resultHandler: { (image, _) in
@@ -294,12 +305,17 @@ UICollectionViewDataSource, UICollectionViewDelegate {
                         return phassetData == asset
                         }) {
                         selectedPHAssetDataFromVC.remove(at: index)
-                        selectedPhotoDatas.append((indexPath.item, phassetData))
+                        //selectedPhotoDatas.append((indexPath.item, phassetData))
+                        selectedPhotoDatas.append(phassetData)
                         willDisplayCell.isSelectedPhoto = true
                     } else  {
-                        if selectedPhotoDatas.contains(where: { $0.0 == indexPath.item && $0.1 == phassetData }) {
+                        /*if selectedPhotoDatas.contains(where: { $0.0 == indexPath.item && $0.1 == phassetData }) {
+                            willDisplayCell.isSelectedPhoto = true
+                        }*/
+                        if selectedPhotoDatas.contains(where: { $0 == phassetData }) {
                             willDisplayCell.isSelectedPhoto = true
                         }
+
                     }
             }
         }
@@ -358,17 +374,63 @@ UICollectionViewDataSource, UICollectionViewDelegate {
         } else if let photosCell = selectedcell as? TopicCreatePhotosCell,
             let phassetData = self.photosCellPHAssetDatas?.object(at: indexPath.item - 1) {
             if !photosCell.isSelectedPhoto {
-                photosCell.isSelectedPhoto = true
+
                 if let _ = photosCell.topicCreatePhotosCellImageView.image {
-                    selectedPhotoDatas.append((indexPath.item, phassetData))
+                    selectedPHAssetHandler(cell: photosCell, with: phassetData, isAdd: true)
+                    /*selectedPhotoDatas.append((indexPath.item, phassetData))*/
+                    //selectedPhotoDatas.append(phassetData)
                 }
             } else {
                 photosCell.isSelectedPhoto = false
-                if let selectedDataIndex = selectedPhotoDatas.index(where: { $0.0 == indexPath.item && $0.1 == phassetData}){
+               /* if let selectedDataIndex = selectedPhotoDatas.index(where: { $0.0 == indexPath.item && $0.1 == phassetData}){
                     selectedPhotoDatas.remove(at: selectedDataIndex)
-                }
+                }*/
+                if let selectedDataIndex = selectedPhotoDatas.index(where: { $0 == phassetData}){
+                        selectedPhotoDatas.remove(at: selectedDataIndex)
+                    }
             }
         }
+    }
+    
+    func selectedPHAssetHandler(cell presentSelected: TopicCreatePhotosCell, with phasset: PHAsset, isAdd addOrRemove: Bool) -> Bool {
+        guard let limitPhotoNum = limitNumberOfPhotoSelection,
+                limitPhotoNum > 0 else { return false }
+        switch limitPhotoNum {
+        case 1:
+            if let selectedCell = exSelectedCell {
+                selectedCell.isSelectedPhoto = false
+                selectedPhotoDatas.removeAll()
+                selectedPhotoDatas.append(phasset)
+                presentSelected.isSelectedPhoto = true
+                exSelectedCell = presentSelected
+                return true
+            } else {
+                selectedPhotoDatas.append(phasset)
+                if selectedPhotoDatas.count == 1 {
+                    presentSelected.isSelectedPhoto = true
+                    exSelectedCell = presentSelected
+                    return true
+                } else {
+                    fatalError()
+                }
+            }
+            break
+        case 2...Int.max:
+            if selectedPhotoDatas.count == limitPhotoNum {
+                let alertCon = UIAlertController(title: "사진 선택 제한 갯수 초과", message: "사진 선택 갯수는 \(limitPhotoNum)까지 입니다.", preferredStyle: .alert)
+                alertCon.addAction(UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil))
+                present(alertCon, animated: true, completion: nil)
+                //TODO: ALERT
+            } else {
+                selectedPhotoDatas.append(phasset)
+                presentSelected.isSelectedPhoto = true
+            }
+            break
+        default:
+            return false
+        }
+        
+        return true // TODO: TEMP CODE
     }
 }
 
@@ -508,17 +570,4 @@ extension TopicCreatePhotoPickerViewController: UITableViewDelegate {
         fetchPHAssetData(with: phassetCollection)
     }
 }
-
-
-/*if PHPhotoLibrary.authorizationStatus() == .notDetermined {
- PHPhotoLibrary.requestAuthorization({ status in
- if status == .authorized {
- 
- } else {
- 
- }
- })
- } else {
- 
- }*/
 

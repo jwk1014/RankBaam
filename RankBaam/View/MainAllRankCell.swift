@@ -9,7 +9,6 @@
 import UIKit
 import SDWebImage
 import SnapKit
-import AssetsLibrary
 
 protocol LikeStoredRankCellDelegate {
     func likeStoredRankCellDeleteHandler(with cell: UICollectionViewCell)
@@ -224,6 +223,7 @@ class MainAllRankCell: UICollectionViewCell {
             $0.height.equalToSuperview().multipliedBy(0.7)
             $0.width.equalTo(width375(40))
         }
+        mainAllRankCellDeleteButton.backgroundColor = UIColor.clear
         
         mainAllRankCellBackgroundView.snp.makeConstraints {
             $0.left.equalTo(self.snp.left).offset(width375(24))
@@ -310,22 +310,41 @@ class MainAllRankCell: UICollectionViewCell {
         shadowLayer.path = UIBezierPath(roundedRect: CGRect.init(x: 2, y: height667(16), width: width375(85), height: self.frame.height - (height667(20) * 2)), cornerRadius: 0).cgPath
     }
     
+//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+//        super.point(inside: <#T##CGPoint#>, with: <#T##UIEvent?#>)
+//
+//        return true
+//    }
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if clipsToBounds || isHidden || alpha == 0 {
-            return nil
-        }
+        
+//        if isHidden || alpha == 0 || clipsToBounds { return nil }
+//        // convert the point into subview's coordinate system
+//        let subviewPoint = self.convert(point, to: self.mainAllRankCellDeleteButton)
+//        // if the converted point lies in subview's bound, tell UIKit that subview should be the one that receives this event
+//        if !self.isHidden && self.bounds.contains(subviewPoint) { return self.mainAllRankCellDeleteButton }
+//        return nil
+        
+//        if clipsToBounds || isHidden || alpha == 0 {
+//            return super.hitTest(point, with: event)
+//        }
+
+        
         
         for subview in subviews.reversed() {
             let subPoint = subview.convert(point, from: self)
-            if let result = subview.hitTest(subPoint, with: event) {
+            if let result = super.hitTest(subPoint, with: event) {
+                print("result is sended!!!!")
+                print("This is \(result)")
                 return result
             }
         }
         
-        return nil
+        return super.hitTest(point, with: event)
     }
     
     @objc func likeStoredCellDeleteButtonTapped(sender: UIButton) {
+        print("Delete Button Tapped")
         delegate?.likeStoredRankCellDeleteHandler(with: self)
     }
     

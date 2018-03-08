@@ -19,6 +19,11 @@ class TabMyViewRankingsViewController: UIViewController {
         return tabMyViewRankingsCollectionView
     }()
     
+    private(set) weak var tabMyViewRankingsSegmentedTopView: UIView?
+    private(set) weak var tabMyViewRankingsSegmentedControl: UISegmentedControl?
+    private(set) weak var tabMyViewRankingsEditingButton: UIButton?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
@@ -29,10 +34,50 @@ class TabMyViewRankingsViewController: UIViewController {
     
     fileprivate func viewInitConfigure() {
         self.view.addSubview(tabMyViewRankingsCollectionView)
+        
+        
+        let tabMyViewRankingsSegmentedTopView = UIView()
+        self.tabMyViewRankingsSegmentedTopView = tabMyViewRankingsSegmentedTopView
+        self.view.addSubview(tabMyViewRankingsSegmentedTopView)
+        tabMyViewRankingsSegmentedTopView.backgroundColor = UIColor.rankbaamGray
+        tabMyViewRankingsSegmentedTopView.snp.makeConstraints {
+            $0.leading.trailing.equalTo(self.view)
+            $0.top.equalTo(height667(103, forX: 125))
+            $0.height.equalTo(height667(94))
+        }
+        
+        let segmentItems = ["랭킹 글", "댓글"]
+        let tabMyViewRankingsSegmentedControl = UISegmentedControl(items: segmentItems)
+        self.tabMyViewRankingsSegmentedControl = tabMyViewRankingsSegmentedControl
+        tabMyViewRankingsSegmentedTopView.addSubview(tabMyViewRankingsSegmentedControl)
+        tabMyViewRankingsSegmentedTopView.backgroundColor = UIColor.clear
+        tabMyViewRankingsSegmentedControl.backgroundColor = UIColor.white
+        tabMyViewRankingsSegmentedControl
+            .setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor(r: 196, g: 196, b: 196)], for: .normal)
+        tabMyViewRankingsSegmentedControl.tintColor = UIColor.rankbaamOrange
+        tabMyViewRankingsSegmentedControl.selectedSegmentIndex = 0
+        tabMyViewRankingsSegmentedControl.snp.makeConstraints {
+            $0.top.equalTo(tabMyViewRankingsSegmentedTopView).offset(height667(16))
+            $0.leading.equalTo(tabMyViewRankingsSegmentedTopView).offset(width375(15))
+            $0.width.equalTo(width375(344))
+            $0.height.equalTo(32)
+        }
+        
+        let tabMyViewRankingsEditingButton = UIButton()
+        self.tabMyViewRankingsEditingButton = tabMyViewRankingsEditingButton
+        tabMyViewRankingsSegmentedTopView.addSubview(tabMyViewRankingsEditingButton)
+        tabMyViewRankingsEditingButton.setTitle("편집", for: .normal)
+        tabMyViewRankingsEditingButton.setTitleColor(UIColor.rankbaamDarkgray, for: .normal)
+        tabMyViewRankingsEditingButton.snp.makeConstraints {
+            $0.top.equalTo(tabMyViewRankingsSegmentedControl.snp.bottom)
+            $0.right.bottom.equalTo(tabMyViewRankingsSegmentedTopView)
+            $0.width.equalTo(width375(62))
+        }
+        
         tabMyViewRankingsCollectionView.backgroundColor = UIColor.rankbaamGray
         tabMyViewRankingsCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(height667(103, forX: 125))
+            $0.top.equalTo(tabMyViewRankingsSegmentedTopView.snp.bottom)
         }
     }
     

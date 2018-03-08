@@ -32,10 +32,6 @@ class TopicCreateCustomCameraViewController: UIViewController {
         topicCreateCameraSetupInputOutput()
         topicCreateSetupPreviewLayer()
         topicCreateCameracaptureSession.startRunning()
-        
-        
-        
-        
         topicCreateCustomCameraCaptureButtonConfigure()
     }
     
@@ -105,6 +101,8 @@ class TopicCreateCustomCameraViewController: UIViewController {
         self.view.layer.insertSublayer(self.topicCreatecameraPreviewLayer!, at: 0)
     }
     
+    
+    
     @objc func photoCaptureButtonTapped(_ sender: UIButton) {
         self.topicCreatePhotoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
     }
@@ -146,6 +144,7 @@ extension TopicCreateCustomCameraViewController: AVCapturePhotoCaptureDelegate {
             let topicCreateCapturedPhotoController = TopicCreateCapturedPhotoViewController()
             topicCreateCapturedPhotoController.capturedPhoto = capturedPhotoImage
             present(topicCreateCapturedPhotoController, animated: true)
+            /*UIImageWriteToSavedPhotosAlbum(<#T##image: UIImage##UIImage#>, <#T##completionTarget: Any?##Any?#>, <#T##completionSelector: Selector?##Selector?#>, <#T##contextInfo: UnsafeMutableRawPointer?##UnsafeMutableRawPointer?#>)*/
         } else {
             // TODO:
         }
