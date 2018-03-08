@@ -22,7 +22,9 @@ class OptionDetailHeaderCell: UICollectionViewCell {
         changeSupportImage(supportType: commentData.supportType)
         descriptionLabel?.text = commentData.description
         nicknameLabel?.text = commentData.writer.nickname
-        subCommentTextLayer?.string = "답글 \(commentData.subCommentCount)"
+        let subCommentCountString = commentData.subCommentCount == 0 ?
+          "" : " \(commentData.subCommentCount)"
+        subCommentTextLayer?.string = "답글\(subCommentCountString)"
         switch commentData.timeDistance {
         case 0..<1000:
           timeLabel?.text = "방금전"

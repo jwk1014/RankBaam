@@ -78,11 +78,11 @@ class SplashViewController: UIViewController {
                             
                         case .success(let sResult):
                             if sResult.succ {
-                                
-                                let vc = MainTabViewController()
-                                let naviVC = UINavigationController(rootViewController: vc)
+                              
+                              let vc = MainTabViewController()
+                              let naviVC = UINavigationController(rootViewController: vc)
 
-                                self.present(naviVC, animated: true, completion: nil)
+                              self.present(naviVC, animated: true, completion: nil)
                             } else if let msg = sResult.msg {
                                 switch msg {
                                 default:
