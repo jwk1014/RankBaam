@@ -113,6 +113,8 @@ class OptionDetailTopHeaderCell: UICollectionViewCell {
       var ratio = image.size.height / image.size.width
       ratio = max( 2.0, min( 0.5, ratio ) )
       self.photoImageViewHeightConstrant?.constant = width375(272.0) * ratio
+      self.photoImageView?.layoutIfNeeded()
+      (self.superview as? UICollectionView)?.collectionViewLayout.invalidateLayout()
     })
   }
   
@@ -127,6 +129,7 @@ class OptionDetailTopHeaderCell: UICollectionViewCell {
     photoImageView.snp.makeConstraints {
       $0.top.equalTo(contentView).offset(height667(16.0))
       $0.centerX.equalTo(contentView)
+      $0.width.equalTo(width375(272.0))
     }
     photoImageViewHeightConstrant = photoImageView.heightAnchor.constraint(
       equalToConstant: height667( 12.0 ))

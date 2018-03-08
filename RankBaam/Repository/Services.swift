@@ -296,8 +296,36 @@ struct OptionService {
     }
   }
   
-  /* 시뮬레이터에서만 정상동작
   static func photoCreate(
+    topicSN: Int,
+    optionSN: Int,
+    photoData: Data,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) {
+    let requestUrl = OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url
+    Alamofire.upload(
+      multipartFormData: {
+        if let mimeType = $0.getImageMimeType(data: photoData) {
+          $0.append(photoData, withName: "photo", fileName: "photo", mimeType: mimeType)
+        }
+      },
+      to: requestUrl,
+      encodingCompletion: {
+        switch $0 {
+        case .success(let upload, _, _):
+          let _ = upload.responseRankBaam(completion)
+        case .failure(let encodingError):
+          let error = DataResponse<SResult>(
+            request: nil, response: nil, data: nil,
+            result: Result<SResult>.failure(encodingError))
+          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
+          completion(error)
+        }
+    })
+  }
+  
+  /* 시뮬레이터에서만 정상동작
+   static func photoCreate(
     topicSN: Int,
     optionSN: Int,
     photoUrl: URL,
@@ -320,34 +348,6 @@ struct OptionService {
         }
     })
   }*/
-  
-  static func photoCreate(
-    topicSN: Int,
-    optionSN: Int,
-    photoData: Data,
-    completion: @escaping (DataResponse<SResult>) -> Void
-    ) {
-    let requestUrl = OptionRouter.photoCreate(topicSN: topicSN, optionSN: optionSN).url
-    Alamofire.upload(
-      multipartFormData: {
-        if let mimeType = $0.getImageMimeType(data: photoData) {
-          $0.append(photoData, withName: "photo", fileName: "photo", mimeType: mimeType)
-        }
-    },
-      to: requestUrl,
-      encodingCompletion: {
-        switch $0 {
-        case .success(let upload, _, _):
-          let _ = upload.responseRankBaam(completion)
-        case .failure(let encodingError):
-          let error = DataResponse<SResult>(
-            request: nil, response: nil, data: nil,
-            result: Result<SResult>.failure(encodingError))
-          DataRequest.debugMultipartEncodingFailure(requestUrl: requestUrl, result: $0)
-          completion(error)
-        }
-    })
-  }
   
   @discardableResult
   // TODO completion

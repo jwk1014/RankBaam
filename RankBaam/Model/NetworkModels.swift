@@ -23,7 +23,14 @@ enum OrderType: Int, Encodable, CustomStringConvertible {
   case best = 2
   case vote = 3
   var description: String {
-    return "\(rawValue)"
+    return "\(self.rawValue)"
+  }
+  var name: String {
+    switch self {
+    case .new: return "최신순"
+    case .best: return "인기순"
+    case .vote: return "투표순"
+    }
   }
 }
 

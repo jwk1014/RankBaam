@@ -181,7 +181,7 @@ class OptionDetailViewController: UIViewController {
     customNaviBarView.isUserInteractionEnabled = true
     customNaviBarView.snp.makeConstraints {
       $0.top.leading.trailing.equalTo(self.view)
-      $0.height.equalTo(height667(76.0) - UIApplication.shared.statusBarFrame.height)
+      $0.height.equalTo(height667(56.0) + UIApplication.shared.statusBarFrame.height)
     }
     
     let backButton = UIButton()

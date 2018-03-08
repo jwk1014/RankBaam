@@ -42,7 +42,7 @@ class MainTabViewController: UIViewController {
   }
   
   @objc func handleButton(_ button: UIButton) {
-    let vc = TopicCreateViewController()
+    let vc = TopicEditViewController()
     present(vc, animated: true, completion: nil)
   }
   
@@ -80,6 +80,16 @@ class MainTabViewController: UIViewController {
       $0.trailing.equalTo(view)
       $0.bottom.equalTo(view)
     }
+    
+    let gradientLayout = CAGradientLayer()
+    gradientLayout.frame = .init(
+      x: 0, y: view.bounds.height - height667(82.0),
+      width: view.bounds.width, height: height667(82.0))
+    gradientLayout.colors = [
+      UIColor(r: 238, g: 238, b: 238).cgColor,
+      UIColor(r: 246, g: 248, b: 250).cgColor
+    ]
+    view.layer.insertSublayer(gradientLayout, at: 0)
     
     guard let tabBarBgImage = UIImage(named: "tab_bar_bg") else {return}
     let vcSize = view.bounds.size

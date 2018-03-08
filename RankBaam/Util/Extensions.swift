@@ -37,14 +37,6 @@ extension String {
     }
 }
 
-extension UIViewController {
-  func present(_ vc: UIViewController, animated: Bool, transitioningDelegate: UIViewControllerTransitioningDelegate, completion: (() -> Void)?){
-    vc.transitioningDelegate = transitioningDelegate
-    vc.modalPresentationStyle = .custom
-    present(vc, animated: animated, completion: completion)
-  }
-}
-
 extension UITextField {
     var isEmpty: Bool {
         return text == nil || text!.isEmpty
@@ -129,7 +121,6 @@ extension MultipartFormData {
 }
 
 extension DataRequest {
-  
     static func debugMultipartEncodingFailure(
       requestUrl: URLConvertible,
       result: SessionManager.MultipartFormDataEncodingResult){
@@ -138,7 +129,7 @@ extension DataRequest {
         
         if case SessionManager.MultipartFormDataEncodingResult.failure(let error) = result {
           var log: String = "\n===== \("Alamofire MultipartEncodingFailure") =====\n\n"
-          log += "[URL]\n\((try? requestUrl.asURL())?.absoluteString ?? "url empty")\n\n"
+          log += "[URL]\n\((try? requestUrl.asURL())?.absoluteString.removingPercentEncoding ?? "url empty")\n\n"
           log += "[ERROR]\n\(error)\n\n"
           print(log)
         }
@@ -150,12 +141,12 @@ extension DataRequest {
         
         #if DEBUG
             
-            var log: String = "\n===== \((response.request?.url?.absoluteString)!) =====\n\n"
+            var log: String = "\n===== \((response.request?.url?.absoluteString.removingPercentEncoding)!) =====\n\n"
           
             log += "[TIMELINE]\n\(response.timeline)\n\n"
-            
-            if let error = response.error {
-                log += "[ERROR]\n\(error.localizedDescription)\n\n"
+          
+            if case Result.failure(let error) = response.result {
+                log += "[ERROR]\n\(error)\n\n"
             } else {
                 
                 if  let headerFields = response.response?.allHeaderFields as? [String: String],
@@ -192,6 +183,8 @@ extension DataRequest {
                     let data = request.httpBody,
                     let str = String(data: data, encoding: .utf8),
                     !str.isEmpty {
+                  var str = str.replacingCharacters(in: str.startIndex..<str.endIndex, with: "\n")
+                  str = str.removingPercentEncoding ?? str
                   log += "[POST BODY]\n\(str)\n\n"
                 }
                 
