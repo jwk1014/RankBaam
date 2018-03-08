@@ -10,6 +10,9 @@ import UIKit
 
 class SignUpViewController: UIViewController, UITextFieldDelegate {
     
+    var signUpBottomStackViewHeightConstraint: NSLayoutConstraint?
+    let stackViewHeight = "stackViewHeight"
+    
     var signUpBackgroundScrollView: UIScrollView = {
         let signUpBackgroundScrollView = UIScrollView()
         return signUpBackgroundScrollView
@@ -123,6 +126,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(signUpKeyboardShowUpHandler(notification:)), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(signUpKeyboardGoesDownHandler(notification:)), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
         
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc fileprivate func signUpKeyboardShowUpHandler(notification: Notification) {
@@ -271,9 +278,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
         
         signUpBackgroundScrollViewContentsView.snp.makeConstraints {
-            $0.top.left.right.bottom.equalToSuperview()
+            $0.left.right.equalToSuperview()
             $0.width.equalTo(self.view)
-            $0.bottom.equalToSuperview().offset(-height667(10))
+            $0.height.equalTo(self.view.frame.height - height667(76))
+            
             //$0.height.equalTo(Constants.screenHeight - height667(78, forX: 101))
         }
         
@@ -324,6 +332,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             $0.bottom.equalToSuperview()
         }
         
+        signUpSubmissionStackView.bottomAnchor.constraint(equalTo: signUpBackgroundScrollViewContentsView.bottomAnchor).isActive = true
+        signUpSubmissionStackView.centerXAnchor.constraint(equalTo: signUpBackgroundScrollViewContentsView.centerXAnchor).isActive = true
+        signUpSubmissionStackView.topAnchor.constraint(equalTo: signUpEmailIdentificationComleteLabel.bottomAnchor).isActive = true
+        signUpSubmissionStackView.widthAnchor.constraint(equalToConstant: width375(343))
+        let heightCon = signUpSubmissionStackView.heightAnchor.constraint(equalToConstant: height667(206))
+        heightCon.identifier = stackViewHeight
+        heightCon.isActive = true
+        
+        signUpBottomStackViewHeightConstraint = heightCon
 //        signUpLoadingIndicator.snp.makeConstraints {
 //            $0.top.left.right.bottom.equalToSuperview()
 //        }
@@ -390,31 +407,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     @objc func signUpSubmitButtonTapped(_ sender: UIButton ) {
         
-        for (index, item) in signUpEmailIdentificationComleteLabel.subviews.enumerated() {
-            print("""
-                This is index : \(index)
-                This is Item : \(item)
-                """
-            )
-            self.signUpSubmissionInnerStackView.isHidden = true
-            UIView.animate(withDuration: 0.1, delay: 0.4, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.6, options: UIViewAnimationOptions.curveEaseInOut, animations: {
-                item.transform = CGAffineTransform(translationX: 0, y: 20)
-                
-            }, completion: { (isCompleted) in
-                UIView.animate(withDuration: 0.6, animations: {
-                    item.transform = CGAffineTransform(translationX: 0, y: -250)
-                    self.signUpSubmissionStackView.distribution = .equalCentering
-                    self.signUpEmailIdentificationComleteLabel.text = """
-                    \(self.signUpEmailTextField.text!)로
-                    인증 메일을 전송하였습니다.
-                    
-                    """
-                })
-            })
-            
-        }
         
-        /*guard ( checkField(signUpEmailTextField) { _ in
+        guard ( checkField(signUpEmailTextField) { _ in
             self.signUpEmailTextField.becomeFirstResponder()
         } ) else {return}
         
@@ -428,6 +422,40 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 
             case .success(let sResult):
                 if sResult.succ {
+                    for (index, item) in self.signUpEmailIdentificationComleteLabel.subviews.enumerated() {
+                        print("""
+                            This is index : \(index)
+                            This is Item : \(item)
+                            """
+                        )
+                        self.signUpSubmissionInnerStackView.isHidden = true
+                        
+                        UIView.animate(withDuration: 0.1, delay: 0.4, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.6, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+                            item.transform = CGAffineTransform(translationX: 0, y: 20)
+                        }, completion: { (isCompleted) in
+                            UIView.animate(withDuration: 0.6, animations: {
+                                /*let test = self.signUpSubmissionStackView.constraints.filter({
+                                 guard let string = $0.identifier else { return false }
+                                 return string == "stackViewHeight"
+                                 })
+                                 print("This is test Count : \(test.count)")*/
+                                NSLayoutConstraint.deactivate([self.signUpBottomStackViewHeightConstraint!])
+                                let height = self.signUpSubmissionInnerStackView.heightAnchor.constraint(equalToConstant: 50)
+                                height.isActive = true
+                                
+                                item.transform = CGAffineTransform(translationX: 0, y: -250)
+                                self.signUpSubmissionStackView.distribution = .equalCentering
+                                self.signUpEmailIdentificationComleteLabel.text = """
+                                \(self.signUpEmailTextField.text!)로
+                                인증 메일을 전송하였습니다.
+                                
+                                """
+                                self.signUpSubmissionStackView.layoutIfNeeded()
+                            })
+                        })
+                        
+                    }
+                    
                     UIAlertController.alert(target: self, msg: "성공적으로 가입요청되었습니다.\n입력하신 이메일로 인증메일이 전송되었습니다.\n인증 후 로그인 해주세요.") { _ in
                         self.dismiss(animated: true, completion: {
                             
@@ -449,7 +477,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     
                 }
             }
-        }*/
+        }
     }
     
     func validateDomainCheck(email: String) -> Bool {

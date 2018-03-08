@@ -29,16 +29,11 @@ class TabMyViewPageViewController: UIPageViewController {
         return tabMyViewNavigationBarTitle
     }()
     
-    var tabMyViewEditingButton: UIButton = {
-        let tabMyViewEditingButton = UIButton()
-        return tabMyViewEditingButton
-    }()
-    
     var tabMyViewRankingsCommentsViewControllers: [UIViewController] = {
         let tabMyViewRankingsViewController = TabMyViewRankingsViewController()
-        let tabMyViewCommentsViewController = TabMyViewCommentsViewController()
+        let tabMyViewProfileViewController = TabMyViewProfileViewController()
         
-        return [tabMyViewRankingsViewController, tabMyViewCommentsViewController]
+        return [tabMyViewRankingsViewController, tabMyViewProfileViewController]
     }()
     
     override init(transitionStyle style: UIPageViewControllerTransitionStyle, navigationOrientation: UIPageViewControllerNavigationOrientation, options: [String : Any]? = nil) {
@@ -69,9 +64,6 @@ class TabMyViewPageViewController: UIPageViewController {
     fileprivate func customNavigationBarTabBarConfigure() {
         self.view.addSubview(tabMyViewCustomNavigationBar)
         tabMyViewCustomNavigationBar.addSubview(tabMyViewNavigationBarTitle)
-        tabMyViewCustomNavigationBar.addSubview(tabMyViewEditingButton)
-        tabMyViewEditingButton.setImage(UIImage(named: "icSettings"), for: .normal)
-        tabMyViewEditingButton.contentMode = .scaleAspectFit
         
         tabMyViewCustomNavigationBar.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview()
@@ -86,14 +78,7 @@ class TabMyViewPageViewController: UIPageViewController {
             $0.centerX.equalToSuperview()
             $0.height.equalTo(height667(21))
         }
-        tabMyViewEditingButton.snp.makeConstraints {
-            $0.left.equalTo(tabMyViewCustomNavigationBar.snp.left)
-                .offset(width375(335))
-            $0.top.equalTo(tabMyViewCustomNavigationBar.snp.top)
-                .offset(height667(36))
-            $0.width.equalTo(width375(24))
-            $0.height.equalTo(height667(24))
-        }
+    
         self.view.addSubview(upperTabView)
         upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: tabMyViewCustomNavigationBar.bottomAnchor).isActive = true

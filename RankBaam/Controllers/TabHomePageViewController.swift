@@ -82,13 +82,15 @@ class TabHomePageViewController: UIPageViewController {
         mainFilterButton.contentMode = .scaleAspectFit
         
         mainCustomNavigationBar.snp.makeConstraints {
-            $0.top.equalTo(self.view.snp.top).offset(-(UIApplication.shared.statusBarFrame.height))
+            $0.top.equalTo(self.view.snp.top)
+                /*.offset(UIApplication.shared.statusBarFrame.height)*/
             $0.left.right.equalToSuperview()
             $0.height.equalTo(height667(68, forX: 90))
         }
         
         mainNavigationBarTitle.text = "RANK BAAM"
         mainNavigationBarTitle.font = UIFont(name: "NanumSquareB", size: 18)
+        mainNavigationBarTitle.textAlignment = .center
         mainNavigationBarTitle.snp.makeConstraints {
             $0.top.equalTo(mainCustomNavigationBar.snp.top)
                 .offset(height667(38, forX: 60))
@@ -107,11 +109,16 @@ class TabHomePageViewController: UIPageViewController {
         }
         
         self.view.addSubview(upperTabView)
-        upperTabView.translatesAutoresizingMaskIntoConstraints = false
+        upperTabView.snp.makeConstraints {
+            $0.top.equalTo(mainCustomNavigationBar.snp.bottom)
+            $0.leading.trailing.equalTo(self.view)
+            $0.height.equalTo(height667(35))
+        }
+        /*upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: mainCustomNavigationBar.bottomAnchor).isActive = true
         upperTabView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         upperTabView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        upperTabView.heightAnchor.constraint(equalToConstant: height667(35)).isActive = true
+        upperTabView.heightAnchor.constraint(equalToConstant: height667(35)).isActive = true*/
         upperTabView.delegate = self
         
         

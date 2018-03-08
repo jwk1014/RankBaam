@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-enum mainWeeklyBottomScrollDirection {
+enum MainWeeklyBottomScrollDirection: Int {
     case forward
     case backward
 }
@@ -18,14 +18,16 @@ class MainWeeklyRankCell: UICollectionViewCell {
     
     var timer: Timer?
     let placeHolderImage = UIImage(named: "noimage")
-    var scrollDirection: mainWeeklyBottomScrollDirection = .forward
+    var scrollDirection: MainWeeklyBottomScrollDirection = .forward
     let widthForScrolling = Constants.screenWidth * 0.7 * ( 258 / 375 )
+    var isRewind: Bool = false
     
     var mainWeeklyRankBackgroundView: UIView = {
         let mainWeeklyRankBackgroundView = UIView()
         mainWeeklyRankBackgroundView.backgroundColor = UIColor.white
         return mainWeeklyRankBackgroundView
     }()
+    
     var mainWeeklyRankImageView: UIImageView = {
         let mainWeeklyRankImageView = UIImageView()
         return mainWeeklyRankImageView
@@ -126,6 +128,21 @@ class MainWeeklyRankCell: UICollectionViewCell {
         return mainWeeklyBottomRankThirdOptionLabel
     }()
     
+    var mainWeeklyBottomRankRewindFirstImageView: UIImageView = {
+        let mainWeeklyBottomRankRewindFirstImageView = UIImageView()
+        return mainWeeklyBottomRankRewindFirstImageView
+    }()
+    
+    var mainWeeklyBottomRankRewindFirstLabel: UILabel = {
+        let mainWeeklyBottomRankRewindFirstLabel = UILabel()
+        return mainWeeklyBottomRankRewindFirstLabel
+    }()
+    
+    var mainWeeklyBottomRankRewindFirstOptionLabel: UILabel = {
+        let mainWeeklyBottomRankRewindFirstOptionLabel = UILabel()
+        return mainWeeklyBottomRankRewindFirstOptionLabel
+    }()
+    
     var mainWeeklyBottomRankLeftScrollingButton: UIButton = {
         let mainWeeklyBottomRankLeftScrollingButton = UIButton()
         return mainWeeklyBottomRankLeftScrollingButton
@@ -189,6 +206,8 @@ class MainWeeklyRankCell: UICollectionViewCell {
                 case 0:
                     self.mainWeeklyBottomRankFirstOptionLabel.text =
                         "\(top3optionDatas[index].title)"
+                    self.mainWeeklyBottomRankRewindFirstOptionLabel.text =
+                        "\(top3optionDatas[index].title)"
                 case 1:
                     self.mainWeeklyBottomRankSecondOptionLabel.text =
                         "\(top3optionDatas[index].title)"
@@ -242,10 +261,17 @@ class MainWeeklyRankCell: UICollectionViewCell {
             .addSubview(mainWeeklyBottomRankThirdLabel)
         mainWeeklyBottomScrollViewContentsView
             .addSubview(mainWeeklyBottomRankThirdOptionLabel)
+        mainWeeklyBottomScrollViewContentsView
+            .addSubview(mainWeeklyBottomRankRewindFirstImageView)
+        mainWeeklyBottomScrollViewContentsView
+            .addSubview(mainWeeklyBottomRankRewindFirstLabel)
+        mainWeeklyBottomScrollViewContentsView
+            .addSubview(mainWeeklyBottomRankRewindFirstOptionLabel)
         mainWeeklyRankBackgroundView
             .addSubview(mainWeeklyBottomRankLeftScrollingButton)
         mainWeeklyRankBackgroundView
             .addSubview(mainWeeklyBottomRankRightScrollingButton)
+        
         mainWeeklyRankImageView.image = UIImage(named: "noimage")
         mainWeeklyRankTitleLabel.textColor = UIColor(red: 77/255,
                                                      green: 77/255,
@@ -285,6 +311,18 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankFirstOptionLabel.font = mainWeeklyBottomRankFirstOptionLabel
             .font
             .withSize(Constants.screenHeight * ( 11 / 667 ))
+        mainWeeklyBottomRankRewindFirstImageView.image = UIImage(named: "1GradeImg")
+        mainWeeklyBottomRankRewindFirstImageView.contentMode = .scaleAspectFit
+        mainWeeklyBottomRankRewindFirstLabel.text = "1위"
+        mainWeeklyBottomRankRewindFirstLabel.textColor = UIColor.rankbaamOrange
+        mainWeeklyBottomRankRewindFirstLabel.font = mainWeeklyBottomRankFirstLabel
+            .font
+            .withSize(Constants.screenHeight * ( 9 / 667 ))
+        mainWeeklyBottomRankRewindFirstOptionLabel.textAlignment = .center
+        mainWeeklyBottomRankRewindFirstOptionLabel.textColor = UIColor.rankbaamBlack
+        mainWeeklyBottomRankRewindFirstOptionLabel.font = mainWeeklyBottomRankFirstOptionLabel
+            .font
+            .withSize(Constants.screenHeight * ( 11 / 667 ))
         mainWeeklyBottomRankSecondImageView.image = UIImage(named: "2GradeImg")
         mainWeeklyBottomRankSecondImageView.contentMode = .scaleAspectFit
         mainWeeklyBottomRankSecondLabel.text = "2위"
@@ -313,9 +351,16 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomRankLeftScrollingButton
             .setImage(UIImage.init(named: "leftIcn"), for: .normal)
         mainWeeklyBottomRankLeftScrollingButton.contentMode = .scaleToFill
+        mainWeeklyBottomRankLeftScrollingButton.tag = 1
+        mainWeeklyBottomRankLeftScrollingButton.addTarget(self, action: #selector(bottomScrollButtonHandler(sender:)), for: .touchUpInside)
         mainWeeklyBottomRankRightScrollingButton
             .setImage(UIImage.init(named: "rightIcn"), for: .normal)
         mainWeeklyBottomRankRightScrollingButton.contentMode = .scaleToFill
+        mainWeeklyBottomRankRightScrollingButton.tag = 0
+        mainWeeklyBottomRankRightScrollingButton.addTarget(self, action: #selector(bottomScrollButtonHandler(sender:)), for: .touchUpInside)
+        
+        
+        
         
         mainWeeklyRankBackgroundView.snp.makeConstraints {
             $0.top.left.right.bottom.equalToSuperview()
@@ -393,7 +438,7 @@ class MainWeeklyRankCell: UICollectionViewCell {
         mainWeeklyBottomScrollView.contentSize = CGSize(width: self.frame.width * 3, height: mainWeeklyBottomScrollView.frame.height)
         mainWeeklyBottomScrollViewContentsView.snp.makeConstraints {
             $0.top.left.equalToSuperview()
-            $0.width.equalTo(self.frame.width * 3)
+            $0.width.equalTo(self.frame.width * 7)
             $0.height.equalTo(mainWeeklyBottomScrollView.snp.height)
         }
         mainWeeklyBottomRankFirstImageView.snp.makeConstraints {
@@ -404,6 +449,7 @@ class MainWeeklyRankCell: UICollectionViewCell {
             $0.width.equalTo(self.frame.width * (20 / 258))
             $0.height.equalTo(self.frame.height * (18 / 406))
         }
+        
         mainWeeklyBottomRankFirstLabel.snp.makeConstraints {
             $0.top.equalTo(mainWeeklySeperatorLineView.snp.bottom)
                 .offset(self.frame.height * ( 19 / 406 ))
@@ -468,6 +514,33 @@ class MainWeeklyRankCell: UICollectionViewCell {
             $0.width.equalTo(self.frame.width * (190 / 258))
             $0.height.equalTo(self.frame.height * (18 / 406))
         }
+        
+        mainWeeklyBottomRankRewindFirstImageView.snp.makeConstraints {
+            $0.top.equalTo(mainWeeklySeperatorLineView.snp.bottom)
+                .offset(self.frame.height * ( 18 / 406 ))
+            $0.left.equalTo(mainWeeklyBottomScrollViewContentsView.snp.left)
+                .offset(self.frame.width * 7 / 2 - (self.frame.width * (17 / 258)))
+            $0.width.equalTo(self.frame.width * (20 / 258))
+            $0.height.equalTo(self.frame.height * (18 / 406))
+        }
+        
+        mainWeeklyBottomRankRewindFirstLabel.snp.makeConstraints {
+            $0.top.equalTo(mainWeeklySeperatorLineView.snp.bottom)
+                .offset(self.frame.height * ( 19 / 406 ))
+            $0.left.equalTo(mainWeeklyBottomRankRewindFirstImageView.snp.right)
+                .offset(self.frame.width * ( 4 / 258))
+            $0.width.equalTo(self.frame.width * (25 / 258))
+            $0.height.equalTo(self.frame.height * (18 / 406))
+        }
+        mainWeeklyBottomRankRewindFirstOptionLabel.snp.makeConstraints {
+            $0.left.equalTo(mainWeeklyBottomScrollViewContentsView.snp.left)
+                .offset(self.frame.width * ( 34 / 258) + (self.frame.width * 3))
+            $0.bottom.equalTo(mainWeeklyBottomScrollViewContentsView.snp.bottom)
+                .offset(-(self.frame.width * ( 36 / 258)))
+            $0.width.equalTo(self.frame.width * (190 / 258))
+            $0.height.equalTo(self.frame.height * (18 / 406))
+        }
+        
         mainWeeklyBottomRankLeftScrollingButton.snp.makeConstraints {
             $0.left.equalTo(mainWeeklyRankBackgroundView.snp.left)
                 .offset(self.frame.width * ( 14 / 258))
@@ -486,7 +559,26 @@ class MainWeeklyRankCell: UICollectionViewCell {
         }
     }
     
-    @objc fileprivate func autoCarouselEffectRankTop3() {
+    @objc fileprivate func bottomScrollButtonHandler(sender: UIButton) {
+        guard let direction = MainWeeklyBottomScrollDirection(rawValue: sender.tag)
+            else { return }
+        switch direction {
+        case .forward:
+            if self.mainWeeklyBottomScrollView.contentOffset.x <= (widthForScrolling * 2) - 10 {
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.mainWeeklyBottomScrollView.contentOffset.x += self.widthForScrolling
+                })
+            }
+        case .backward:
+            if self.mainWeeklyBottomScrollView.contentOffset.x != 0 {
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.mainWeeklyBottomScrollView.contentOffset.x -= self.widthForScrolling
+                })
+            }
+        }
+    }
+    
+    /*@objc fileprivate func autoCarouselEffectRankTop3() {
         if self.scrollDirection == .forward {
             if self.mainWeeklyBottomScrollView.contentOffset.x <= (widthForScrolling * 2) - 10 {
                 UIView.animate(withDuration: 0.5, animations: {
@@ -508,6 +600,29 @@ class MainWeeklyRankCell: UICollectionViewCell {
                     self.mainWeeklyBottomScrollView.contentOffset.x += self.widthForScrolling
                 })
                 self.scrollDirection = .forward
+            }
+        }
+    }*/
+    
+    @objc fileprivate func autoCarouselEffectRankTop3() {
+        
+        if isRewind {
+            self.mainWeeklyBottomScrollView.contentOffset.x = 0
+            isRewind = false
+        }
+        
+        if self.mainWeeklyBottomScrollView.contentOffset.x <= (widthForScrolling * 3) - 10 {
+            
+            if self.mainWeeklyBottomScrollView.contentOffset.x >= (widthForScrolling * 2) - 10 {
+                isRewind = true
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.mainWeeklyBottomScrollView.contentOffset.x += self.widthForScrolling
+                })
+                
+            } else {
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.mainWeeklyBottomScrollView.contentOffset.x += self.widthForScrolling
+                })
             }
         }
     }
