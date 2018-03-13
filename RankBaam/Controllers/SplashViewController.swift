@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class SplashViewController: UIViewController {
     
@@ -43,90 +44,120 @@ class SplashViewController: UIViewController {
         splashTitleLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(splashLogoImageView.snp.bottom).offset(height667(14))
-            $0.width.equalTo(width375(152))
+            //$0.width.equalTo(width375(152))
             $0.height.equalTo(height667(31))
         }
     }
-    
-    
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadNetwork()
         viewInitConfigure()
-        
-        
+      
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-            UIView.animate(withDuration: 1, delay: 0, animations: {
-                self.view.backgroundColor = UIColor.white
-                self.splashTitleLabel.text = "Rank Baam"
-                self.splashTitleLabel.font = UIFont(name: "NanumSquareB", size: 28)
-                self.splashTitleLabel.textColor = UIColor.rankbaamOrange
-            }, completion: nil)        
-        }
-        
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-          TopicService.categoryList{
-            if let resultCategoryList = $0.value {
-              categories = resultCategoryList.categories
+          UIView.transition(with: self.splashTitleLabel, duration: 1, options: .transitionCrossDissolve, animations: {
+            self.view.backgroundColor = UIColor.white
+            self.splashTitleLabel.text = "Rank Baam"
+            self.splashTitleLabel.font = UIFont(name: "NanumSquareB", size: 28)
+            self.splashTitleLabel.textColor = UIColor.rankbaamOrange
+          }, completion: { success in
+            if success {
+              self.loadCompletionSemaphore.wait()
+              self.isAnimationComplete = true
+              self.loadCompletionSemaphore.signal()
+              self.complete()
             }
-            //if let signData = SignManager.keychain {
-            let signDataTemp = SignData(email: "fgfg4514@naver.com", identification: "test1234")
-            UserService.singin(signData: signDataTemp) {
-                
-                        switch($0.result) {
-                            
-                        case .success(let sResult):
-                            if sResult.succ {
-                              
-                              let vc = MainTabViewController()
-                              let naviVC = UINavigationController(rootViewController: vc)
-
-                              self.present(naviVC, animated: true, completion: nil)
-                            } else if let msg = sResult.msg {
-                                switch msg {
-                                default:
-                                    break
-                                }
-                            }
-                            
-                        case .failure(let error):
-                            if let error = error as? SolutionProcessableProtocol {
-                                error.handle(self)
-                            } else {
-                                
-                            }
-                            
-                        }
-                    }
-                    /*
-                    .responseRankBaam { (error, errorClosure, result: SResult?, date) in
-                        
-                        if let errorClosure = errorClosure {
-                            errorClosure(self)
-                            return
-                        }
-                        
-                        if let result = result {
-                            if result.succ {
-                                
-                            } else {
-                                switch result.msg {
-                                default:
-                                    break
-                                }
-                            }
-                            let vc = TopicListViewController()
-                            let naviVC = UINavigationController(rootViewController: vc)
-                            self.present(naviVC, animated: true, completion: nil)
-                        }
-                    }*/
-            /*} else {
-                let vc = TopicListViewController()
-                let naviVC = UINavigationController(rootViewController: vc)
-                self.present(naviVC, animated: true, completion: nil)
-            }*/
+          })
         }
+    }
+  
+    private func loadNetworkStep1TopicCategoryList(response: DataResponse<SResultCategoryList>) {
+      switch(response.result) {
+      case .success(let result):
+        if result.succ {
+          if let topicCategories = result.categories {
+            categories = topicCategories
+            
+            if let signData = SignManager.keychain {
+              UserService.singin(signData: signData, completion: loadNetworkStep2UserSignIn)
+            } else {
+              loadNetworkCompleteWithOutSignIn()
+            }
+          } else {
+            assertionFailure("categories is nil")
+          }
+        } else if let msg = result.msg {
+          switch msg {
+          default: assertionFailure(msg)
+          }
+        } else {
+          assertionFailure("succ is false and msg is nil")
+        }
+      case .failure(_): break
       }
+    }
+  
+    private func loadNetworkStep2UserSignIn(response: DataResponse<SResult>) {
+      switch(response.result) {
+      case .success(let result):
+        if result.succ {
+          loadNetworkComplete()
+        } else if let msg = result.msg {
+          switch msg {
+          case "UserNotFound":
+            loadNetworkCompleteWithOutSignIn()
+          case "UserNeedNickname":
+            loadNetworkCompleteWithOutNickname()
+          default: assertionFailure(msg)
+          }
+        } else {
+          assertionFailure("succ is false and msg is null")
+        }
+      case .failure(_): break
+      }
+    }
+  
+    private func loadNetworkCompleteWithOutSignIn() {
+      self.loadCompletionSemaphore.wait()
+      self.completionClosure = {
+        let vc = SignInViewController()
+        let naviVC = UINavigationController(rootViewController: vc)
+        self.present(naviVC, animated: true, completion: nil)
+      }
+      self.loadCompletionSemaphore.signal()
+      self.complete()
+    }
+  
+    private func loadNetworkCompleteWithOutNickname() {
+      fatalError("TODO")////TODO
+    }
+  
+    private func loadNetworkComplete() {
+      self.loadCompletionSemaphore.wait()
+      self.completionClosure = {
+        let vc = MainTabViewController()
+        let naviVC = UINavigationController(rootViewController: vc)
+        self.present(naviVC, animated: true, completion: nil)
+      }
+      self.loadCompletionSemaphore.signal()
+      self.complete()
+    }
+  
+    private func loadNetwork() {
+      TopicService.categoryList(completion: loadNetworkStep1TopicCategoryList)
+    }
+  
+    private var loadCompletionSemaphore = DispatchSemaphore(value: 1)
+    private var isAnimationComplete = false
+    private var completionClosure: (()->Void)?
+  
+    private func complete(){
+      loadCompletionSemaphore.wait()
+      if isAnimationComplete, let completionClosure = completionClosure {
+        loadCompletionSemaphore.signal()
+        completionClosure()
+        return
+      }
+      loadCompletionSemaphore.signal()
     }
 }

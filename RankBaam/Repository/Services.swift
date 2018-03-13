@@ -43,6 +43,29 @@ struct UserService {
     Alamofire.request(UserRouter.signout).response{ _ in }
   }
   
+  @discardableResult
+  static func getNickname(
+    completion: @escaping (DataResponse<SResultNickname>) -> Void
+    ) -> DataRequest {
+    return Alamofire.request(UserRouter.getNickname).responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func setNickname(
+    nickname: String,
+    completion: @escaping (DataResponse<SResult>) -> Void
+    ) -> DataRequest {
+    return Alamofire.request(UserRouter.setNickname(nickname: nickname))
+      .responseRankBaam(completion)
+  }
+  
+  @discardableResult
+  static func preNickname(
+    completion: @escaping (DataResponse<SResultNickname>) -> Void
+    ) -> DataRequest {
+    return Alamofire.request(UserRouter.preNickname).responseRankBaam(completion)
+  }
+  
 }
 
 struct TopicService {

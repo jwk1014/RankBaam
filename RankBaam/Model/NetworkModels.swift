@@ -7,6 +7,7 @@
 //
 
 import Foundation
+//22일 1시
 
 enum SignType: Int, Codable, CustomStringConvertible {
   case email = 1
@@ -39,10 +40,16 @@ struct SResult: Decodable{
     var msg: String?
 }
 
+struct SResultNickname: Decodable {
+  var succ: Bool
+  var msg: String?
+  var nickname: String?
+}
+
 struct SResultCategoryList: Decodable {
   var succ: Bool
   var msg: String?
-  var categories: [Category]
+  var categories: [Category]?
 }
 
 struct SResultTopicList: Decodable{
