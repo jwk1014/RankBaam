@@ -15,15 +15,25 @@ protocol TopicEditTopViewDelegate: class {
   func topViewHandleTapAddImage()
   func topViewValueUpdate(title: String)
   func topViewValueUpdate(description: String)
-  func topViewValueRemove(image: UIImage)
+  func topViewValueRemove(index: Int)
 }
 
-class TopicEditTopView: UICollectionReusableView {
-  private enum ButtonTag: Int {
-    case category = 1
-    case imageAdd = 2
-    case imageRemove = 3
-  }
+protocol TopicEditTopViewProtocol {
+  var firstResponder: UIResponder? { get }
+  var isVisibleAddButton: Bool { get set }
+  var countImageViews: Int { get }
+  var isVisibleImageArea: Bool { get set }
+  var isVisibleButtomArea: Bool { get set }
+  var isNeedFrameHeightUpdate: Bool { get }
+  
+  func setValue(categoryName: String?)
+  func setValue(title: String)
+  func setValue(description: String)
+  
+  func resetImages(imageBindDatas: [ImageBindData])
+}
+
+class TopicEditTopView: UIView, TopicEditTopViewProtocol{
   
   private let imagesAreaScrollViewHeight = height667(170.0)
   
@@ -56,12 +66,33 @@ class TopicEditTopView: UICollectionReusableView {
   private var addImageLabelZeroLeadingOffsetConstraint: NSLayoutConstraint?
   private var imagesAreaScrollViewHeightConstraint: NSLayoutConstraint?
   
-  var imageMaxCount: Int = Int.max
+  var isVisibleAddButton: Bool = true {
+    didSet {
+      if oldValue != isVisibleAddButton {
+        addImageButtonZeroWidthConstraint?.isActive = !isVisibleAddButton
+        addImageLabelZeroLeadingOffsetConstraint?.isActive = !isVisibleAddButton
+      }
+    }
+  }
+  
+  var countImageViews: Int {
+    return imageAreaStackView?.arrangedSubviews.count ?? 0
+  }
+  
+  var isVisibleImageArea: Bool = false {
+    didSet {
+      if oldValue != isVisibleImageArea {
+        imagesAreaScrollViewHeightConstraint?.isActive = isVisibleImageArea
+      }
+    }
+  }
   
   var isVisibleButtomArea: Bool = false {
     didSet {
-      descriptionSeperatorView?.isHidden = !isVisibleButtomArea
-      optionsLabel?.isHidden = !isVisibleButtomArea
+      if oldValue != isVisibleButtomArea {
+        descriptionSeperatorView?.isHidden = !isVisibleButtomArea
+        optionsLabel?.isHidden = !isVisibleButtomArea
+      }
     }
   }
   
@@ -78,12 +109,29 @@ class TopicEditTopView: UICollectionReusableView {
     return 0
   }
   
-  func setCategoryButtonImage(category: Category?) {
-    if let category = category {
+  func updateFrameHeight() -> Bool {
+    let realheight = self.realHeight
+    if bounds.height != realheight {
+      frame.size.height = realheight
+      return true
+    }
+    return false
+  }
+  
+  func setValue(title: String) {
+    titleTextField?.text = title
+  }
+  
+  func setValue(description: String) {
+    descriptionTextView?.text = description
+  }
+  
+  func setValue(categoryName: String?) {
+    if let categoryName = categoryName {
       if let image = UIImage(named: "category_resizable_btn") {
         if let font = UIFont(name: "NanumSquareB", size: 14.0) {
           categoryButton?.setAttributedTitle(NSAttributedString(
-            string: category.name,
+            string: categoryName,
             attributes: [
               .font: font,
               .foregroundColor: UIColor(r: 250, g: 84, b: 76)
@@ -107,30 +155,30 @@ class TopicEditTopView: UICollectionReusableView {
     }
   }
   
-  func checkViewRelativeImage() -> Bool {
-    var result = false
-    let imageViewCount = imageAreaStackView?.arrangedSubviews.count ?? 0
-    let isNotEmpty = imageViewCount > 0
-    let isMax = imageViewCount == imageMaxCount
-    
-    if isNotEmpty != imagesAreaScrollViewHeightConstraint?.isActive {
-      imagesAreaScrollViewHeightConstraint?.isActive = isNotEmpty
-      result = true
+  func resetImages(imageBindDatas: [ImageBindData]) {
+    guard let imageAreaStackView = imageAreaStackView else { return }
+    let dataCount = imageBindDatas.count
+    let subViewCount = imageAreaStackView.arrangedSubviews.count
+    let minCount = min(dataCount, subViewCount)
+    for i in 0..<minCount {
+      imageBindDatas[i].imageView = imageAreaStackView.arrangedSubviews[i] as? UIImageView
     }
-    
-    if isMax != addImageButtonZeroWidthConstraint?.isActive {
-      addImageButtonZeroWidthConstraint?.isActive = isMax
-      addImageLabelZeroLeadingOffsetConstraint?.isActive = isMax
-      result = true
+    if dataCount < subViewCount {
+      imageAreaStackView.arrangedSubviews[minCount...].forEach{
+        $0.removeFromSuperview()
+      }
+    } else if dataCount > subViewCount {
+      for i in subViewCount..<dataCount {
+        if let imageView = createImageView() {
+          imageBindDatas[i].imageView = imageView
+        }
+      }
     }
-    
-    return result
   }
   
   private func createImageView() -> UIImageView? {
     
-    guard let imageAreaStackView = imageAreaStackView,
-          imageAreaStackView.arrangedSubviews.count < imageMaxCount
+    guard let imageAreaStackView = imageAreaStackView
       else { assertionFailure(); return nil }
     
     let imageView = UIImageView()
@@ -155,39 +203,18 @@ class TopicEditTopView: UICollectionReusableView {
       $0.width.equalTo(width375(30.0))
       $0.height.equalTo(button.snp.width)
     }
+    
     return imageView
   }
   
-  func setImageInImageArea(index: Int, imageData: ImageData) {
-    if imageAreaStackView?.arrangedSubviews.count ?? 0 <= index {
-      let originIndex = imageAreaStackView?.arrangedSubviews.count ?? 0
-      for _ in originIndex...index {
-        let _ = createImageView()
-      }
-    }
-    if let imageView = imageAreaStackView?.arrangedSubviews[index] as? UIImageView {
-      imageData.sendImage(imageView: imageView)
-    }
-  }
-  
   @objc private func handleTapRemoveButtonInImageArea(_ sender: UIButton) {
-    guard let imageView = (sender.superview as? UIImageView) else {return}
+    guard let imageView = (sender.superview as? UIImageView),
+          let imageAreaStackView = imageAreaStackView else {return}
+    let index = imageAreaStackView.arrangedSubviews.index(where: { $0 == imageView })
     imageView.removeFromSuperview()
     
-    if checkViewRelativeImage() {
-      (superview as? UICollectionView)?.collectionViewLayout.invalidateLayout()
-    }
-    
-    if let image = imageView.image {
-      delegate?.topViewValueRemove(image: image)
-    }
-  }
-  
-  func clearImageInImageArea(){
-    guard let subViews = imageAreaStackView?.arrangedSubviews,
-      subViews.count > 0 else { return }
-    for view in subViews {
-      view.removeFromSuperview()
+    if let index = index {
+      delegate?.topViewValueRemove(index: index)
     }
   }
   
@@ -200,12 +227,12 @@ class TopicEditTopView: UICollectionReusableView {
   }
   
   private func initView(){
+    
     let categoryButton = UIButton()
     categoryButton.setBackgroundImage(UIImage(named: "category_btn"), for: .normal)
     categoryButton.addTarget(self, action: #selector(handleTapCategory), for: .touchUpInside)
     self.categoryButton = categoryButton
     self.addSubview(categoryButton)
-    categoryButton.tag = ButtonTag.category.rawValue
     categoryButton.snp.makeConstraints {
       $0.top.equalToSuperview().offset(height667(24.0))
       $0.leading.equalToSuperview().offset(width375(26.0))
@@ -218,7 +245,6 @@ class TopicEditTopView: UICollectionReusableView {
     addImageButton.addTarget(self, action: #selector(handleTapAddImage), for: .touchUpInside)
     self.addImageButton = addImageButton
     self.addSubview(addImageButton)
-    addImageButton.tag = ButtonTag.imageAdd.rawValue
     addImageButton.snp.makeConstraints {
       $0.top.equalTo(categoryButton.snp.bottom)
         .offset(height667(16.0))
@@ -407,31 +433,5 @@ extension TopicEditTopView {
   @objc func textFieldDidChange(_ textField: UITextField) {
     delegate?.topViewValueUpdate(title:
       textField.text?.trimmingCharacters(in: CharacterSet(charactersIn: " \n")) ?? "")
-  }
-}
-
-extension ImageData {
-  fileprivate func sendImage(imageView: UIImageView) {
-    for constraint in imageView.constraints {
-      if constraint.firstAnchor == imageView.widthAnchor {
-        imageView.removeConstraint(constraint)
-      }
-    }
-    
-    imageView.widthAnchor.constraint(equalToConstant: targetSize.width).isActive = true
-    
-    if let image = image {
-      imageView.image = image
-    } else {
-      PHImageManager.default().requestImage(
-        for: imageAsset,
-        targetSize: targetSize,
-        contentMode: PHImageContentMode.aspectFit,
-        options: nil) {
-          image, _ in
-          self.image = image
-          imageView.image = image
-      }
-    }
   }
 }

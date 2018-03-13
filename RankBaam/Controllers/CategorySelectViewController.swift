@@ -33,12 +33,12 @@ class CategorySelectViewController: UIViewController {
     return .init(categorySN: 0, name: "전체")
   }
   
-  static func createForOrderAndCategory(selectedOrder: OrderType, selectedCategory: Category) -> CategorySelectViewController {
+  static func createForOrderAndCategory(selectedOrder: OrderType, selectedCategory: Category?) -> CategorySelectViewController {
     let vc = CategorySelectViewController()
     vc.orders = [OrderType.new, OrderType.best, OrderType.vote]
     vc.snapshotCategories = [vc.categoryAll] + categories
     vc.selectedOrder = selectedOrder
-    vc.selectedCategory = selectedCategory
+    vc.selectedCategory = selectedCategory ?? vc.defaultCategory
     return vc
   }
   

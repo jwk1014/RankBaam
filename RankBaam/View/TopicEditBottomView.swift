@@ -19,7 +19,7 @@ enum TopicEditBottomCheckType: Int {
   case onlyWriterCreateOption
 }
 
-class TopicEditBottomView: UICollectionReusableView {
+class TopicEditBottomView: UIView {
   weak var delegate: TopicEditBottomViewDelegate?
   
   var isVotableCount: Bool = false {

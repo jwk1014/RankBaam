@@ -24,6 +24,11 @@ class TopicEditOptionCell: UICollectionViewCell {
   private(set) weak var imageView: UIImageView?
   private(set) weak var textField: UITextField?
   
+  static var imageViewSize: CGSize {
+    return .init(width: width375(76.0), height: width375(62.0))
+    //height에 세로인데도 width375기준으로 한것은 "디바이스 세로"가 아닌 "이미지뷰 가로에 대한 비율"로 가기 위해서
+  }
+  
   func initImage() {
     imageView?.image = UIImage(named: "image_icn")
   }
@@ -38,11 +43,12 @@ class TopicEditOptionCell: UICollectionViewCell {
     self.imageView = imageView
     initImage()
     self.addSubview(imageView)
+    let imageViewSize = TopicEditOptionCell.imageViewSize
     imageView.snp.makeConstraints {
       $0.leading.equalToSuperview().offset(width375(5.0))
       $0.centerY.equalToSuperview()
-      $0.width.equalTo(width375(76.0))
-      $0.height.equalTo(imageView.snp.width).multipliedBy(62.0/76.0)
+      $0.width.equalTo(imageViewSize.width)
+      $0.height.equalTo(imageViewSize.height)
     }
     
     imageView.isUserInteractionEnabled = true
