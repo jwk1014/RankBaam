@@ -7,40 +7,39 @@ struct UserService {
                          "yahoo.co.jp", "hanmail.net", "me.com", "mac.com"]
   
   @discardableResult
-  static func singin(
+  static func signIn(
     signData: SignData, fcmToken: String? = nil,
     completion: @escaping (DataResponse<SResult>) -> Void
     ) -> DataRequest {
-    return singin(type: signData.type, email: signData.email, identification: signData.identification, fcmToken: fcmToken, completion: completion)
+    return signIn(type: signData.type, email: signData.email, identification: signData.identification, fcmToken: fcmToken, completion: completion)
   }
   
   @discardableResult
-  static func singin(
+  static func signIn(
     type: SignType, email: String? = nil, identification: String, fcmToken: String? = nil,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) -> DataRequest {
-    return Alamofire .request(UserRouter.signin(type: type, email: email, identification: identification, fcmToken: fcmToken))
+    return Alamofire .request(UserRouter.signIn(type: type, email: email, identification: identification, fcmToken: fcmToken))
               .responseRankBaam(completion)
   }
   
   @discardableResult
-  static func signup(
-    email: String, identification: String,
+  static func signUp(
+    email: String, identification: String, nickname: String,
     completion: @escaping (DataResponse<SResult>) -> Void
   ) -> DataRequest {
-    return Alamofire .request(UserRouter.signup(email: email, identification: identification))
-              .responseRankBaam(completion)
+    return Alamofire .request(UserRouter.signUp(email: email, identification: identification, nickname: nickname)).responseRankBaam(completion)
   }
   
   @discardableResult
-  static func signout(
+  static func signOut(
     completion: @escaping (DataResponse<SResult>) -> Void
     ) -> DataRequest {
-    return Alamofire.request(UserRouter.signout).responseRankBaam(completion)
+    return Alamofire.request(UserRouter.signOut).responseRankBaam(completion)
   }
   
-  static func signout() {
-    Alamofire.request(UserRouter.signout).response{ _ in }
+  static func signOut() {
+    Alamofire.request(UserRouter.signOut).response{ _ in }
   }
   
   @discardableResult

@@ -78,7 +78,7 @@ class SplashViewController: UIViewController {
             categories = topicCategories
             
             if let signData = SignManager.keychain {
-              UserService.singin(signData: signData, completion: loadNetworkStep2UserSignIn)
+              UserService.signIn(signData: signData, completion: loadNetworkStep2UserSignIn)
             } else {
               loadNetworkComplete()
             }

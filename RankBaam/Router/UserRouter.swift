@@ -3,9 +3,9 @@ import Alamofire
 
 /// 유저와 관련된 서비스 (로그인, 회원가입 등)을 위한 URLRequest를 만들어주는 라우터
 enum UserRouter {
-  case signin(type: SignType, email: String?, identification: String, fcmToken: String?)
-  case signup(email: String, identification: String)
-  case signout
+  case signIn(type: SignType, email: String?, identification: String, fcmToken: String?)
+  case signUp(email: String, identification: String, nickname: String)
+  case signOut
   case getNickname
   case setNickname(nickname: String)
   case preNickname
@@ -16,11 +16,11 @@ extension UserRouter: TargetType {
   
   var path: String {
     switch self {
-    case .signin:
+    case .signIn:
       return "/sign/in"
-    case .signup:
+    case .signUp:
       return "/sign/up"
-    case .signout:
+    case .signOut:
       return "/sign/out"
     case .getNickname, .setNickname:
       return "/user/me/nickname"
@@ -34,9 +34,9 @@ extension UserRouter: TargetType {
     case .getNickname,
          .preNickname:
       return .get
-    case .signin,
-         .signup,
-         .signout,
+    case .signIn,
+         .signUp,
+         .signOut,
          .setNickname:
       return .post
     }
@@ -44,21 +44,22 @@ extension UserRouter: TargetType {
   
   var parameters: Parameters? {
     switch self {
-    case let .signin(type, email, identification, fcmToken):
+    case let .signIn(type, email, identification, fcmToken):
       return .init(optionalItems: [
         "type": type.rawValue,
         "email": email,
         "identification": identification,
         "fcmToken": fcmToken
       ])
-    case let .signup(email, identification):
+    case let .signUp(email, identification, nickname):
       return .init(optionalItems: [
         "email": email,
-        "identification": identification
+        "identification": identification,
+        "nickname": nickname
       ])
     case let .setNickname(nickname):
       return ["nickname": nickname]
-    case .signout,
+    case .signOut,
          .getNickname,
          .preNickname:
       return nil
