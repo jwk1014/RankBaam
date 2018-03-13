@@ -43,7 +43,6 @@ class SplashViewController: UIViewController {
         splashTitleLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(splashLogoImageView.snp.bottom).offset(height667(14))
-            $0.width.equalTo(width375(152))
             $0.height.equalTo(height667(31))
         }
     }
@@ -79,7 +78,7 @@ class SplashViewController: UIViewController {
                         case .success(let sResult):
                             if sResult.succ {
                               
-                              let vc = MainTabViewController()
+                              let vc = SignInViewController()
                               let naviVC = UINavigationController(rootViewController: vc)
 
                               self.present(naviVC, animated: true, completion: nil)

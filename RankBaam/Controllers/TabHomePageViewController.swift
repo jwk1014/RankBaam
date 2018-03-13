@@ -7,19 +7,25 @@
 //
 
 
-
-
-
 import UIKit
 import SnapKit
 
-protocol MainUpperTabScrollViewDelegate {
+protocol TabHomeCategorySelectionDelegate: class {
+    func categorySelectionCancelled()
+    func categorySelectionCompleted()
+}
+
+protocol MainUpperTabScrollViewDelegate: class {
     func mainUpperTabScrollViewDidScroll()
 }
 
 class TabHomePageViewController: UIPageViewController {
     
     var scrollDelegate: MainUpperTabScrollViewDelegate?
+    var selectedOrderType: OrderType = .new
+    var selectedCategory: Category?
+    var presentFadeInOutManager = PresentFadeInOutManager()
+    
     
     var upperTabView: MainAllRankTopTabbar =  {
        let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "모든랭킹", rightTabTitle: "주간랭킹")
@@ -36,6 +42,11 @@ class TabHomePageViewController: UIPageViewController {
         let mainnaviTitle = UILabel()
         mainnaviTitle.textColor = UIColor.rankbaamOrange
         return mainnaviTitle
+    }()
+    
+    var mainFilterButtonImageView: UIImageView = {
+        let mainFilterButtonImageView = UIImageView()
+        return mainFilterButtonImageView
     }()
     
     var mainFilterButton: UIButton = {
@@ -77,9 +88,13 @@ class TabHomePageViewController: UIPageViewController {
     fileprivate func customNavigationBarTabBarConfigure() {
         self.view.addSubview(mainCustomNavigationBar)
         mainCustomNavigationBar.addSubview(mainNavigationBarTitle)
+        mainCustomNavigationBar.addSubview(mainFilterButtonImageView)
         mainCustomNavigationBar.addSubview(mainFilterButton)
-        mainFilterButton.setImage(UIImage(named: "filterIcnN"), for: .normal)
+        //mainFilterButton.setImage(UIImage(named: "filterIcnN"), for: .normal)
         mainFilterButton.contentMode = .scaleAspectFit
+        mainFilterButtonImageView.image = UIImage(named: "filterIcnN")
+        mainFilterButtonImageView.contentMode = .scaleAspectFit
+        mainFilterButton.addTarget(self, action: #selector(mainFilterButtonTapped), for: .touchUpInside)
         
         mainCustomNavigationBar.snp.makeConstraints {
             $0.top.equalTo(self.view.snp.top)
@@ -98,14 +113,22 @@ class TabHomePageViewController: UIPageViewController {
             $0.height.equalTo(height667(21))
         }
         
-        mainFilterButton.snp.makeConstraints {
+        mainFilterButtonImageView.snp.makeConstraints {
            
-            $0.left.equalTo(mainNavigationBarTitle.snp.right)
-                .offset(width375(335))
+            $0.right.equalTo(mainCustomNavigationBar.snp.right)
+                .offset(-(width375(16)))
             $0.top.equalTo(mainCustomNavigationBar.snp.top)
-                .offset(height667(36))
+                .offset(height667(36, forX: 58))
             $0.width.equalTo(width375(24))
             $0.height.equalTo(height667(24))
+        }
+        
+        mainFilterButton.snp.makeConstraints {
+            
+            $0.right.equalTo(mainCustomNavigationBar.snp.right)
+            $0.top.equalTo(mainCustomNavigationBar.snp.top)
+            $0.width.equalTo(width375(40))
+            $0.height.equalTo(height667(60, forX: 82))
         }
         
         self.view.addSubview(upperTabView)
@@ -114,6 +137,7 @@ class TabHomePageViewController: UIPageViewController {
             $0.leading.trailing.equalTo(self.view)
             $0.height.equalTo(height667(35))
         }
+        
         /*upperTabView.translatesAutoresizingMaskIntoConstraints = false
         upperTabView.topAnchor.constraint(equalTo: mainCustomNavigationBar.bottomAnchor).isActive = true
         upperTabView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
@@ -124,9 +148,14 @@ class TabHomePageViewController: UIPageViewController {
         
     }
   
-  override func viewDidLayoutSubviews() {
-    print("a")
-  }
+    @objc fileprivate func mainFilterButtonTapped() {
+        let defaultCategory = Category(categorySN: 0, name: "전체")
+        let categorySelectViewController = CategorySelectViewController.createForOrderAndCategory(selectedOrder: selectedOrderType, selectedCategory: selectedCategory ?? defaultCategory)
+        categorySelectViewController.delegate = self
+        categorySelectViewController.transitioningDelegate = presentFadeInOutManager
+        categorySelectViewController.modalPresentationStyle = .custom
+        present(categorySelectViewController, animated: true, completion: nil)
+    }
 }
 
 extension TabHomePageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -217,6 +246,22 @@ extension TabHomePageViewController: UpperCustomTabbarDelegate {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
             scrollView.delegate = self
         }
+    }
+}
+
+extension TabHomePageViewController: CategoryOrderSelectDelegate {
+    
+    func submitted(order: OrderType, category: Category?) {
+        guard let tabHomeViewController = mainViewControllers[0] as? TabHomeViewController else { return }
+        tabHomeViewController.selectedCategory = category
+        tabHomeViewController.selectedOrder = order
+        tabHomeViewController.isCategorySelectionCompleted = true
+        
+        print("\(#function) is called")
+    }
+    
+    func closed(order: OrderType, category: Category?) {
+        print("\(#function) is called")
     }
 }
 

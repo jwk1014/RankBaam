@@ -133,12 +133,12 @@ class SignInViewController: UIViewController {
         signInBottomStackView.addArrangedSubview(signInSignUpTextLabel)
         self.navigationController?.isNavigationBarHidden = true
         
-        self.view.backgroundColor = UIColor.rankbaamOrange
+        self.view.backgroundColor = UIColor.white
         self.view.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textFieldResignedWithBackgroundTapping))
         self.view.addGestureRecognizer(tapGesture)
         signInLogoImageview.image = UIImage(named: "logoIcn")?.withRenderingMode(.alwaysTemplate)
-        signInLogoImageview.tintColor = UIColor.white
+        signInLogoImageview.tintColor = UIColor.rankbaamOrange
         signInEmailTextField.layer.cornerRadius = 3
         signInEmailTextField.layer.borderColor = UIColor(r: 216, g: 216, b: 216).cgColor
         signInEmailTextField.layer.borderWidth = 1
@@ -156,42 +156,42 @@ class SignInViewController: UIViewController {
         signInPasswordTextField.attributedPlaceholder = attributedPlaceholer
         signInPasswordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: signInEmailTextField.frame.height))
         signInPasswordTextField.leftViewMode = .always
-        signInLoginButton.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+        signInLoginButton.backgroundColor = UIColor.rankbaamOrange
         signInLoginButton.layer.cornerRadius = 3
-        signInLoginButton.layer.borderWidth = 5
-        signInLoginButton.layer.borderColor = UIColor.white.withAlphaComponent(0.7).cgColor
         signInLoginButton.setTitle("로그인", for: .normal)
         signInLoginButton.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
         signInLoginButton.titleLabel?.font = nanumSquareBFont
         signInFaceBookLoginButton.setBackgroundImage(UIImage(named: "facebookIcn"), for: .normal)
         signInFaceBookLoginButton.setTitle("페이스북으로 로그인", for: .normal)
         signInFaceBookLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        signInFaceBookLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 14)
+        signInFaceBookLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
         signInFaceBookLoginButton.setTitleColor(UIColor.white, for: .normal)
         signInKakaoLoginButton.setBackgroundImage(UIImage(named: "kakaoIcn"), for: .normal)
         signInKakaoLoginButton.setTitle("카카오톡으로 로그인", for: .normal)
         signInKakaoLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        signInKakaoLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 14)
+        signInKakaoLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
         signInKakaoLoginButton.setTitleColor(UIColor.init(r: 80, g: 81, b: 53), for: .normal)
         signInGoogleLoginButton.setBackgroundImage(UIImage(named: "googleIcn"), for: .normal)
         signInGoogleLoginButton.setTitle("구글로 로그인", for: .normal)
         signInGoogleLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        signInGoogleLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 14)
-        signInGoogleLoginButton.setTitleColor(UIColor.white, for: .normal)
+        signInGoogleLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
+        signInGoogleLoginButton.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
         signInNaverLoginButton.setBackgroundImage(UIImage(named: "naverIcn"), for: .normal)
         signInNaverLoginButton.setTitle("네이버로 로그인", for: .normal)
         signInNaverLoginButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        signInNaverLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 14)
+        signInNaverLoginButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
         signInNaverLoginButton.setTitleColor(UIColor.white, for: .normal)
         signInFindPasswordTextLabel.text = "비밀번호 찾기"
         signInFindPasswordTextLabel.textColor = UIColor(r: 134, g: 134, b: 134)
-        signInFindPasswordTextLabel.font = UIFont(name: "NanumSquareB", size: 14)
+        signInFindPasswordTextLabel.font = UIFont(name: "NanumSquareB", size: width375(14))
         signInBottomStackviewSeparatorView.backgroundColor = UIColor(r: 134, g: 134, b: 134)
         signInBottomStackviewSeparatorView.widthAnchor.constraint(equalToConstant: 2).isActive = true
         signInSignUpTextLabel.text = "이메일로 회원가입"
         signInSignUpTextLabel.textColor = UIColor(r: 134, g: 134, b: 134)
-        signInSignUpTextLabel.font = UIFont(name: "NanumSquareB", size: 14)
-        signInBottomStackView.distribution = .equalSpacing
+        signInSignUpTextLabel.font = UIFont(name: "NanumSquareB", size: width375(14))
+        signInBottomStackView.axis = .horizontal
+        signInBottomStackView.distribution = .fillProportionally
+        signInBottomStackView.alignment = .fill
         signInBottomStackView.spacing = 14
         signInDismissButtonImageView.image = UIImage(named: "ic_clear")
         signInDismissButtonImageView.contentMode = .center
@@ -215,7 +215,7 @@ class SignInViewController: UIViewController {
             $0.top.equalTo(self.view).offset(height667(122, forX: 145))
             $0.centerX.equalToSuperview()
             $0.width.equalTo(width375(191))
-            $0.height.equalTo(height667(36))
+            $0.height.equalTo(height667(31))
         }
         
         signInEmailTextField.snp.makeConstraints {
@@ -270,7 +270,7 @@ class SignInViewController: UIViewController {
         signInBottomStackView.snp.makeConstraints {
             $0.top.equalTo(signInNaverLoginButton.snp.bottom).offset(height667(38))
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(width375(217))
+            //$0.width.equalTo(width375(217))
             $0.height.equalTo(height667(18))
         }
         
@@ -305,6 +305,7 @@ class SignInViewController: UIViewController {
     }
     
     @objc func emailSignInButtonTapped(_ sender: UIButton) {
+        //SignData(email: <#T##String#>, identification: <#T##String#>)
         // TODO: FIXME
     }
     
