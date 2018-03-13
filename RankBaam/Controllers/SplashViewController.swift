@@ -44,7 +44,6 @@ class SplashViewController: UIViewController {
         splashTitleLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalTo(splashLogoImageView.snp.bottom).offset(height667(14))
-            //$0.width.equalTo(width375(152))
             $0.height.equalTo(height667(31))
         }
     }
@@ -81,7 +80,7 @@ class SplashViewController: UIViewController {
             if let signData = SignManager.keychain {
               UserService.singin(signData: signData, completion: loadNetworkStep2UserSignIn)
             } else {
-              loadNetworkCompleteWithOutSignIn()
+              loadNetworkComplete()
             }
           } else {
             assertionFailure("categories is nil")
@@ -105,7 +104,7 @@ class SplashViewController: UIViewController {
         } else if let msg = result.msg {
           switch msg {
           case "UserNotFound":
-            loadNetworkCompleteWithOutSignIn()
+            loadNetworkComplete()
           case "UserNeedNickname":
             loadNetworkCompleteWithOutNickname()
           default: assertionFailure(msg)
@@ -115,17 +114,6 @@ class SplashViewController: UIViewController {
         }
       case .failure(_): break
       }
-    }
-  
-    private func loadNetworkCompleteWithOutSignIn() {
-      self.loadCompletionSemaphore.wait()
-      self.completionClosure = {
-        let vc = SignInViewController()
-        let naviVC = UINavigationController(rootViewController: vc)
-        self.present(naviVC, animated: true, completion: nil)
-      }
-      self.loadCompletionSemaphore.signal()
-      self.complete()
     }
   
     private func loadNetworkCompleteWithOutNickname() {

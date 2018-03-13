@@ -17,7 +17,6 @@ protocol CellDataRefreshable: class {
 
 extension CellDataRefreshable {
 
-    // class 일때는 접근가능
     func setRefreshAllDataNeeded() {
         refreshAllDataNeeded = true
     }
@@ -28,7 +27,6 @@ extension CellDataRefreshable {
            refreshAllDataNeeded = false
         }
     }
-    
 }
 
 class TabHomeViewController: UIViewController, CellDataRefreshable {
@@ -40,9 +38,29 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
     var page: Int = 1
     var isMoreDataExist: Bool = true
     var refreshAllDataNeeded: Bool = false
+    var selectedOrder: OrderType?
+    var selectedCategory: Category?
     var isLoading: Bool = false
+    var isCategorySet: Bool = false
+    var isCategorySelectionCompleted: Bool = false {
+        didSet {
+            if isCategorySelectionCompleted {
+                self.mainRankActivityIndicatorHandler(isAnimated: true)
+                self.fetchMainRankCellDatas(nil, selectedCategory?.categorySN, selectedOrder)
+            }
+        }
+    }
+    
     var mainAllRankLoadingFooterView: MainAllRankLoadingFooterView?
     let mainRankRefreshControl: UIRefreshControl = UIRefreshControl()
+    
+    var mainRankActivityIndicator: UIActivityIndicatorView = {
+        let mainRankActivityIndicator = UIActivityIndicatorView()
+        mainRankActivityIndicator.activityIndicatorViewStyle = .whiteLarge
+        mainRankActivityIndicator.color = UIColor.rankbaamOrange
+        mainRankActivityIndicator.hidesWhenStopped = true
+        return mainRankActivityIndicator
+    }()
     
     var mainAllRankCollectionView: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
@@ -60,24 +78,40 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         navigationController?.navigationBar.isHidden = true
         
     }
-    /*override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        loadMainRankCellDatas(1)
-        mainAllRankCollectionView.reloadData()
-    }*/
     
     fileprivate func viewInitConfigure() {
         self.view.addSubview(mainAllRankCollectionView)
+        self.view.addSubview(mainRankActivityIndicator)
+        
         
         mainAllRankCollectionView.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()
             $0.top.equalTo(height667(103, forX: 125))
+        }
+        
+        mainRankActivityIndicator.snp.makeConstraints {
+            $0.top.bottom.leading.trailing.equalToSuperview()
+        }
+        mainRankActivityIndicator.isHidden = true
+        mainRankActivityIndicator.stopAnimating()
+    }
+    
+    func mainRankActivityIndicatorHandler(isAnimated: Bool) {
+        if isAnimated {
+            mainRankActivityIndicator.isHidden = false
+            mainRankActivityIndicator.startAnimating()
+            UIApplication.shared.beginIgnoringInteractionEvents()
+        } else {
+            mainRankActivityIndicator.isHidden = true
+            mainRankActivityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
     
     func mainRankCollectionViewConfigure() {
         mainAllRankCollectionView.dataSource = self
         mainAllRankCollectionView.delegate = self
+        mainAllRankCollectionView.prefetchDataSource = self
         let footerNib = UINib(nibName: "MainAllRankLoadingFooterView", bundle: nil)
         mainAllRankCollectionView.register(MainAllRankCell.self, forCellWithReuseIdentifier: ConstantsNames.TabHomeViewControllerNames.MAINALLRANKCELL)
         mainAllRankCollectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "loadingFooterView")
@@ -96,21 +130,37 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
         self.page = 1
         isMoreDataExist = true
         setRefreshAllDataNeeded()
-        fetchMainRankCellDatas()
+        fetchMainRankCellDatas(nil, selectedCategory?.categorySN, selectedOrder)
         self.mainAllRankLoadingFooterView?.backToInit()
     }
     
-    func fetchMainRankCellDatas(_ pageInput: Int? = nil) {
+    func categorySetFetchingPreset() {
+        self.page = 1
+        setRefreshAllDataNeeded()
+    }
+    
+    func fetchMainRankCellDatas(_ pageInput: Int? = nil, _ category: Int? = nil, _ order: OrderType? = nil) {
+        
+//        if let _ = category {
+//
+//            isCategorySet = true
+//
+//        }
+        if isCategorySelectionCompleted {
+            self.page = 1
+            setRefreshAllDataNeeded()
+        }
         
         if !isOnGoingLoading {
         isOnGoingLoading = true
-        TopicService.list(page: pageInput ?? self.page, count: 15, order: .new) {
+        TopicService.list(page: pageInput ?? self.page, count: 15, categorySN: category, order: order ?? .new) {
             switch $0.result {
             case .success(let result):
                 if result.succ {
                     guard let topicDatas = result.topics else {return}
                     print("This is topicDatas Count : \(topicDatas.count)")
                     self.loadedDataHandle(topicDatas)
+                    
                 } else if let msg = result.msg {
                     self.mainAllRankLoadingFooterView?.endLoad()
                     switch msg {
@@ -130,9 +180,18 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
        }
     }
     
+    func categoryFetchingRefreshData(loadedData: [Topic]) -> [Topic]{
+        if isCategorySet {
+            return [Topic]()
+        }
+        return loadedData
+    }
+    
     func loadedDataHandle(_ loadedData: [Topic]) {
         
         refreshCellDataIfNeeded()
+        
+        let preCount = loadedData.count
         
         let loadedData = loadedData.reduce([Topic]()) { (tmp, item) -> [Topic] in
             var item = item
@@ -143,23 +202,32 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
             return tmp
         }
         
+//        loadedData = categoryFetchingRefreshData(loadedData: loadedData)
+        
         page += 1
         
-        if loadedData.isEmpty {
+        if loadedData.isEmpty || (preCount == loadedData.count && loadedData.count < 15) {
             isMoreDataExist = false
             mainAllRankLoadingFooterView?.endLoad()
+            if isCategorySelectionCompleted {
+                isCategorySelectionCompleted = false
+                self.cellDatas += loadedData
+                self.mainAllRankCollectionView.reloadData()
+            }
         } else {
             self.cellDatas += loadedData
             self.mainAllRankCollectionView.reloadData()
         }
         self.mainRankRefreshControl.endRefreshing()
+        self.mainRankActivityIndicatorHandler(isAnimated: false)
     }
     
     func footerViewLoadDataHandler(_ indexPath: IndexPath){
+        
         if indexPath.item >= cellDatas.count - loadThreshold,
             isMoreDataExist, !isOnGoingLoading {
             mainAllRankLoadingFooterView?.startLoad()
-            fetchMainRankCellDatas()
+            fetchMainRankCellDatas(nil, selectedCategory?.categorySN, selectedOrder)
         }
     }
 }
@@ -208,7 +276,7 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        footerViewLoadDataHandler(indexPath)
+       footerViewLoadDataHandler(indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -228,4 +296,9 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
 }
 
+extension TabHomeViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        
+    }
+}
 

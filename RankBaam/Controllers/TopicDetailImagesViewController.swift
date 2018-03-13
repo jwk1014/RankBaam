@@ -22,8 +22,11 @@ class TopicDetailImagesViewController: UIViewController, UIGestureRecognizerDele
     var firstTouchedPoint: CGPoint?
     var firstImageView: UIImageView?
     var direction: MovingDirection?
-    
 
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     var topicImages: [Photo] = [Photo]()
     var topicImagesScrollView: UIScrollView = {
         let topicImagesScrollView = UIScrollView()

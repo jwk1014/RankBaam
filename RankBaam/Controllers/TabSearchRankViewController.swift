@@ -32,11 +32,13 @@ class TabSearchRankViewController: UIViewController {
         return tabSearchCustomSearchBar
     }()
     
+    private weak var tabSearchRankSearchKeywordView: SearchRankSearchKeywordView?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
-        //tabSearchCustomSearchBarConfigure()
+        tabSearchRankSearchKeywordViewConfigure()
         self.navigationController?.isNavigationBarHidden = true
       
       
@@ -108,6 +110,28 @@ class TabSearchRankViewController: UIViewController {
             $0.width.equalTo(Constants.screenWidth * (343 / 375))
             $0.height.equalTo(Constants.screenHeight * (46 / 667))
         }
+        
+        
+    }
+    
+    fileprivate func tabSearchRankSearchKeywordViewConfigure() {
+        let tabSearchRankSearchKeywordView = SearchRankSearchKeywordView()
+        self.tabSearchRankSearchKeywordView = tabSearchRankSearchKeywordView
+        self.view.addSubview(tabSearchRankSearchKeywordView)
+        tabSearchRankSearchKeywordView.backgroundColor = UIColor.rankbaamGray
+        tabSearchRankSearchKeywordView.searchRankSearchKeywordTableView?.delegate = self
+         tabSearchRankSearchKeywordView.searchRankSearchKeywordTableView?.dataSource = self
+        tabSearchRankSearchKeywordView.snp.makeConstraints {
+            $0.top.equalTo(tabSearchCustomNavigationBar.snp.bottom)
+            $0.bottom.leading.trailing.equalToSuperview()
+        }
+        tabSearchRankSearchKeywordView.searchRankSearchKeywordTableView?
+            .register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
+         tabSearchRankSearchKeywordView.searchRankSearchKeywordTableView?
+            .register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewHeaderFooterView.self))
+       
+        
+        
     }
     
     @objc fileprivate func searchBarTextDidChanged(_ sender: UITextField) {
@@ -135,8 +159,48 @@ extension TabSearchRankViewController: UITextFieldDelegate {
         UIView.animate(withDuration: 0.5, animations: {
             self.tabSearchCustomNavigationBar.backgroundColor = UIColor.rankbaamOrange
             self.tabSearchCustomNavigationBarTitleLabel.textColor = UIColor.white
+            self.tabSearchRankSearchKeywordView?
+                .searchRankSearchKeywordTableViewHeight?.constant = height667(70) + (height667(50) * 5)
+            self.tabSearchRankSearchKeywordView?.layoutIfNeeded()
+            
         })
         return true
     }
     
+}
+
+extension TabSearchRankViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let searchKeywordCell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
+        searchKeywordCell.backgroundColor = UIColor.rankbaamGray
+        searchKeywordCell.textLabel?.text = "1. 인기검색어"
+        searchKeywordCell.selectionStyle = .none
+        searchKeywordCell.textLabel?.textColor = UIColor.rankbaamDeepBlack
+        return searchKeywordCell
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewHeaderFooterView.self))
+        let searchKeywordHeader = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewHeaderFooterView.self))
+        searchKeywordHeader?.textLabel?.text = "인기검색어"
+        searchKeywordHeader?.textLabel?.textColor = UIColor.rankbaamDeepBlack
+        searchKeywordHeader?.backgroundColor = UIColor.rankbaamGray
+        return searchKeywordHeader
+    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return height667(70)
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return height667(50)
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
+    }
 }

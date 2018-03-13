@@ -139,7 +139,6 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
                 .offset(height667(38, forX: 60))
             $0.centerX.equalTo(tabLikeStoredRankCustomNavigationBar.snp.centerX)
             $0.height.equalTo(height667(21))
-            $0.width.equalTo(width375(80))
         }
         tabLikeStoredRankEditingButton.snp.makeConstraints {
             $0.top.equalTo(tabLikeStoredRankCustomNavigationBar.snp.top)

@@ -38,7 +38,6 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
     
     fileprivate func viewInitConfigure() {
         self.view.backgroundColor = UIColor.white
-        self.view.isUserInteractionEnabled = true
         
         
         

@@ -9,6 +9,7 @@
 import UIKit
 
 enum SettingActions: Int {
+    case NicknameReset
     case PasswordReset
     case GetNotification
     case LibraryInfo
@@ -28,7 +29,7 @@ class TabMyViewProfileViewController: UIViewController {
     private weak var tabMyViewProfileCellNotificationSwitch: UISwitch?
     private weak var tabMyViewProfileSettingTableView: UITableView?
     
-    var tabMyViewProfileCellTitleArray:[String] = ["비밀번호 변경", "알림받기", "라이브러리 정보", "로그아웃", "회원탈퇴"]
+    var tabMyViewProfileCellTitleArray:[String] = ["닉네임 변경","비밀번호 변경", "알림받기", "라이브러리 정보", "로그아웃", "회원탈퇴"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,17 +70,16 @@ class TabMyViewProfileViewController: UIViewController {
         tabMyViewProfileNicknameLabel.isUserInteractionEnabled = true
         // MARK: TODO //
         let string = "닉네임입니다"
-        let test = string.widthForHeight(16, font: UIFont(name: "NanumSquareB", size: 16)!)
-        print("This is width size for text : \(test)")
+        let nicknameWidth = string.widthForHeight(height667(16), font: UIFont(name: "NanumSquareB", size: 16)!)
         // MARK: TODO //
         
-        let tabMyViewProfileNicknameTextField = UITextField()
+        /*let tabMyViewProfileNicknameTextField = UITextField()
         self.tabMyViewProfileNicknameTextField = tabMyViewProfileNicknameTextField
         tabMyViewProfileNicknameStackView
             .addArrangedSubview(tabMyViewProfileNicknameTextField)
         tabMyViewProfileNicknameTextField.placeholder = "닉네임"
         tabMyViewProfileNicknameTextField.isHidden = true
-        tabMyViewProfileNicknameTextField.textAlignment = .center
+        tabMyViewProfileNicknameTextField.textAlignment = .center*/
         
         let tabMyViewProfileEmailLabel = UILabel()
         self.tabMyViewProfileEmailLabel = tabMyViewProfileEmailLabel
@@ -88,26 +88,26 @@ class TabMyViewProfileViewController: UIViewController {
         tabMyViewProfileEmailLabel.textColor = UIColor.rankbaamDarkgray
         tabMyViewProfileEmailLabel.font = UIFont(name: "NanumSquareR", size: 14)
         
-        let tabMyViewProfileNicknameReviseImageView = UIImageView()
+        /*let tabMyViewProfileNicknameReviseImageView = UIImageView()
         self.tabMyViewProfileNicknameResetImageView = tabMyViewProfileNicknameReviseImageView
         tabMyViewProfileNicknameReviseImageView.image = UIImage(named: "icEdit")
         tabMyViewProfileNicknameReviseImageView.contentMode = .scaleAspectFit
         tabMyViewProfileNicknameLabel.addSubview(tabMyViewProfileNicknameReviseImageView)
         tabMyViewProfileNicknameReviseImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(min(width375(test + 10), width375(343) ))
+            $0.leading.equalToSuperview().offset(width375(nicknameWidth + 15))
             $0.width.height.equalTo(width375(16))
             $0.centerY.equalToSuperview()
         }
-        
+ 
         let tabMyViewProfileNicknameReviseButton = UIButton()
         self.tabMyViewProfileNicknameResetButton = tabMyViewProfileNicknameReviseButton
         tabMyViewProfileNicknameLabel.addSubview(tabMyViewProfileNicknameReviseButton)
         tabMyViewProfileNicknameReviseButton.snp.makeConstraints {
             $0.top.bottom.trailing.equalToSuperview()
-            $0.leading.equalToSuperview().offset(test)
+            $0.leading.equalToSuperview().offset(nicknameWidth)
         }
         
-        tabMyViewProfileNicknameReviseButton.addTarget(self, action: #selector(tabMyViewProfileNicknameReviseButtonTapped), for: .touchUpInside)
+        tabMyViewProfileNicknameReviseButton.addTarget(self, action: #selector(tabMyViewProfileNicknameReviseButtonTapped), for: .touchUpInside)*/
  
         let tabMyViewProfileSettingTableView = UITableView()
         self.tabMyViewProfileSettingTableView = tabMyViewProfileSettingTableView
@@ -130,7 +130,7 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -142,6 +142,11 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
             , let setting = SettingActions(rawValue: indexPath.row) else { return settingCell }
         
         switch setting {
+            case .NicknameReset:
+                let disclosureImageView = UIImageView()
+                settingCell.accessoryView = disclosureImageView
+                disclosureImageView.image = UIImage(named: "chevronDownIcn")
+                disclosureImageView.contentMode = .center
             case .PasswordReset:
                 let disclosureImageView = UIImageView()
                 settingCell.accessoryView = disclosureImageView
@@ -165,6 +170,9 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
         // TODO: ADD ACTION
         
         switch settings {
+            case .NicknameReset:
+                let tabMyViewProfileResetNicknameViewController = TabMyViewProfileResetNicknameViewController()
+                self.navigationController?.pushViewController(tabMyViewProfileResetNicknameViewController, animated: true)
             case .PasswordReset:
                 let tabMyViewProfileResetPasswordController = TabMyViewProfileResetPasswordViewController()
                 self.navigationController?
@@ -180,12 +188,12 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
         }
     }
     
-    @objc func tabMyViewProfileNicknameReviseButtonTapped() {
+    /*@objc func tabMyViewProfileNicknameReviseButtonTapped() {
         tabMyViewProfileNicknameLabel?.isHidden = true
         tabMyViewProfileNicknameTextField?.isHidden = false
         tabMyViewProfileNicknameTextField?.text = tabMyViewProfileNicknameLabel?.text
         tabMyViewProfileNicknameTextField?.becomeFirstResponder()
-    }
+    }*/
 }
 
 extension TabMyViewProfileViewController: UITableViewDelegate {

@@ -127,6 +127,7 @@ class TopicDetailViewController: UIViewController {
     lazy var heartButtonImgForLiked: UIImage? = UIImage(named: "heartIcnF")
     lazy var heartButtonImgForUnliked: UIImage? = UIImage(named: "heartIcnN")
     
+    
    
     
     var topicDetailScrollViewForRankOptionCollectionView: UIScrollView = {
@@ -307,7 +308,6 @@ class TopicDetailViewController: UIViewController {
             $0.left.equalTo(topicDetailrankMainBackButton.snp.right)
             $0.top.equalTo(topicDetailTopCustomNavigationBar.snp.top)
                 .offset(height667(45, forX: 67))
-            $0.width.equalTo(width375(100))
             $0.height.equalTo(height667(18))
         }
         topicDetailMoreFunctionsOrDeleteMyRankButtonImageView.snp.makeConstraints {
@@ -697,7 +697,8 @@ extension TopicDetailViewController: UICollectionViewDelegateFlowLayout {
         
         guard let topicDetailHeaderView = topicDetailHeaderView else { return targetSize }
         
-        let fittingSizeHeight = topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height > 520 ? topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height : 520
+        let fittingSizeHeight = topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height > height667(520) ? topicDetailHeaderView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height : height667(520)
+
         return .init(width: self.view.frame.width, height: fittingSizeHeight)
     }
 
