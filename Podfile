@@ -15,4 +15,7 @@ target 'RankBaam' do
   pod 'SDWebImage', '~> 4.2.3'
   pod 'Fabric', '~> 1.7.5'
   pod 'Crashlytics', '~> 3.10.1'
+  pod 'FacebookCore'
+  pod 'FacebookLogin'
+  pod 'GoogleSignIn'
 end

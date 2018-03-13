@@ -427,8 +427,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     let height = self.signUpSubmissionInnerStackView.heightAnchor.constraint(equalToConstant: 50)
                     height.isActive = true
                     
-                    //item.transform = CGAffineTransform(translationX: 0, y: -250)
-                    item.isHidden = true
+                    item.transform = CGAffineTransform(translationX: 0, y: -250)
+                    //item.isHidden = true
                     self.signUpSubmissionStackView.distribution = .equalCentering
                     self.signUpEmailIdentificationComleteLabel.text = """
                     \(self.signUpEmailTextField.text!)로

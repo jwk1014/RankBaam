@@ -12,9 +12,7 @@ import Kingfisher
 struct RankBaamIndicator: Indicator {
     var view: IndicatorView = UIView()
     
-    
     let orangeIndicator = UIActivityIndicatorView()
-    
     
     func startAnimatingView() {
         orangeIndicator.startAnimating()
