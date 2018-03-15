@@ -305,8 +305,32 @@ class SignInViewController: UIViewController {
     }
     
     @objc func emailSignInButtonTapped(_ sender: UIButton) {
-        //SignData(email: <#T##String#>, identification: <#T##String#>)
-        // TODO: FIXME
+      
+      guard let email = signInEmailTextField.text, email.count > 0 else {
+        
+        return
+      }
+      
+      guard let password = signInPasswordTextField.text, email.count > 0 else {
+        
+        return
+      }
+      
+      let signData = SignData(email: email, identification: password)
+      SignManager.keychain = signData
+      UserService.signIn(signData: signData) {
+        switch $0.result {
+        case .success(let result):
+          if result.succ {
+            ////TODO
+          } else if let msg = result.msg {
+            switch msg {
+            default: assertionFailure(msg)
+            }
+          }
+        case .failure(_): break
+        }
+      }
     }
     
     @objc func facebookSignInButtonTapped(_ sender: UIButton) {
