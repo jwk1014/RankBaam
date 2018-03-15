@@ -8,6 +8,10 @@
 
 import UIKit
 import SnapKit
+import FacebookCore
+import FacebookLogin
+import GoogleSignIn
+
 
 class SignInViewController: UIViewController {
     
@@ -286,6 +290,12 @@ class SignInViewController: UIViewController {
             
         }
         
+        
+        signInFaceBookLoginButton.addTarget(self, action: #selector(facebookSignInButtonTapped(_:)), for: .touchUpInside)
+        signInGoogleLoginButton.addTarget(self, action: #selector(googleSignInButtonTapped(_:)), for: .touchUpInside)
+        signInKakaoLoginButton.addTarget(self, action: #selector(kakaoSignInButtonTapped(_:)), for: .touchUpInside)
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
     }
     
     @objc fileprivate func textFieldResignedWithBackgroundTapping() {
@@ -305,7 +315,6 @@ class SignInViewController: UIViewController {
     }
     
     @objc func emailSignInButtonTapped(_ sender: UIButton) {
-      
       guard let email = signInEmailTextField.text, email.count > 0 else {
         
         return
@@ -334,15 +343,44 @@ class SignInViewController: UIViewController {
     }
     
     @objc func facebookSignInButtonTapped(_ sender: UIButton) {
-        // TODO: FIXME
+        let loginManager = LoginManager()
+        
+        loginManager.logIn(readPermissions: [.publicProfile], viewController: self) { loginResult in
+            switch loginResult {
+            case .success(grantedPermissions: _,
+                          declinedPermissions: _,
+                          token: let accessToken):
+                print("This is Facebook AccessToken : \(accessToken)")
+            case .failed(let error):
+                print("This kind of error is occured : \(error.localizedDescription)")
+            case .cancelled:
+                print("User cancelled Facebook Login process")
+            }
+        }
     }
     
     @objc func googleSignInButtonTapped(_ sender: UIButton) {
-        // TODO: FIXME
+        GIDSignIn.sharedInstance().signIn()
     }
     
     @objc func kakaoSignInButtonTapped(_ sender: UIButton) {
-        // TODO: FIXME
+        let session: KOSession = KOSession.shared()
+        if session.isOpen() {
+            session.close()
+        }
+        
+        session.presentingViewController = self
+        
+        session.open { error in
+            if let error = error {
+                print("Kakao Login is fail by this Error : \(error.localizedDescription)")
+            } else {
+                if session.isOpen() {
+                    print("This is Kakao Login accessToken : \(session.accessToken)")
+                }
+            }
+        }
+        
     }
 }
 
@@ -350,5 +388,29 @@ extension SignInViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
         return true
+    }
+}
+
+// MARK: Facebook Delegate
+/* extension SignInViewController: LoginButtonDelegate {
+    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
+        <#code#>
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: LoginButton) {
+        <#code#>
+    }
+}*/
+
+// MARK: Google Delegate
+extension SignInViewController: GIDSignInUIDelegate {
+    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
+        
+    }
+    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
+        
+    }
+    func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
+        
     }
 }

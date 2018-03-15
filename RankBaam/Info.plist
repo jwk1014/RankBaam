@@ -19,6 +19,20 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb202797733603062</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.701178045079-1k9o5jpth88b5ckk8norlevnk13thh4c</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -29,6 +43,10 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>6</string>
+	<key>FacebookAppID</key>
+	<string>202797733603062</string>
+	<key>FacebookDisplayName</key>
+	<string>RankBaam</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
