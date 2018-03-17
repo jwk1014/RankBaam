@@ -213,7 +213,8 @@ class TopicDetailViewController: UIViewController {
         topicDetailRankOpitonCollectionConfigure()
         rankMainButtonsConfigure()
         self.view.backgroundColor = UIColor.white
-        navigationController?.isNavigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShowUp(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidDisappear(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -885,6 +886,12 @@ extension TopicDetailViewController: TopicDetailOptionCellDelegate {
     func optionCellCommentDetailButtonTapped(optionSN: Int) {
       let vc = OptionDetailViewController.create(topicSN: topicSN, optionSN: optionSN)
       navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension TopicDetailViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 

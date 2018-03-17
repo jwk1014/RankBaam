@@ -7,6 +7,7 @@
 //
 
 
+
 public extension String {
     
     func widthForHeight(_ height: CGFloat, font: UIFont) -> CGFloat

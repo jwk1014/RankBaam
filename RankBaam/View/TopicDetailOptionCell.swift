@@ -310,6 +310,11 @@ class TopicDetailOptionCell: UICollectionViewCell {
     func topicDetailOptionCellDataConfigure(_ option: Option) {
         self.optionCellTitleLabel.text = option.title
         self.optionSN = option.optionSN
+        let date = option.createDate.stringToDateConverter()
+        guard let compareDate = date else { return }
+        if let dateDiff = compareDate |> Date(), dateDiff {
+            self.optionCellNewOptionMarkImageView.isHidden = false
+        }
         /*let randomPercentage = Float(arc4random()) / Float(UInt32.max)
         self.votePercentage = CGFloat(randomPercentage)*/
         if !option.photos.isEmpty {

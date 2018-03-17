@@ -31,9 +31,7 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
         super.viewDidLoad()
         viewInitConfigure()
         
-        
     }
-    
     
     
     fileprivate func viewInitConfigure() {
