@@ -213,15 +213,15 @@ class TopicDetailOptionCell: UICollectionViewCell {
         optionCellImageView.image = UIImage(named: "ImageIcn")
         optionCellCommentDetailLabel.text = "댓글"
         optionCellCommentDetailLabel.textColor = UIColor.rankbaamBlue
-        optionCellCommentDetailLabel.font = UIFont(name: "NanumSquareB", size: 13)
-        optionCellTitleLabel.font = UIFont(name: "NanumSquareB", size: 15)
+        optionCellCommentDetailLabel.font = UIFont(name: "NanumSquareB", size: width375(13))
+        optionCellTitleLabel.font = UIFont(name: "NanumSquareB", size: width375(15))
         optionCellCommentDetailRightShapeImageView.image =
             UIImage(named: "rightIcn")?.withRenderingMode(.alwaysTemplate)
         optionCellCommentDetailRightShapeImageView.tintColor = UIColor.rankbaamBlue
         optionCellCommentDetailSeperatorView.backgroundColor = UIColor.rankbaamSeperatorColor
         optionCellCommentDetailButton.addTarget(self, action: #selector(commentDetailButtonTapped), for: .touchUpInside)
         optionCellVoteCountLabel.text = "???표"
-        optionCellVoteCountLabel.font = UIFont(name: "NanumSquareB", size: 14)
+        optionCellVoteCountLabel.font = UIFont(name: "NanumSquareB", size: width375(14))
         
         
         

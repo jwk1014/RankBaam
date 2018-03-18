@@ -29,11 +29,36 @@ class TabMyViewProfileViewController: UIViewController {
     private weak var tabMyViewProfileCellNotificationSwitch: UISwitch?
     private weak var tabMyViewProfileSettingTableView: UITableView?
     
-    var tabMyViewProfileCellTitleArray:[String] = ["닉네임 변경","비밀번호 변경", "알림받기", "라이브러리 정보", "로그아웃", "회원탈퇴"]
+    var tabMyViewProfileCellTitleArray: [String] = ["닉네임 변경","비밀번호 변경", "알림받기", "라이브러리 정보", "로그아웃", "회원탈퇴"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
+        nicknameDataFetch()
+    }
+    
+    fileprivate func nicknameDataFetch(){
+        UserService.getNickname {
+            switch $0.result {
+            case .success(let sResultNickname):
+                if sResultNickname.succ {
+                    guard let nickname = sResultNickname.nickname  else { return }
+                    DispatchQueue.main.async {
+                        self.tabMyViewProfileNicknameLabel?.text = nickname
+                    }
+                    
+                } else {
+                    
+                }
+            case .failure(let error):
+                if let error = error as? SolutionProcessableProtocol {
+                    error.handle(self)
+                } else {
+                    
+                }
+            }
+        }
+        
     }
     
     fileprivate func viewInitConfigure() {
@@ -66,11 +91,11 @@ class TabMyViewProfileViewController: UIViewController {
         tabMyViewProfileNicknameLabel.textColor = UIColor.rankbaamDeepBlack
         tabMyViewProfileNicknameLabel.textAlignment = .left
         tabMyViewProfileNicknameLabel.isHidden = false
-        tabMyViewProfileNicknameLabel.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyViewProfileNicknameLabel.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewProfileNicknameLabel.isUserInteractionEnabled = true
         // MARK: TODO //
-        let string = "닉네임입니다"
-        let nicknameWidth = string.widthForHeight(height667(16), font: UIFont(name: "NanumSquareB", size: 16)!)
+//        let string = "닉네임입니다"
+//        let nicknameWidth = string.widthForHeight(height667(16), font: UIFont(name: "NanumSquareB", size: 16)!)
         // MARK: TODO //
         
         /*let tabMyViewProfileNicknameTextField = UITextField()
@@ -136,6 +161,7 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let settingCell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
         settingCell.textLabel?.text = tabMyViewProfileCellTitleArray[indexPath.row]
+        settingCell.textLabel?.font = UIFont(name: "NanumSquareB", size: width375(16))
         settingCell.selectionStyle = .none
         
         guard indexPath.row < 2

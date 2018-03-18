@@ -94,9 +94,6 @@ class TopicDetailViewController: UIViewController {
             if (oldValue != nil) && (isLikedForHeartButton != nil) {
                 if let newValue = isLikedForHeartButton {
                     
-                    
-                    
-                    
                     TopicService.like(topicSN: topicSN, isLiked: newValue) {
                         switch($0.result) {
                         case .success(let sResult):
@@ -812,7 +809,7 @@ extension TopicDetailViewController: TopicDetailFooterViewDelegate {
     }
     
     func optionCreateButtonTapped(_ optionTitle: String) {
-        if (optionTitle.count > 100) {
+        if optionTitle.count > 100 {
             let alertCon = UIAlertController(title: "글자수 제한", message: "랭킹 선택지는 100자 이하로 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
             let alertAction = UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil)
             alertCon.addAction(alertAction)
@@ -875,6 +872,7 @@ extension TopicDetailViewController: UIImagePickerControllerDelegate, UINavigati
             if let url = info[UIImagePickerControllerReferenceURL] as? URL,
                 let phAsset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject{
                 //TODO
+                
             }
         }
         picker.dismiss(animated: true, completion: nil)

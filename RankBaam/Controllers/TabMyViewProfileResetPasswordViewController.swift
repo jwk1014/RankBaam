@@ -30,14 +30,11 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewInitConfigure()
-        
     }
     
     
     fileprivate func viewInitConfigure() {
         self.view.backgroundColor = UIColor.white
-        
-        
         
         let tabMyViewResetPasswordCustomNavigationBar = UIView()
         self.tabMyViewResetPasswordCustomNavigationBar = tabMyViewResetPasswordCustomNavigationBar
@@ -88,7 +85,7 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
         tabMyViewResetPasswordNavigationBarTitleLabel.text = "비밀번호 변경"
         tabMyViewResetPasswordNavigationBarTitleLabel.textColor = UIColor.rankbaamDeepBlack
         tabMyViewResetPasswordNavigationBarTitleLabel
-            .font = UIFont(name: "NanumSquareB", size: 16)
+            .font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewResetPasswordNavigationBarTitleLabel.snp.makeConstraints {
             $0.left.equalTo(tabMyViewResetPasswordBackButton.snp.right)
             $0.top.equalTo(height667(45, forX: 68))
@@ -124,14 +121,13 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
             .addSubview(tabMyVieWResetPasswordEmailTitleLabel)
         tabMyVieWResetPasswordEmailTitleLabel.text = "이메일"
         tabMyVieWResetPasswordEmailTitleLabel.textColor = UIColor.rankbaamDeepBlack
-        tabMyVieWResetPasswordEmailTitleLabel.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyVieWResetPasswordEmailTitleLabel.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyVieWResetPasswordEmailTitleLabel.snp.makeConstraints {
             $0.top.equalTo(tabMyViewResetPasswordScrollViewContentsView)
                 .offset(height667(16))
             $0.left.equalTo(self.view)
                 .offset(width375(16))
             $0.height.equalTo(height667(18))
-            $0.width.equalTo(width375(50))
         }
         
         let tabMyViewResetPasswordEmailLabel = UILabel()
@@ -140,14 +136,13 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
             .addSubview(tabMyViewResetPasswordEmailLabel)
         tabMyViewResetPasswordEmailLabel.text = "emailAddress@rankbaam.com"
         tabMyViewResetPasswordEmailLabel.textColor = UIColor.rankbaamDeepBlack
-        tabMyViewResetPasswordEmailLabel.font = UIFont(name: "NanumSquareB", size: 14)
+        tabMyViewResetPasswordEmailLabel.font = UIFont(name: "NanumSquareB", size: width375(14))
         tabMyViewResetPasswordEmailLabel.snp.makeConstraints {
             $0.top.equalTo(tabMyVieWResetPasswordEmailTitleLabel.snp.bottom)
                 .offset(height667(28))
             $0.left.equalTo(tabMyViewResetPasswordNavigationBarSeperatorView)
                 .offset(width375(16))
             $0.height.equalTo(height667(16))
-            $0.width.equalTo(width375(343))
         }
         
         let tabMyViewResetPasswordPasswordTitleLabel = UILabel()
@@ -156,21 +151,20 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
             .addSubview(tabMyViewResetPasswordPasswordTitleLabel)
         tabMyViewResetPasswordPasswordTitleLabel.text = "비밀번호"
         tabMyViewResetPasswordPasswordTitleLabel.textColor = UIColor.rankbaamDeepBlack
-        tabMyViewResetPasswordPasswordTitleLabel.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyViewResetPasswordPasswordTitleLabel.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewResetPasswordPasswordTitleLabel.snp.makeConstraints {
             $0.top.equalTo(tabMyViewResetPasswordEmailLabel.snp.bottom)
                 .offset(height667(48))
             $0.left.equalTo(tabMyViewResetPasswordNavigationBarSeperatorView)
                 .offset(width375(16))
             $0.height.equalTo(height667(18))
-            $0.width.equalTo(width375(200))
         }
         
         let tabMyViewResetPasswordPresentPasswordTextField = UITextField()
         self.tabMyViewResetPasswordPresentPasswordTextField = tabMyViewResetPasswordPresentPasswordTextField
         tabMyViewResetPasswordScrollViewContentsView
             .addSubview(tabMyViewResetPasswordPresentPasswordTextField)
-        var attributedPlaceholder = NSAttributedString(string: "현재 비밀번호", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 14) ?? UIFont.boldSystemFont(ofSize: 14)])
+        var attributedPlaceholder = NSAttributedString(string: "현재 비밀번호", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: width375(14)) ?? UIFont.boldSystemFont(ofSize: width375(14))])
         tabMyViewResetPasswordPresentPasswordTextField.attributedPlaceholder = attributedPlaceholder
         tabMyViewResetPasswordPresentPasswordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: tabMyViewResetPasswordPresentPasswordTextField.frame.height))
         tabMyViewResetPasswordPresentPasswordTextField.leftViewMode = .always
@@ -190,7 +184,7 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
         self.tabMyViewResetPasswordRenewedPasswordTextField = tabMyViewResetPasswordRenewedPasswordTextField
         tabMyViewResetPasswordScrollViewContentsView
             .addSubview(tabMyViewResetPasswordRenewedPasswordTextField)
-        attributedPlaceholder = NSAttributedString(string: "새로운 비밀번호 ( 8자리 이상 영문자, 숫자 )", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 14) ?? UIFont.boldSystemFont(ofSize: 14)])
+        attributedPlaceholder = NSAttributedString(string: "새로운 비밀번호 ( 8자리 이상 영문자, 숫자 )", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: width375(14)) ?? UIFont.boldSystemFont(ofSize: width375(14))])
         tabMyViewResetPasswordRenewedPasswordTextField.attributedPlaceholder = attributedPlaceholder
         tabMyViewResetPasswordRenewedPasswordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: tabMyViewResetPasswordPresentPasswordTextField.frame.height))
         tabMyViewResetPasswordRenewedPasswordTextField.leftViewMode = .always
@@ -209,7 +203,7 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
         self.tabMyViewResetPasswordConfirmPasswordTextField = tabMyViewResetPasswordConfirmPasswordTextField
         tabMyViewResetPasswordScrollViewContentsView
             .addSubview(tabMyViewResetPasswordConfirmPasswordTextField)
-        attributedPlaceholder = NSAttributedString(string: "비밀번호 확인", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 14) ?? UIFont.boldSystemFont(ofSize: 14)])
+        attributedPlaceholder = NSAttributedString(string: "비밀번호 확인", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: width375(14)) ?? UIFont.boldSystemFont(ofSize: width375(14))])
         tabMyViewResetPasswordConfirmPasswordTextField.attributedPlaceholder = attributedPlaceholder
         tabMyViewResetPasswordConfirmPasswordTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: tabMyViewResetPasswordConfirmPasswordTextField.frame.height))
         tabMyViewResetPasswordConfirmPasswordTextField.leftViewMode = .always
@@ -229,7 +223,7 @@ class TabMyViewProfileResetPasswordViewController: UIViewController {
         self.view.addSubview(tabMyViewResetPasswordCompleteButton)
         tabMyViewResetPasswordCompleteButton.backgroundColor = UIColor.rankbaamOrange
         tabMyViewResetPasswordCompleteButton.setTitle("비밀번호 변경", for: .normal)
-        tabMyViewResetPasswordCompleteButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyViewResetPasswordCompleteButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewResetPasswordCompleteButton.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
         tabMyViewResetPasswordCompleteButton.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()
