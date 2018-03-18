@@ -11,6 +11,7 @@ import UIKit
 class TopicCreateCapturedPhotoViewController: UIViewController {
 
     var capturedPhoto: UIImage?
+    private weak var tabMyViewResetPasswordCustomNavigationBar: UIView?
     
     var topicCreateCapturedPhotoImageView: UIImageView = {
        let topicCreateCapturedPhotoImageView = UIImageView()
@@ -23,6 +24,11 @@ class TopicCreateCapturedPhotoViewController: UIViewController {
     }
     
     fileprivate func viewInitConfigure() {
+        self.navigationController?.isNavigationBarHidden = true
+        self.view.backgroundColor = UIColor.white
+        let tabMyViewResetPasswordCustomNavigationBar = UIView()
+        
+        
         self.view.addSubview(topicCreateCapturedPhotoImageView)
         topicCreateCapturedPhotoImageView.snp.makeConstraints {
             $0.top.bottom.left.right.equalTo(self.view)

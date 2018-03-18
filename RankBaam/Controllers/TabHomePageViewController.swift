@@ -25,8 +25,6 @@ class TabHomePageViewController: UIPageViewController {
     var selectedOrderType: OrderType = .new
     var selectedCategory: Category?
     var presentFadeInOutManager = PresentFadeInOutManager()
-    
-    
     var upperTabView: MainAllRankTopTabbar =  {
        let upperTabView = MainAllRankTopTabbar(frame: CGRect.zero, leftTabTitle: "모든랭킹", rightTabTitle: "주간랭킹")
        return upperTabView

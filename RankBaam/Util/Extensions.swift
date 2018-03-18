@@ -9,13 +9,50 @@
 import UIKit
 import Alamofire
 
+infix operator |>
+
+
+protocol MostRecentFindable {
+    static func |> (lhs: Self, rhs: Self) -> Bool?
+}
+
+extension Date: MostRecentFindable {
+    static func |>(lhs: Date, rhs: Date) -> Bool? {
+        let dateFormatter = DateFormatter()
+        let userCalendar = Calendar.current
+        dateFormatter.dateFormat = "dd/MM/yy hh:mm:ss"
+        let requestedComponent: Set<Calendar.Component> = [.year, .month,.day,.hour,.minute,.second ]
+//        let endTime = dateFormatter.date(from: "25/12/17 00:00:00")
+        let timeDifference = userCalendar.dateComponents(requestedComponent, from: lhs, to: rhs)
+        let string = "This is test Result : \(timeDifference.year) Year \(timeDifference.month) Months \(timeDifference.day) Days \(timeDifference.minute) Minutes \(timeDifference.second) Seconds"
+        guard let diffYear = timeDifference.year, let diffMonth = timeDifference.month, let diffDay = timeDifference.day else { return nil }
+        if diffYear == 0 && diffMonth == 0 {
+            switch diffDay {
+            case -7...7:
+                return true
+            default:
+                return false
+            }
+            
+        } else {
+            return false
+        }
+        
+        
+        
+        
+        print(string)
+    }
+}
+
+
 func width375(_ width: CGFloat) -> CGFloat {
   return UIScreen.main.bounds.width * width / 375.0
 }
 
 func height667(_ height: CGFloat, forX: CGFloat? = nil) -> CGFloat {
   let screenHeight = UIScreen.main.bounds.height
-  if screenHeight == 812.0 { //if X
+  if screenHeight == 812.0 {
     guard let forX = forX else { return height }
     return forX
   }
@@ -34,6 +71,13 @@ extension String {
         guard let result = dateFormatter.date(from: self) else { return "" }
         dateFormatter.dateFormat = "yyyy.MM.dd"
         return dateFormatter.string(from: result)
+    }
+    
+    func stringToDateConverter() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy H:mm:ss a"
+        guard let result = dateFormatter.date(from: self) else { return nil }
+        return result
     }
 }
 

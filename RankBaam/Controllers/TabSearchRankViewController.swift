@@ -181,6 +181,7 @@ extension TabSearchRankViewController: UITableViewDataSource, UITableViewDelegat
         let searchKeywordCell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
         searchKeywordCell.backgroundColor = UIColor.rankbaamGray
         searchKeywordCell.textLabel?.text = "1. 인기검색어"
+        searchKeywordCell.textLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
         searchKeywordCell.selectionStyle = .none
         searchKeywordCell.textLabel?.textColor = UIColor.rankbaamDeepBlack
         return searchKeywordCell
@@ -189,6 +190,7 @@ extension TabSearchRankViewController: UITableViewDataSource, UITableViewDelegat
         tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewHeaderFooterView.self))
         let searchKeywordHeader = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewHeaderFooterView.self))
         searchKeywordHeader?.textLabel?.text = "인기검색어"
+        searchKeywordHeader?.textLabel?.font = UIFont(name: "NanumSquareB", size: width375(14))
         searchKeywordHeader?.textLabel?.textColor = UIColor.rankbaamDeepBlack
         searchKeywordHeader?.backgroundColor = UIColor.rankbaamGray
         return searchKeywordHeader

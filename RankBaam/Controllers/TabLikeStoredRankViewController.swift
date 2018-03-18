@@ -54,7 +54,6 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
         tabLikeStoredRankEditingButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
         //tabLikeStoredRankEditingCancelButton.addTarget(self, action: #selector(tabLikeStoredRankButtonsHandler(_:)), for: .touchUpInside)
         self.navigationController?.isNavigationBarHidden = true
-        
     }
     
     /*override func viewWillAppear(_ animated: Bool) {

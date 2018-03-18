@@ -80,12 +80,12 @@ class TabMyViewProfileResetNicknameViewController: UIViewController {
         tabMyViewResetNicknameNavigationBarTitleLabel.text = "닉네임 변경"
         tabMyViewResetNicknameNavigationBarTitleLabel.textColor = UIColor.rankbaamDeepBlack
         tabMyViewResetNicknameNavigationBarTitleLabel
-            .font = UIFont(name: "NanumSquareB", size: 16)
+            .font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewResetNicknameNavigationBarTitleLabel.snp.makeConstraints {
             $0.left.equalTo(tabMyViewResetNicknameBackButton.snp.right)
             $0.top.equalTo(height667(45, forX: 68))
             $0.height.equalTo(height667(18))
-            $0.width.equalTo(width375(200))
+           
         }
         
         let tabMyVieWResetNicknameLabel = UILabel()
@@ -93,7 +93,7 @@ class TabMyViewProfileResetNicknameViewController: UIViewController {
         self.view.addSubview(tabMyVieWResetNicknameLabel)
         tabMyVieWResetNicknameLabel.text = "닉네임"
         tabMyVieWResetNicknameLabel.textColor = UIColor.rankbaamDeepBlack
-        tabMyVieWResetNicknameLabel.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyVieWResetNicknameLabel.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyVieWResetNicknameLabel.snp.makeConstraints {
             $0.top.equalTo(tabMyViewResetNicknameNavigationBarSeperatorView.snp.bottom)
                 .offset(height667(16))
@@ -106,7 +106,7 @@ class TabMyViewProfileResetNicknameViewController: UIViewController {
         let tabMyViewResetNicknameTextField = UITextField()
         self.tabMyViewResetNicknameTextField = tabMyViewResetNicknameTextField
         self.view.addSubview(tabMyViewResetNicknameTextField)
-        var attributedPlaceholder = NSAttributedString(string: "닉네임", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: 14) ?? UIFont.boldSystemFont(ofSize: 14)])
+        let attributedPlaceholder = NSAttributedString(string: "닉네임", attributes: [NSAttributedStringKey.foregroundColor : UIColor.rankbaamDarkgray, NSAttributedStringKey.font : UIFont(name: "NanumSquareB", size: width375(14)) ?? UIFont.boldSystemFont(ofSize: width375(14))])
         tabMyViewResetNicknameTextField.attributedPlaceholder = attributedPlaceholder
         tabMyViewResetNicknameTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 22, height: tabMyViewResetNicknameTextField.frame.height))
         tabMyViewResetNicknameTextField.leftViewMode = .always
@@ -126,7 +126,7 @@ class TabMyViewProfileResetNicknameViewController: UIViewController {
         self.view.addSubview(tabMyViewResetNicknameCompleteButton)
         tabMyViewResetNicknameCompleteButton.backgroundColor = UIColor.rankbaamOrange
         tabMyViewResetNicknameCompleteButton.setTitle("닉네임 변경", for: .normal)
-        tabMyViewResetNicknameCompleteButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: 16)
+        tabMyViewResetNicknameCompleteButton.titleLabel?.font = UIFont(name: "NanumSquareB", size: width375(16))
         tabMyViewResetNicknameCompleteButton.setTitleColor(UIColor.rankbaamDeepBlack, for: .normal)
         tabMyViewResetNicknameCompleteButton.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()

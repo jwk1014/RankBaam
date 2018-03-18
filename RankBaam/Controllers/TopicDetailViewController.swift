@@ -93,7 +93,6 @@ class TopicDetailViewController: UIViewController {
             topicDetailHeartLikeButtonImageView.image = isLikedForHeartButton! ?heartButtonImgForLiked : heartButtonImgForUnliked
             if (oldValue != nil) && (isLikedForHeartButton != nil) {
                 if let newValue = isLikedForHeartButton {
-                  
                     TopicService.like(topicSN: topicSN, isLiked: newValue) {
                         switch($0.result) {
                         case .success(let sResult):
@@ -209,7 +208,8 @@ class TopicDetailViewController: UIViewController {
         topicDetailRankOpitonCollectionConfigure()
         rankMainButtonsConfigure()
         self.view.backgroundColor = UIColor.white
-        navigationController?.isNavigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShowUp(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidDisappear(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -785,7 +785,7 @@ extension TopicDetailViewController: TopicDetailFooterViewDelegate {
     }
     
     func optionCreateButtonTapped(_ optionTitle: String) {
-        if (optionTitle.count > 100) {
+        if optionTitle.count > 100 {
             let alertCon = UIAlertController(title: "글자수 제한", message: "랭킹 선택지는 100자 이하로 입력해주세요", preferredStyle: UIAlertControllerStyle.alert)
             let alertAction = UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil)
             alertCon.addAction(alertAction)
@@ -844,6 +844,7 @@ extension TopicDetailViewController: UIImagePickerControllerDelegate, UINavigati
             if let url = info[UIImagePickerControllerReferenceURL] as? URL,
                 let phAsset = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil).firstObject{
                 //TODO
+                
             }
         }
         picker.dismiss(animated: true, completion: nil)
@@ -876,6 +877,12 @@ extension TopicDetailViewController: TopicDetailOptionCellDelegate {
           }
         }
       }
+    }
+}
+
+extension TopicDetailViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
