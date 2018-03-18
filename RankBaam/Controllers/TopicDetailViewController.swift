@@ -93,10 +93,7 @@ class TopicDetailViewController: UIViewController {
             topicDetailHeartLikeButtonImageView.image = isLikedForHeartButton! ?heartButtonImgForLiked : heartButtonImgForUnliked
             if (oldValue != nil) && (isLikedForHeartButton != nil) {
                 if let newValue = isLikedForHeartButton {
-                    
-                    
-                    
-                    
+                  
                     TopicService.like(topicSN: topicSN, isLiked: newValue) {
                         switch($0.result) {
                         case .success(let sResult):
@@ -110,12 +107,9 @@ class TopicDetailViewController: UIViewController {
                             }
                             
                         case .failure(let error):
-                            if let error = error as? SolutionProcessableProtocol {
-                                error.handle(self)
-                            } else {
-                                
-                            }
-                            
+                          if let error = error as? SolutionProcessableProtocol {
+                            error.handle(self)
+                          }
                         }
                     }
                 }
@@ -208,7 +202,9 @@ class TopicDetailViewController: UIViewController {
         super.viewDidLoad()
         
         viewInitConfigure()
-        topicDetailTopicDataFetch()
+        if topic == nil {
+          topicDetailTopicDataFetch()
+        }
         topicDetailOptionDataFetch()
         topicDetailRankOpitonCollectionConfigure()
         rankMainButtonsConfigure()
@@ -381,40 +377,33 @@ class TopicDetailViewController: UIViewController {
         }
         
     }
-    
+  
     fileprivate func topicDetailTopicDataFetch() {
-        TopicService.read(topicSN: self.topicSN) {
-
-            switch($0.result) {
-
-            case .success(let sResult):
-                if sResult.succ {
-                    guard let topic = sResult.topic else {return}
-                    DispatchQueue.main.async {
-                        self.topic = topic
-                        if self.navigationTitleConverter != .isSettingMyView {
-                            self.isLikedForHeartButton = topic.isLike
-                        }
-                        self.topicDetailRankOptionCollectionView.reloadData()
-                    }
-                } else if let msg = sResult.msg {
-                    switch msg {
-                    default:
-                        break
-                    }
+      TopicService.read(topicSN: topicSN) {
+        switch $0.result {
+        case .success(let result):
+          if result.succ {
+            if let topic = result.topic {
+              DispatchQueue.main.async {
+                self.topic = topic
+                if self.navigationTitleConverter != .isSettingMyView {
+                  self.isLikedForHeartButton = topic.isLike
                 }
-
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-
-                }
-
+                self.topicDetailRankOptionCollectionView.reloadData()
+              }
+            } else {
+              assertionFailure("topic is nil")
             }
+          } else if let msg = result.msg {
+            switch msg {
+            default: debugPrint(msg)
+            }
+          } else {
+            assertionFailure("succ is false and msg is nil")
+          }
+        case .failure(let error): break
         }
-
-        
+      }
     }
     
     fileprivate func topicDetailOptionDataFetch(){
@@ -464,12 +453,7 @@ class TopicDetailViewController: UIViewController {
                     }
                 }
                 
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                    
-                }
+            case .failure(let error): break
             }
         }
     }
@@ -591,11 +575,7 @@ class TopicDetailViewController: UIViewController {
                         }
                     }
                     
-                case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                        error.handle(self)
-                    } else {
-                    }
+                case .failure(let error): break
                 }
             })
         }
@@ -776,13 +756,7 @@ extension TopicDetailViewController: TopicDetailHeaderViewDelegate {
                         }
                     }
                     
-                case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                        error.handle(self)
-                    } else {
-                        
-                    }
-                    
+                case .failure(let error): break
                 }
                 self.semaphore.signal()
             }
@@ -846,11 +820,7 @@ extension TopicDetailViewController: TopicDetailFooterViewDelegate {
                             }
                         }
                     
-                    case .failure(let error):
-                        if let error = error as? SolutionProcessableProtocol {
-                            error.handle(self)
-                        } else {
-                    }
+                    case .failure(let error): break
                 }
             }
         }
@@ -883,8 +853,29 @@ extension TopicDetailViewController: UIImagePickerControllerDelegate, UINavigati
 
 extension TopicDetailViewController: TopicDetailOptionCellDelegate {
     func optionCellCommentDetailButtonTapped(optionSN: Int) {
-      let vc = OptionDetailViewController.create(topicSN: topicSN, optionSN: optionSN)
-      navigationController?.pushViewController(vc, animated: true)
+      UserService.getNickname {
+        switch $0.result {
+        case .success(let result):
+          if result.succ {
+            if let _ = result.nickname {
+              let vc = OptionDetailViewController.create(topicSN: self.topicSN, optionSN: optionSN)
+              self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+              assertionFailure("nickname is nil")
+            }
+          } else if let msg = result.msg {
+            switch msg {
+            default: debugPrint(msg)
+            }
+          } else {
+            assertionFailure("succ is false and msg is nil")
+          }
+        case .failure(let error):
+          if let error = error as? SolutionProcessableProtocol {
+            error.handle(self)
+          }
+        }
+      }
     }
 }
 

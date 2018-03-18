@@ -14,6 +14,8 @@ import GoogleSignIn
 
 
 class SignInViewController: UIViewController {
+  
+    var loginCompleteClosure: (() -> Void)? = nil
     
     var signInBackgroundScrollView: UIScrollView = {
         let signInBackgroundScrollView = UIScrollView()
@@ -290,7 +292,7 @@ class SignInViewController: UIViewController {
             
         }
         
-        
+        signInLoginButton.addTarget(self, action: #selector(emailSignInButtonTapped(_:)), for: .touchUpInside)
         signInFaceBookLoginButton.addTarget(self, action: #selector(facebookSignInButtonTapped(_:)), for: .touchUpInside)
         signInGoogleLoginButton.addTarget(self, action: #selector(googleSignInButtonTapped(_:)), for: .touchUpInside)
         signInKakaoLoginButton.addTarget(self, action: #selector(kakaoSignInButtonTapped(_:)), for: .touchUpInside)
@@ -316,30 +318,17 @@ class SignInViewController: UIViewController {
     
     @objc func emailSignInButtonTapped(_ sender: UIButton) {
       guard let email = signInEmailTextField.text, email.count > 0 else {
-        
+        //TODO
         return
       }
       
       guard let password = signInPasswordTextField.text, email.count > 0 else {
-        
+        //TODO
         return
       }
       
       let signData = SignData(email: email, identification: password)
-      SignManager.keychain = signData
-      UserService.signIn(signData: signData) {
-        switch $0.result {
-        case .success(let result):
-          if result.succ {
-            ////TODO
-          } else if let msg = result.msg {
-            switch msg {
-            default: assertionFailure(msg)
-            }
-          }
-        case .failure(_): break
-        }
-      }
+      loginNetwork(signData)
     }
     
     @objc func facebookSignInButtonTapped(_ sender: UIButton) {
@@ -351,6 +340,8 @@ class SignInViewController: UIViewController {
                           declinedPermissions: _,
                           token: let accessToken):
                 print("This is Facebook AccessToken : \(accessToken)")
+                self.loginNetwork(
+                  .init(type: .facebook, identification: accessToken.authenticationToken))
             case .failed(let error):
                 print("This kind of error is occured : \(error.localizedDescription)")
             case .cancelled:
@@ -377,10 +368,27 @@ class SignInViewController: UIViewController {
             } else {
                 if session.isOpen() {
                     print("This is Kakao Login accessToken : \(session.accessToken)")
+                    self.loginNetwork(.init(type: .kakao, identification: session.accessToken))
                 }
             }
         }
-        
+    }
+      
+    private func loginNetwork(_ signData: SignData) {
+      SignManager.keychain = signData
+      UserService.signIn(signData: signData) {
+        switch $0.result {
+        case .success(let result):
+          if result.succ {
+            self.dismiss(animated: true, completion: { self.loginCompleteClosure?() })
+          } else if let msg = result.msg {
+            switch msg {
+            default: assertionFailure(msg)
+            }
+          }
+        case .failure(_): break
+        }
+      }
     }
 }
 
@@ -405,7 +413,9 @@ extension SignInViewController: UITextFieldDelegate {
 // MARK: Google Delegate
 extension SignInViewController: GIDSignInUIDelegate {
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
-        
+      if let idToken = signIn.currentUser.authentication.idToken {
+        self.loginNetwork(.init(type: .google, identification: idToken))
+      }
     }
     func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
         

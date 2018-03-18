@@ -26,24 +26,30 @@ class MainTabViewController: UIViewController {
     initView()
   }
   
-  @objc func handleImageView(_ sender: UITapGestureRecognizer) {
-    guard let tag = sender.view?.tag,
-          tag != currentFocusedTab.rawValue,
-          let tab = TabIcn(rawValue: tag),
-          let imageView = sender.view as? UIImageView else {return}
-    if let selectedTabImageView = selectedTabImageView {
-      changeTabImage(tab: currentFocusedTab, imageView: selectedTabImageView, focused: false)
-    }
-    currentFocusedTab = tab
-    selectedTabImageView = imageView
-    changeTabImage(tab: currentFocusedTab, imageView: imageView, focused: true)
-    
-    changeTabContentView(tab: currentFocusedTab)
-  }
-  
   @objc func handleButton(_ button: UIButton) {
-    let vc = TopicEditViewController()
-    present(vc, animated: true, completion: nil)
+    UserService.getNickname {
+      switch $0.result {
+      case .success(let result):
+        if result.succ {
+          if let _ = result.nickname {
+            let vc = TopicEditViewController()
+            self.present(vc, animated: true, completion: nil)
+          } else {
+            assertionFailure("nickname is nil")
+          }
+        } else if let msg = result.msg {
+          switch msg {
+          default: debugPrint(msg)
+          }
+        } else {
+          assertionFailure("succ is false and msg is nil")
+        }
+      case .failure(let error):
+        if let error = error as? SolutionProcessableProtocol {
+          error.handle(self)
+        }
+      }
+    }
   }
   
   func changeTabImage(tab: TabIcn, imageView: UIImageView, focused: Bool) {
@@ -55,15 +61,61 @@ class MainTabViewController: UIViewController {
     }
   }
   
-  func changeTabContentView(tab: TabIcn){
+  func changeTab(tab: TabIcn, imageView: UIImageView) {
+    if let selectedTabImageView = selectedTabImageView {
+      changeTabImage(tab: currentFocusedTab, imageView: selectedTabImageView, focused: false)
+    }
+    currentFocusedTab = tab
+    selectedTabImageView = imageView
+    changeTabImage(tab: currentFocusedTab, imageView: imageView, focused: true)
+    
     let vc = tabVCs[tab.rawValue-1]
     if vc.parent == nil {
-      addChildViewController(vc)
+      self.addChildViewController(vc)
     }
-    if let count = contentView?.subviews.count, count > 0 {
-      contentView?.subviews[0].removeFromSuperview()
+    if let count = self.contentView?.subviews.count, count > 0 {
+      self.contentView?.subviews[0].removeFromSuperview()
     }
-    contentView?.addSubview(vc.view)
+    self.contentView?.addSubview(vc.view)
+  }
+  
+  @objc func handleImageView(_ sender: UITapGestureRecognizer) {
+    guard let tag = sender.view?.tag,
+      tag != currentFocusedTab.rawValue,
+      let tab = TabIcn(rawValue: tag),
+      let imageView = sender.view as? UIImageView else {return}
+    handleTab(tab: tab, imageView: imageView)
+  }
+  
+  func handleTab(tab: TabIcn, imageView: UIImageView){
+    switch tab {
+    case .heart, .profile:
+      UserService.getNickname {
+        switch $0.result {
+        case .success(let result):
+          if result.succ {
+            if let _ = result.nickname {
+              self.changeTab(tab: tab, imageView: imageView)
+            } else {
+              assertionFailure("nickname is nil")
+            }
+          } else if let msg = result.msg {
+            switch msg {
+            default: debugPrint(msg)
+            }
+          } else {
+            assertionFailure("succ is false and msg is nil")
+          }
+        case .failure(let error):
+          if let error = error as? SolutionProcessableProtocol {
+            error.handle(self)
+          }
+        }
+      }
+      break
+    default:
+      self.changeTab(tab: tab, imageView: imageView)
+    }
   }
   
   override func viewDidLayoutSubviews() {
@@ -135,10 +187,8 @@ class MainTabViewController: UIViewController {
         $0.trailing.equalTo(tabBarBackgroundView).offset(-vcSize.width * 11.0/375.0) }
       }
       if tab == currentFocusedTab {
-        selectedTabImageView = imageView
-        changeTabImage(tab: tab, imageView: imageView, focused: true)
         contentView.frame = view.frame
-        changeTabContentView(tab: tab)
+        changeTab(tab: tab, imageView: imageView)
       }
     }
     

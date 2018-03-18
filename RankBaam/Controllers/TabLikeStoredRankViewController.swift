@@ -85,12 +85,7 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
                         break
                     }
                 }
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                    
-                }
+            case .failure(let error): break
              }
              self.isOnGoingLoading = false
           }
@@ -219,12 +214,7 @@ class TabLikeStoredRankViewController: UIViewController, CellDataRefreshable {
                             break
                         }
                     }
-                case .failure(let error):
-                    if let error = error as? SolutionProcessableProtocol {
-                        error.handle(self)
-                    } else {
-                        
-                    }
+                case .failure(let error): break
                 }
             })
             
@@ -413,12 +403,7 @@ extension TabLikeStoredRankViewController: LikeStoredRankCellDelegate {
                         break
                     }
                 }
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                    
-                }
+            case .failure(let error): break
             }
         })
     }

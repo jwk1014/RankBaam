@@ -168,12 +168,7 @@ class TabHomeViewController: UIViewController, CellDataRefreshable {
                         break
                     }
                 }
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                    
-                }
+            case .failure(let error): break
              }
             self.isOnGoingLoading = false
           }
@@ -262,17 +257,13 @@ extension TabHomeViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let topicDetailViewController = TopicDetailViewController()
-        let topicSN = cellDatas[indexPath.item].topicSN
-        
-        if let _ = self.parent as? TabMyViewPageViewController {
-            topicDetailViewController.bottomButtonTitleConverter =
-                .isForRevisingTopic
-            topicDetailViewController.navigationTitleConverter =
-                .isSettingMyView
-        }
-        topicDetailViewController.topicSN = topicSN
-        navigationController?.pushViewController(topicDetailViewController, animated: true)
+      let topicDetailViewController = TopicDetailViewController()
+      topicDetailViewController.topicSN = cellDatas[indexPath.item].topicSN
+      if self.parent is TabMyViewPageViewController {
+        topicDetailViewController.bottomButtonTitleConverter = .isForRevisingTopic
+        topicDetailViewController.navigationTitleConverter = .isSettingMyView
+      }
+      navigationController?.pushViewController(topicDetailViewController, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

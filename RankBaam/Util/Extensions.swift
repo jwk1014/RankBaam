@@ -258,6 +258,19 @@ extension DataRequest {
                     completionHandler(response.create(.failure(MappingError(from: data, to: T.self))))
                     return
                 }
+              
+                if let result = try? JSONDecoder().decode(SResult.self, from: data),
+                   result.msg == "NeedLogin"{
+                    if let request = response.request {
+                      var error = NeedLoginError<T>()
+                      error.urlRequest = request
+                      error.completionHandler = completionHandler
+                      completionHandler(response.create(.failure(error)))
+                    } else {
+                      assertionFailure("request is nil")
+                    }
+                    return
+                }
                 
                 completionHandler(response.create(.success(decodedData)))
                 

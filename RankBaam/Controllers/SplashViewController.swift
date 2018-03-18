@@ -123,7 +123,7 @@ class SplashViewController: UIViewController {
     private func loadNetworkComplete() {
       self.loadCompletionSemaphore.wait()
       self.completionClosure = {
-        let vc = SignInViewController()
+        let vc = MainTabViewController()
         let naviVC = UINavigationController(rootViewController: vc)
         self.present(naviVC, animated: true, completion: nil)
       }

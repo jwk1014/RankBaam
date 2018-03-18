@@ -99,11 +99,7 @@ class TabMyViewRankingsViewController: UIViewController {
                     }
                 }
                 
-            case .failure(let error):
-                if let error = error as? SolutionProcessableProtocol {
-                    error.handle(self)
-                } else {
-                }
+            case .failure(let error): break
             }
         }
     }

@@ -182,6 +182,8 @@ extension TabMyViewProfileViewController: UITableViewDataSource {
             case .LibraryInfo:
                 break
             case .LogOut:
+                UserService.signOut()
+                //TODO
                 break
             case .MemberLeave:
                 break
